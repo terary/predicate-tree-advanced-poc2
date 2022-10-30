@@ -1,0 +1,10 @@
+{
+  // Or install directly with `npm i -D @tsconfig/node16`
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "target": "es6"
+  }
+}

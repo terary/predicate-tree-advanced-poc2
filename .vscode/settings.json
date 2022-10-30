@@ -1,0 +1,27 @@
+{
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": true },
+  "editor.formatOnSave": true,
+  "eslint.alwaysShowStatus": true,
+  "cSpell.words": [
+    "betweeni",
+    "betweenx",
+    "clonedeep",
+    "consts",
+    "datetime",
+    "differencewith",
+    "firstname",
+    "lastname",
+    "nany",
+    "Projectable",
+    "projectables",
+    "subtreeroot",
+    "testables"
+  ],
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/.hg/store/**": true
+  },
+  "jest.jestCommandLine": "npm test --"
+}
