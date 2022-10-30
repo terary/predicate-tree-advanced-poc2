@@ -10,31 +10,11 @@ interface IAppendChildNodeIds {
   junctionNodeId: string; // this will ALWAYS be the nodeId provided to append*(nodeId)
   isNewBranch: boolean;
 }
-interface IAbstractExpressionTreeOptions<T> {
-  isBranchNodeContent?: (nodeContent: T) => boolean;
-}
-const testIsBranchContent = <T>(nodeContent: TGenericNodeContent<T>) => {
-  if (nodeContent instanceof Object) {
-    // @ts-ignore
-    return junctionOperators.includes(nodeContent?.operator);
-  }
-
-  // subtrees?
-  return false;
-};
-
 export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedGraph<
   OPERAND | JUNCTION
 > {
-  private _isBranchNodeContent: (nodeContent: OPERAND | JUNCTION) => boolean;
-  constructor(
-    rootNodeId = "_root_",
-    nodeContent?: OPERAND | JUNCTION,
-    options: IAbstractExpressionTreeOptions<OPERAND | JUNCTION> = {}
-  ) {
+  constructor(rootNodeId = "_root_", nodeContent?: OPERAND | JUNCTION) {
     super(rootNodeId, nodeContent);
-    this._isBranchNodeContent = options.isBranchNodeContent || testIsBranchContent;
-    // this._isJunction = options?.isJunction || isJunction;
   }
 
   public appendContentWithAnd(
@@ -93,11 +73,6 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
       junctionNodeId: parentNodeId,
       isNewBranch: true,
     };
-  }
-
-  public isBranchNodeContent(nodeContent: TGenericNodeContent<OPERAND | JUNCTION>): boolean {
-    // @ts-ignore
-    return this._isBranchNodeContent(nodeContent);
   }
 
   public appendChildNodeWithContent(
