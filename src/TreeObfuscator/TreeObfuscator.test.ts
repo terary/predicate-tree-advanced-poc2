@@ -213,7 +213,7 @@ describe("TreeObfuscator", () => {
   });
 
   describe("SubTree POJO to/from", () => {
-    it.only("Blue skies", () => {
+    it("Blue skies", () => {
       const originalGraph = new TestAbstractDirectedGraph(undefined);
       const obfuscatedGraph = new TreeObfuscator(originalGraph);
       const { dTreeIds, dTree, subgraph } =
