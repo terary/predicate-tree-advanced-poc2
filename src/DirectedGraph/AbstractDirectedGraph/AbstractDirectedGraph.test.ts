@@ -128,6 +128,7 @@ describe("AbstractDirectedGraph", () => {
         expect(dTree.countDescendantsOf(dTreeIds["child_0"])).toEqual(3);
         expect(dTree.countDescendantsOf(dTreeIds["child_0_0"])).toEqual(0);
       });
+
       it("Should throw error if nodeId does not exist or otherwise not valid.", () => {
         const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
           new TestAbstractDirectedGraph() as ITree<WidgetType>
@@ -287,6 +288,15 @@ describe("AbstractDirectedGraph", () => {
       // expect(newChildId.indexOf(childId_1)).toBe(0);
     });
   });
+  describe(".moveTree(from, to)", () => {
+    it("Should move child content to child other", () => {
+      const tree = new TestAbstractDirectedGraph(undefined, { label: "root" });
+      const childId_0 = tree.appendChildNodeWithContent(tree.rootNodeId, { label: "child_0" });
+      const childId_1 = tree.appendChildNodeWithContent(tree.rootNodeId, { label: "child_1" });
+
+      const childId_0_0 = tree.appendChildNodeWithContent(childId_0, { label: "child_0_0" });
+    });
+  });
   describe(".getTreeNodeIdsAt()", () => {
     it("Should get nodeIds for all descendants and the given nodeId", () => {
       const { dTreeIds, dTree, subgraph } = make3ChildrenSubgraph2Children(
@@ -299,6 +309,7 @@ describe("AbstractDirectedGraph", () => {
       const subgraphTreeIds = subgraph.getTreeNodeIdsAt(subgraph.rootNodeId);
 
       expect(["_root_:0", "_root_:0:6", "_root_:0:7"].sort()).toStrictEqual(treeIds.sort());
+
       expect(["_root_:1:3", "_root_:1:3:4", "_root_:1:3:5"].sort()).toStrictEqual(
         subgraphTreeIds.sort()
       );
@@ -371,7 +382,7 @@ describe("AbstractDirectedGraph", () => {
           does create go into subgraph (no)
           should be invisible in root, root can/does traverse
     `;
-    it("Should get all children for given node (root/child) including subtree.", () => {
+    it.skip("Should get all children for given node (root/child) including subtree.", () => {
       const contentRoot = { label: "root" };
       const contentSubtreeRoot = { label: "subtreeroot" };
       const contentGrandChild = { label: "grandChild" };
@@ -464,7 +475,7 @@ describe("AbstractDirectedGraph", () => {
         [grandChild_1_0, grandChild_1_1, grandChild_1_2].sort()
       );
     });
-    it("Should empty if subtree called from parent, should be tree content if called from subtree.", () => {
+    it.skip("Should empty if subtree called from parent, should be tree content if called from subtree.", () => {
       const dTree = new TestAbstractDirectedGraph();
 
       const childId_0 = dTree.appendChildNodeWithContent(dTree.rootNodeId, {
@@ -474,13 +485,31 @@ describe("AbstractDirectedGraph", () => {
       const subtree1 = dTree.createSubGraphAt(childId_0);
       subtree1.appendChildNodeWithContent(subtree1.rootNodeId, { label: "child_1" });
 
-      const subtreeContent = dTree.getChildrenContent(subtree1.rootNodeId);
-      const subtreeContent2 = subtree1.getChildrenContent(subtree1.rootNodeId);
-      const treeContent = dTree.getChildrenContent(dTree.rootNodeId);
+      //     should  an empty array and not [null]
+      dTree.getTreeContentAt(subtree1.rootNodeId);
 
-      expect(subtreeContent).toStrictEqual([]);
-      expect(subtreeContent2).toStrictEqual([{ label: "child_1" }]);
-      expect(treeContent).toStrictEqual([{ label: "child_0" }]);
+      const subtreeContent = dTree.getTreeContentAt(subtree1.rootNodeId);
+      const subtreeContent2 = subtree1.getTreeContentAt(subtree1.rootNodeId);
+      const treeContent = dTree.getTreeContentAt(dTree.rootNodeId);
+
+      `
+        If I createSubGraphAt(nodeId)
+        - tree child creates node at nodeId, (nodeId:0)
+        - subtree root content will be null
+        - tree content at nodeId:0 is a subtree (not a predicate)
+        - tree.replaceContent(nodeId:0, [any]), will replace subtree
+        - fromPojo will see nodeType=subtree and that node's content 
+          becomes subtree root content, which is NOT accessible from tree
+          (descendants, getChildrenContent, will include it because it descends tree?)
+          does not descend tree (see what you've been doing)
+
+      
+      `;
+
+      expect(subtreeContent).toStrictEqual([null]);
+      expect(subtreeContent2).toStrictEqual([{ label: "child_0" }, { label: "child_1" }]);
+      expect(treeContent).toStrictEqual([null]);
+      expect(treeContent).toStrictEqual([]);
     });
   }); // describe(".getChildrenContent"
 
@@ -1087,18 +1116,32 @@ describe("AbstractDirectedGraph", () => {
   describe("SubTree POJO to/from", () => {
     it("Should be awesome", () => {
       const parentVisitor = new TestTreeVisitor();
+      const wholeTreeVisitor = new TestTreeVisitor();
       const subTreeVisitor = new TestTreeVisitor();
+      parentVisitor.includeSubtrees = false;
+      wholeTreeVisitor.includeSubtrees = true;
+
       const { dTreeIds, dTree, subgraph } = make3ChildrenSubgraph2Children(
         new TestAbstractDirectedGraph() as ITree<WidgetType>
       );
-
       dTree.visitAllAt(parentVisitor);
+      dTree.visitAllAt(wholeTreeVisitor);
       subgraph.visitAllAt(subTreeVisitor);
+
       expect(parentVisitor.contentItems.sort(WidgetSort)).toStrictEqual(
         [
           { label: "root" },
           { label: "child_0" },
           { label: "child_1" },
+          { label: "child_2" },
+        ].sort(WidgetSort)
+      );
+      const c = wholeTreeVisitor.contentItems;
+      expect(wholeTreeVisitor.contentItems.sort(WidgetSort)).toStrictEqual(
+        [
+          { label: "root" },
+          { label: "child_0" },
+          { label: "child_1" }, // test data changes this to '{ label: "subgraph:root" }'
           { label: "child_2" },
           { label: "subgraph:root" },
           { label: "child_1:subgraph_0" },

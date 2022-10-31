@@ -58,6 +58,13 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return nodeId;
   }
 
+  public fromPojoAppendChildNodeWithContent(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<T>
+  ): string {
+    return this._appendChildNodeWithContent(parentNodeId, nodeContent);
+  }
+
   protected _appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>
@@ -194,22 +201,9 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return Object.keys(this._nodeDictionary).length;
   }
 
-  public getContentItemsWithIds(
-    nodeIds: string[]
-  ): { nodeId: string; nodeContent: ITree<T> | T | null }[] {
-    const contents = nodeIds.map((nodeId) => {
-      return {
-        nodeId,
-        nodeContent: this.getChildContent(nodeId),
-      };
-    });
-
-    return contents;
-  }
-
-  public getContentItems(nodeIds: string[]): (ITree<T> | T | null)[] {
-    return this._getContentItems(nodeIds);
-  }
+  // private getContentItems(nodeIds: string[]): (ITree<T> | T | null)[] {
+  //   return this._getContentItems(nodeIds);
+  // }
 
   private _getContentItems(nodeIds: string[]): (ITree<T> | T | null)[] {
     return nodeIds.map((childNodeId) => {
@@ -241,10 +235,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
         descendantContent.push(
           ...nodeContentAsAbstract.getTreeContentAt(nodeContentAsAbstract.rootNodeId)
         );
-        // @ts-ignore - hack for BranchNode (LogicalExpression2)
-      } else if (nodeContent?.nodeContent !== undefined) {
-        // @ts-ignore - hack for BranchNode (LogicalExpression2)
-        descendantContent.push(nodeContent.nodeContent);
       } else {
         descendantContent.push(nodeContent);
       }
@@ -271,10 +261,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     // @ts-ignore - function not constructable
     // can we rethink this.  Is there a better way?
     return new this.constructor(rootNodeId) as typeof this;
-  }
-
-  getNodeAt(nodeId: string): TGenericNodeType<T> | undefined {
-    return this._nodeDictionary[nodeId];
   }
 
   public getParentNodeId(nodeId: string): string {
@@ -570,6 +556,39 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return subgraph as unknown as ITree<T>;
   }
 
+  private static fromPojoTraverseAndExtractChildren = <T>(
+    treeParentId: string,
+    jsonParentId: string,
+    dTree: ITree<T>,
+    treeObject: TTreePojo<T>,
+    transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>
+  ): void => {
+    const childrenNodes = treeUtils.extractChildrenNodes<T>(jsonParentId, treeObject);
+
+    Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
+      if (nodePojo.nodeType === AbstractDirectedGraph.SubGraphNodeTypeName) {
+        const subtree = dTree.createSubGraphAt(treeParentId);
+        subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
+        AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
+          subtree.rootNodeId,
+          nodeId,
+          subtree as ITree<T>,
+          treeObject,
+          transformer
+        );
+      } else {
+        const childId = dTree.appendChildNodeWithContent(treeParentId, transformer(nodePojo));
+        AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
+          childId,
+          nodeId,
+          dTree,
+          treeObject,
+          transformer
+        );
+      }
+    });
+  };
+
   static fromPojo<T>(
     srcPojoTree: TTreePojo<T>,
     transform = defaultFromPojoTransform,
@@ -588,7 +607,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     // dTree._replaceNodeContent(dTree._rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
-    treeUtils.traverseAndExtractChildren(
+    AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
       dTree.rootNodeId, // rootNodeId -
       // rootNodeId,
       // dTree.rootNodeId === rootNodeId ? dTree.rootNodeId : rootNodeId,
@@ -635,18 +654,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
         nodeContent: nodeContent.getChildContent(nodeContent.rootNodeId),
         parentId: parentNodeId,
       };
-      // @ts-ignore - nodeContent not a property, BranchNode hack
-    } else if (nodeContent.nodeContent !== undefined) {
-      workingPojoDocument[currentNodeId] = {
-        parentId: parentNodeId,
-        // @ts-ignore - nodeContent not a property, BranchNode hack
-        nodeContent: nodeContent.nodeContent as unknown as T,
-      };
-
-      const children = this._getChildrenNodeIds(currentNodeId);
-      children.forEach((childId) => {
-        this._toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument);
-      });
     } else {
       workingPojoDocument[currentNodeId] = {
         parentId: parentNodeId,
