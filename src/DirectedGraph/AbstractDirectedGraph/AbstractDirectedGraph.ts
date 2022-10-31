@@ -578,6 +578,39 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return subgraph as unknown as ITree<T>;
   }
 
+  private static traverseAndExtractChildren = <T>(
+    treeParentId: string,
+    jsonParentId: string,
+    dTree: ITree<T>,
+    treeObject: TTreePojo<T>,
+    transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>
+  ): void => {
+    const childrenNodes = treeUtils.extractChildrenNodes<T>(jsonParentId, treeObject);
+
+    Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
+      if (nodePojo.nodeType === AbstractDirectedGraph.SubGraphNodeTypeName) {
+        const subtree = dTree.createSubGraphAt(treeParentId);
+        subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
+        AbstractDirectedGraph.traverseAndExtractChildren(
+          subtree.rootNodeId,
+          nodeId,
+          subtree as ITree<T>,
+          treeObject,
+          transformer
+        );
+      } else {
+        const childId = dTree.appendChildNodeWithContent(treeParentId, transformer(nodePojo));
+        AbstractDirectedGraph.traverseAndExtractChildren(
+          childId,
+          nodeId,
+          dTree,
+          treeObject,
+          transformer
+        );
+      }
+    });
+  };
+
   static fromPojo<T>(
     srcPojoTree: TTreePojo<T>,
     transform = defaultFromPojoTransform,
@@ -596,7 +629,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     // dTree._replaceNodeContent(dTree._rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
-    treeUtils.traverseAndExtractChildren(
+    AbstractDirectedGraph.traverseAndExtractChildren(
       dTree.rootNodeId, // rootNodeId -
       // rootNodeId,
       // dTree.rootNodeId === rootNodeId ? dTree.rootNodeId : rootNodeId,
