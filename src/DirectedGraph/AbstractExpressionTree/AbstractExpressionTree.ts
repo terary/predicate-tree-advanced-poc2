@@ -101,7 +101,20 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
       undefined,
       AbstractExpressionTree
     );
-
+    AbstractExpressionTree.validateTree(tree);
     return tree;
+  }
+
+  // *tmc* I don't think generics are necessary or even useful?
+  private static validateTree<T>(tree: ITree<T>) {
+    const allNodeIds = tree.getTreeNodeIdsAt(tree.rootNodeId);
+    allNodeIds.forEach((nodeId) => {
+      if (tree.isBranch(nodeId)) {
+        const childrenIds = tree.getChildrenNodeIds(nodeId);
+        if (childrenIds.length < 2) {
+          throw new Error("REPLACE - tree fails no-single-child rule.");
+        }
+      }
+    });
   }
 }

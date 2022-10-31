@@ -268,5 +268,17 @@ describe("AbstractExpressionTree", () => {
       expect(dTree.countTotalNodes()).toEqual(10);
       expect(subtree.countTotalNodes()).toEqual(4);
     });
+    it("Should validate/throw error if pojo contains tree that is invalid", () => {
+      const pojo = makePojo3Children9Grandchildren();
+      // @ts-ignore - can only delete optional
+      delete pojo["child_0_0"];
+      // @ts-ignore - can only delete optional
+      delete pojo["child_0_1"];
+
+      const willThrow = () => {
+        ClassTestAbstractExpressionTree.fromPojo(pojo);
+      };
+      expect(willThrow).toThrow(Error);
+    });
   });
 });
