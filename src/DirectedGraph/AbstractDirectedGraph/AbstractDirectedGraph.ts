@@ -58,6 +58,14 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return nodeId;
   }
 
+  public fromPojoAppendChildNodeWithContent(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<T>
+  ): string {
+    const nodeId = this._appendChildNodeWithContent(parentNodeId, nodeContent);
+    return nodeId;
+  }
+
   protected _appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>

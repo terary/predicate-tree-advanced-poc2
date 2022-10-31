@@ -16,10 +16,11 @@ interface ITreeVisitor<T> {
 
 interface ITree<T> {
   rootNodeId: string;
+
   appendChildNodeWithContent: (
     treeParentId: string,
     nodeContent: TGenericNodeContent<T>
-  ) => string;
+  ) => string; // why use arrow notation?
   cloneAt(nodeId: string): ITree<T>;
 
   countGreatestDepthOf(nodeId?: string): number;
@@ -28,10 +29,13 @@ interface ITree<T> {
   countTotalNodes(nodeId?: string): number;
 
   createSubGraphAt(nodeId: string): ITree<T>;
-
+  fromPojoAppendChildNodeWithContent(
+    treeParentId: string,
+    nodeContent: TGenericNodeContent<T>
+  ): string;
   // maybe null
   getChildContent(nodeId: string): TGenericNodeContent<T>;
-  getNodeAt(nodeId: string): TGenericNodeType<T> | undefined;
+  // getNodeAt(nodeId: string): TGenericNodeType<T> | undefined;
   getChildrenContent(nodeId: string): TGenericNodeContent<T>[];
   getChildrenNodeIds(parentNodeId: string): string[];
   getDescendantContent(nodeId: string): TGenericNodeContent<T>[];

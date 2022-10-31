@@ -27,6 +27,13 @@ class TreeObfuscator<T> implements ITree<T> {
     return this._keyMap.putValue(nodeId);
   }
 
+  fromPojoAppendChildNodeWithContent(
+    treeParentKey: string,
+    nodeContent: TGenericNodeContent<T>
+  ): string {
+    return this.appendChildNodeWithContent(treeParentKey, nodeContent);
+  }
+
   cloneAt(nodeKey: string): ITree<T> {
     const nodeId = this.getNodeIdOrThrow(nodeKey);
     return this._internalTree.cloneAt(nodeId);
@@ -79,10 +86,10 @@ class TreeObfuscator<T> implements ITree<T> {
     return nodeId;
   }
 
-  public getNodeAt(nodeKey: string): TGenericNodeType<T> | undefined {
-    const nodeId = this.getNodeId(nodeKey);
-    return this._internalTree.getNodeAt(nodeId);
-  }
+  // public getNodeAt(nodeKey: string): TGenericNodeType<T> | undefined {
+  //   const nodeId = this.getNodeId(nodeKey);
+  //   return this._internalTree.getNodeAt(nodeId);
+  // }
 
   getChildContent(nodeKey: string): TGenericNodeContent<T> {
     const nodeId = this.getNodeId(nodeKey);

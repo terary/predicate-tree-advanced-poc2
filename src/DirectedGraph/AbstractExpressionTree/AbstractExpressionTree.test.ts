@@ -4,24 +4,15 @@ import {
   makePojo3Children9Grandchildren,
   makePojo3Children,
   makePojo2Children1subtree9leaves,
+  SortPredicateTest,
 } from "./test-utilities";
-
-// import {
-//   WidgetSort,
-//   make3Children9GrandchildrenTreeAbstract,
-//   make3ChildrenSubgraph2Children,
-//   filterPojoContent,
-//   WidgetType,
-// } from "../test-helpers/test.utilities";
-
-type operatorTypes = "==" | "!=" | "<" | ">";
-
-type TJunction = "||" | "&&";
-type TOperand = {
-  subjectId: string;
-  operator: operatorTypes;
-  value: any;
-};
+import type {
+  TJunction,
+  TOperand,
+  TOperandOperators,
+  TPredicateNodeTypes,
+  TPredicateTypes,
+} from "./types";
 
 class ClassTestAbstractExpressionTree<T> extends AbstractExpressionTree<TOperand, TJunction> {}
 describe("AbstractExpressionTree", () => {
@@ -34,17 +25,17 @@ describe("AbstractExpressionTree", () => {
     it("Should split leaf into branch.", () => {
       const rootPredicate = {
         subjectId: "customers.root",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "root",
       };
       const childPredicate0 = {
         subjectId: "customers.child0",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child0",
       };
       const childPredicate1 = {
         subjectId: "customers.child1",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child1",
       };
       const dTree = new ClassTestAbstractExpressionTree();
@@ -61,17 +52,17 @@ describe("AbstractExpressionTree", () => {
     it("(appendContentWithOr) should have appendChildWithAnd, appendChildWithOr,", () => {
       const rootPredicate = {
         subjectId: "customers.root",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "root",
       };
       const childPredicate0 = {
         subjectId: "customers.child0",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child0",
       };
       const childPredicate1 = {
         subjectId: "customers.child1",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child1",
       };
 
@@ -96,17 +87,17 @@ describe("AbstractExpressionTree", () => {
     it("(appendContentWithAnd)should have appendChildWithAnd, appendChildWithOr,", () => {
       const rootPredicate = {
         subjectId: "customers.root",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "root",
       };
       const childPredicate0 = {
         subjectId: "customers.child0",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child0",
       };
       const childPredicate1 = {
         subjectId: "customers.child1",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child1",
       };
 
@@ -132,17 +123,17 @@ describe("AbstractExpressionTree", () => {
     it("(appendContentWith(And|Or))should have appendChildWithAnd, appendChildWithOr,", () => {
       const rootPredicate = {
         subjectId: "customers.root",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "root",
       };
       const childPredicate0 = {
         subjectId: "customers.child0",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child0",
       };
       const childPredicate1 = {
         subjectId: "customers.child1",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child1",
       };
 
@@ -168,37 +159,37 @@ describe("AbstractExpressionTree", () => {
     it("(appendContentWith(And|Or))should have appendChildWithAnd, appendChildWithOr,", () => {
       const rootPredicate = {
         subjectId: "customers.root",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "root",
       };
       const childPredicate_0 = {
         subjectId: "customers.child0",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child0",
       };
       const childPredicate_1 = {
         subjectId: "customers.child1",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child1",
       };
       const childPredicate_1_0 = {
         subjectId: "customers.child1_0",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child1_0",
       };
       const childPredicate_1_1 = {
         subjectId: "customers.child1_1",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child1_1",
       };
       const childPredicate_1_2 = {
         subjectId: "customers.child1_2",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child1_2",
       };
       const childPredicate_2 = {
         subjectId: "customers.child2",
-        operator: "==" as operatorTypes,
+        operator: "$eq" as TOperandOperators,
         value: "child2",
       };
 
@@ -228,9 +219,8 @@ describe("AbstractExpressionTree", () => {
     });
     it("Should support subtrees.", () => {
       const pojo = makePojo2Children1subtree9leaves();
-
+      const { content: OO } = makePojo2Children1subtree9leaves;
       const dTree = ClassTestAbstractExpressionTree.fromPojo(pojo);
-      const x = dTree.countTotalNodes();
       const childrenIds = dTree.getChildrenNodeIds(dTree.rootNodeId);
       expect(dTree.getChildContent(childrenIds[0])).toStrictEqual({ operator: "$or" });
 
@@ -238,6 +228,42 @@ describe("AbstractExpressionTree", () => {
       const subtree = dTree.getChildContent(
         subtreeIds[0]
       ) as unknown as ClassTestAbstractExpressionTree<TJunction | TOperand>;
+
+      const x = (dTree.getTreeContentAt(dTree.rootNodeId) as TPredicateTypes[]).sort(
+        SortPredicateTest
+      );
+      expect(
+        (dTree.getTreeContentAt(dTree.rootNodeId) as TPredicateTypes[]).sort(SortPredicateTest)
+      ).toStrictEqual(
+        (
+          [
+            { operator: "$and" },
+            { operator: "$or" },
+            { operator: "$or" },
+            { operator: "$or" },
+            OO["child_0_0"],
+            OO["child_0_1"],
+            OO["child_0_2"],
+            OO["child_2_0"],
+            OO["child_2_1"],
+            OO["child_2_2"],
+          ] as TPredicateTypes[]
+        ).sort(SortPredicateTest)
+      );
+      expect(
+        (subtree.getTreeContentAt(subtree.rootNodeId) as TPredicateTypes[]).sort(
+          SortPredicateTest
+        )
+      ).toStrictEqual(
+        (
+          [
+            { operator: "$or" },
+            OO["child_1_0"],
+            OO["child_1_1"],
+            OO["child_1_2"],
+          ] as TPredicateTypes[]
+        ).sort(SortPredicateTest)
+      );
 
       expect(dTree.countTotalNodes()).toEqual(10);
       expect(subtree.countTotalNodes()).toEqual(4);

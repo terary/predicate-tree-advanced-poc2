@@ -2,14 +2,13 @@ import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { ITree } from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 
-const junctionOperators = ["&&", "||", "$or", "$and"];
-
 interface IAppendChildNodeIds {
   newNodeId: string;
   originalContentNodeId?: string; // ONLY set if isNewBranch is true, represents where the content went
   junctionNodeId: string; // this will ALWAYS be the nodeId provided to append*(nodeId)
   isNewBranch: boolean;
 }
+
 export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedGraph<
   OPERAND | JUNCTION
 > {
@@ -82,10 +81,11 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
     // at this time, only *fromPojo is calling this function.
     // need to move traverse tree logic from utilities to
     // to static methods?
-    return this.appendChildNodeWithContentFromPojo(parentNodeId, nodeContent);
+    // return this.appendContentWithAnd(parentNodeId, nodeContent);
+    return this.fromPojoAppendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  public appendChildNodeWithContentFromPojo(
+  public fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<OPERAND | JUNCTION>
   ): string {
@@ -93,21 +93,6 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
       return super.appendChildNodeWithContent(parentNodeId, nodeContent);
     }
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
-
-    // const originalContent = this.getChildContent(parentNodeId);
-    // const originalContentId = super.appendChildNodeWithContent(parentNodeId, originalContent);
-
-    // let newNodeId;
-    // if (this.isBranchNodeContent(nodeContent)) {
-    //   this.replaceNodeContent(parentNodeId, nodeContent);
-    //   newNodeId = super.appendChildNodeWithContent(parentNodeId, null);
-    // } else {
-    //   this.replaceNodeContent(parentNodeId, null);
-    //   newNodeId = super.appendChildNodeWithContent(parentNodeId, nodeContent);
-    // }
-    // this.replaceNodeContent(parentNodeId, null);
-    // const newNodeId = super.appendChildNodeWithContent(parentNodeId, nodeContent);
-    // return newNodeId;
   }
 
   static fromPojo<T>(srcPojoTree: TTreePojo<T>): ITree<T> {
