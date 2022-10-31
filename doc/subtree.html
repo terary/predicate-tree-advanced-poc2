@@ -1,0 +1,47 @@
+<html>
+
+<head></head>
+
+<body>
+  <h3>Subtree</h3>
+  <section>
+    <p>
+      Subtree are extensions to the main tree.
+      The only requirement of a subtree is that it implements
+      <code>Itree<T></code> interface
+    </p>
+  </section>
+  <section>
+    <h4>Parent to Subtree relationship</h4>
+    <p style="color: yellow">
+      Need to figure-out
+    <ul>
+      <li>Visitors have option to descend subtree</li>
+      <li>Should observers of parent tree descend subtree?
+        <ul> suppose
+          <li>Subtree one node NOT</li>
+          <li>Subtree as atypical field (date range, postal address)</li>
+          <il>toPojo will have to descend children, that code is already there</il>
+
+        </ul>
+
+      </li>
+    </ul>
+    <span style="color:yellowgreen">
+      Definitely <code>getTreeContents()</code>
+      would not return only the parent node to subtree.
+      It will return all or none?
+    </span>
+    </p>
+  </section>
+  <section>
+    <h4>Subtree to parent relationship</h4>
+    <p>
+      Subtree is unaware it is a subtree.
+      All functions, methods, counts, logic, operate only on the subtree.
+
+    </p>
+  </section>
+</body>
+
+</html>
