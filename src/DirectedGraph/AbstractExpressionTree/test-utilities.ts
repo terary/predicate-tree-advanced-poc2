@@ -6,7 +6,7 @@ import type {
   TPredicateTypes,
 } from "./types";
 import { ITree } from "../ITree";
-
+import type { TGenericNodeContent } from "../types"; //<TPredicateNodeTypes>
 // type PredicateTypes = TOperand | TJunction;
 // type PredicateNodeTypes = TOperand | TJunction;
 
@@ -584,8 +584,8 @@ const isLeafPredicate = (p: TPredicateTypes) => {
 };
 
 const SortPredicateTest = (
-  predicate1: TPredicateNodeTypes | null,
-  predicate2: TPredicateNodeTypes | null
+  predicate1: TGenericNodeContent<TPredicateNodeTypes>,
+  predicate2: TGenericNodeContent<TPredicateNodeTypes>
 ) => {
   const p1 = predicate1 as TPredicateTypes;
   const p2 = predicate2 as TPredicateTypes;

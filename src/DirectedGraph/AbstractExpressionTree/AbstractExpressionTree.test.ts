@@ -14,8 +14,8 @@ import type {
   TPredicateNodeTypes,
   TPredicateTypes,
 } from "./types";
-
-class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TOperand, TJunction> {}
+import { ITree } from "../ITree";
+class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
 describe("AbstractExpressionTree", () => {
   describe(".appendChildNode(nodeId, content)", () => {
     // .appendChildNode(nodeId, content)
@@ -291,7 +291,7 @@ describe("AbstractExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(dTree);
+      } = make3Children2Subtree3Children(dTree as ITree<TPredicateTypes>);
 
       // pre conditions
       expect(

@@ -9,45 +9,32 @@ interface IAppendChildNodeIds {
   isNewBranch: boolean;
 }
 
-export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedGraph<
-  OPERAND | JUNCTION
-> {
-  constructor(rootNodeId = "_root_", nodeContent?: OPERAND | JUNCTION) {
+export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
+  constructor(rootNodeId = "_root_", nodeContent?: P) {
     super(rootNodeId, nodeContent);
   }
 
   public appendContentWithAnd(
     parentNodeId: string,
-    nodeContent: TGenericNodeContent<JUNCTION | OPERAND>
+    nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
-    return this.appendContentWithJunction(
-      parentNodeId,
-      "&&" as unknown as JUNCTION,
-      nodeContent
-    );
+    return this.appendContentWithJunction(parentNodeId, "&&" as unknown as P, nodeContent);
   }
 
   public appendContentWithOr(
     parentNodeId: string,
-    nodeContent: TGenericNodeContent<JUNCTION | OPERAND>
+    nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
-    return this.appendContentWithJunction(
-      parentNodeId,
-      "||" as unknown as JUNCTION,
-      nodeContent
-    );
+    return this.appendContentWithJunction(parentNodeId, "||" as unknown as P, nodeContent);
   }
 
   private appendContentWithJunction(
     parentNodeId: string,
-    junctionContent: TGenericNodeContent<JUNCTION>,
-    nodeContent: TGenericNodeContent<OPERAND | JUNCTION>
+    junctionContent: TGenericNodeContent<P>,
+    nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
     if (this.isBranch(parentNodeId)) {
-      super.replaceNodeContent(
-        parentNodeId,
-        junctionContent as TGenericNodeContent<OPERAND | JUNCTION>
-      );
+      super.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
       return {
         newNodeId: super.appendChildNodeWithContent(parentNodeId, nodeContent),
         originalContentNodeId: undefined,
@@ -58,10 +45,7 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
 
     const originalContent = this.getChildContentAt(parentNodeId);
     const originalContentId = super.appendChildNodeWithContent(parentNodeId, originalContent);
-    this.replaceNodeContent(
-      parentNodeId,
-      junctionContent as TGenericNodeContent<OPERAND | JUNCTION>
-    );
+    this.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
 
     // const newNodeId = super.appendChildNodeWithContent(parentNodeId, nodeContent);
     // return newNodeId;
@@ -75,7 +59,7 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
 
   public appendChildNodeWithContent(
     parentNodeId: string,
-    nodeContent: TGenericNodeContent<OPERAND | JUNCTION>
+    nodeContent: TGenericNodeContent<P>
   ): string {
     // at this time, only *fromPojo is calling this function.
     // need to move traverse tree logic from utilities to
@@ -86,7 +70,7 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
 
   public fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
-    nodeContent: TGenericNodeContent<OPERAND | JUNCTION>
+    nodeContent: TGenericNodeContent<P>
   ): string {
     if (this.isBranch(parentNodeId)) {
       return super.appendChildNodeWithContent(parentNodeId, nodeContent);
