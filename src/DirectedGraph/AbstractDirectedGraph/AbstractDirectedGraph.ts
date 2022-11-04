@@ -425,39 +425,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     this.removeSingleNode(fromNodeId);
   }
 
-  /**
-   * sourceNode becomes targetNode
-   * I think 'replace' tree maybe a better name.
-   * Not sure what we're suppose to accomplish but it looks like
-   *
-   * @param sourceNodeId
-   * @param targetNodeId
-   * @deprecated
-   */
-  public moveTree(sourceNodeId: string, targetNodeId: string): { from: string; to: string }[] {
-    const parentId = this.getParentNodeId(targetNodeId);
-    const newChildId = parentId;
-    const subtreeIds = this.getTreeNodeIdsAt(sourceNodeId);
-    const killList = this.getDescendantNodeIds(targetNodeId);
-
-    const mapFromTo = subtreeIds.map((descKey) => {
-      return { from: descKey, to: descKey.replace(sourceNodeId, newChildId) };
-    });
-
-    const mapFromToMap = subtreeIds.map((descKey) => {
-      return { [descKey]: descKey.replace(sourceNodeId, newChildId) };
-    });
-
-    mapFromTo.forEach(({ from, to }) => {
-      this.moveNode(from, to);
-    });
-
-    killList.forEach((killChild) => {
-      this.removeNodeAt(killChild);
-    });
-    return mapFromTo;
-  }
-
   public removeNodeAt(nodeId: string): void {
     if (this.isRoot(nodeId)) {
       throw new Error("CUSTOM ERROR - can not remove root node");
@@ -605,14 +572,10 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     const dTree = new TreeClass<T>(); // as AbstractDirectedGraph<T>;
 
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
-    // dTree._replaceNodeContent(dTree._rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
     AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
       dTree.rootNodeId, // rootNodeId -
-      // rootNodeId,
-      // dTree.rootNodeId === rootNodeId ? dTree.rootNodeId : rootNodeId,
-      // dTree._rootNodeId,
       rootNodeId,
       dTree,
       pojoObject,
@@ -649,7 +612,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
         workingPojoDocument[nodeId] = nodeContent;
       });
 
-      const content = nodeContent.getChildContentAt(nodeContent.rootNodeId);
       workingPojoDocument[currentNodeId] = {
         nodeType: AbstractDirectedGraph.SubGraphNodeTypeName,
         nodeContent: nodeContent.getChildContentAt(nodeContent.rootNodeId),
