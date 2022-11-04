@@ -49,7 +49,7 @@ interface ITree<T> {
   ): TGenericNodeContent<T>[];
   getParentNodeId(nodeId: string): string;
   getSiblingIds(nodeId: string): string[];
-  getSubgraphIdsAt(nodeId: string): string[];
+  getSubgraphIdsAt(nodeId?: string): string[];
   getTreeContentAt(nodeId: string, shouldIncludeSubtrees?: boolean): TGenericNodeContent<T>[];
 
   // nodeIds of subtrees doesn't make sense.  Internally the tree is different so

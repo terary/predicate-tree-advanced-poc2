@@ -310,7 +310,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
   public getSiblingIds(nodeId: string): string[] {
     if (this.isRoot(nodeId)) {
-      // because root points to itself
+      // parent of root is root, which causes this method to act oddly
       return [];
     }
 
@@ -318,15 +318,16 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     const childrenIds = this._getChildrenNodeIds(parentNodeId);
 
     const index = childrenIds.indexOf(nodeId);
+    /* istanbul ignore next - likely unnecessary check */
     if (index > -1) {
-      // only splice array when item is found
-      childrenIds.splice(index, 1); // 2nd parameter means remove one item only
+      // only splice array when item is found, and it should always be found.
+      childrenIds.splice(index, 1);
     }
 
     return childrenIds;
   }
 
-  public getSubgraphIdsAt(nodeId: string) {
+  public getSubgraphIdsAt(nodeId: string = this.rootNodeId) {
     const allNodeIds = this.getDescendantNodeIds(nodeId, true);
     const self = this;
     return allNodeIds.filter((nodeId: string) => {
@@ -474,8 +475,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
     if (visitor.includeSubtrees && content instanceof AbstractDirectedGraph) {
       content._visitAllAt(visitor);
-    } else if (!visitor.includeSubtrees && content instanceof AbstractDirectedGraph) {
-      // just ignore it
     } else {
       visitor.visit(nodeId, content, parentNodeId);
     }
@@ -545,7 +544,10 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
           transformer
         );
       } else {
-        const childId = dTree.appendChildNodeWithContent(treeParentId, transformer(nodePojo));
+        const childId = dTree.fromPojoAppendChildNodeWithContent(
+          treeParentId,
+          transformer(nodePojo)
+        );
         AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
           childId,
           nodeId,

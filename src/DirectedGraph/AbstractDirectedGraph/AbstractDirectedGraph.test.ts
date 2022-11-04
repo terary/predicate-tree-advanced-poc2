@@ -731,6 +731,7 @@ describe("AbstractDirectedGraph", () => {
       const { dTreeIds, dTree, subgraph } = make3ChildrenSubgraph2Children(
         new TestAbstractDirectedGraph() as ITree<WidgetType>
       );
+      const s = dTree.getSiblingIds(dTree.rootNodeId);
       expect(dTree.getSiblingIds(dTree.rootNodeId)).toStrictEqual([]);
 
       expect(dTree.getSiblingIds(dTreeIds["child_0"])).toStrictEqual([
@@ -771,14 +772,30 @@ describe("AbstractDirectedGraph", () => {
   });
   describe(".getSubgraphIdsAt()", () => {
     it("Should get an array of subgraph ids", () => {
-      const { dTreeIds, dTree, subgraph } = make3ChildrenSubgraph2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
-      );
+      const {
+        dTreeIds,
+        dTree,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
 
-      const subgraphIds = dTree.getSubgraphIdsAt(dTree.rootNodeId);
+      expect(dTree.getSubgraphIdsAt()).toStrictEqual([
+        dTreeIds["subtree0:root"],
+        dTreeIds["subtree1:root"],
+      ]);
 
-      expect(subgraphIds.length).toBe(1);
-      expect(subgraphIds[0]).toStrictEqual(subgraph.rootNodeId);
+      expect(dTree.getSubgraphIdsAt(dTree.rootNodeId)).toStrictEqual([
+        dTreeIds["subtree0:root"],
+        dTreeIds["subtree1:root"],
+      ]);
+      expect(dTree.getSubgraphIdsAt(dTreeIds["child_1"])).toStrictEqual([]);
+      // const { dTreeIds, dTree, subgraph } = make3ChildrenSubgraph2Children(
+      //   new TestAbstractDirectedGraph() as ITree<WidgetType>
+      // );
+      // const subgraphIds = dTree.getSubgraphIdsAt(dTree.rootNodeId);
+      // expect(subgraphIds.length).toBe(1);
+      // expect(subgraphIds[0]).toStrictEqual(subgraph.rootNodeId);
     });
   });
   describe("isFunctions", () => {
@@ -1374,6 +1391,8 @@ describe("AbstractDirectedGraph", () => {
       expect(dTree.getChildContentAt(dTree.rootNodeId)).toStrictEqual({ label: "root" });
 
       expect(dTree.countTotalNodes(dTree.rootNodeId)).toEqual(13);
+      expect(dTree.countTotalNodes()).toEqual(13);
+      expect(dTree.countTotalNodes(dTreeIds["child_0"])).toEqual(4);
 
       expect(dTree.getChildContentAt(dTreeIds["subtree0:root"])).toBe(subtree0);
 
