@@ -323,21 +323,5 @@ describe("AbstractExpressionTree", () => {
         dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));
     });
-    it("Should inherently remove subtrees along removed paths.", () => {
-      const dTree = new ClassTestAbstractExpressionTree();
-
-      const {
-        dTreeIds,
-        // dTree: dTree as ITree<TPredicateTypes>,
-        subtree0,
-        subtree1,
-        originalWidgets: OO,
-      } = make3Children2Subtree3Children(dTree);
-
-      const subgraphNew = dTree.createSubGraphAt(dTreeIds["child_0"]);
-
-      const subgraphIds = dTree.getSubgraphIdsAt(dTreeIds["child_0"]);
-      expect(subgraphNew).toStrictEqual([subgraphNew.rootNodeId]);
-    });
   });
 });
