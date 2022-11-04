@@ -54,7 +54,6 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
         junctionNodeId: parentNodeId,
         isNewBranch: false,
       };
-      // return super.appendChildNodeWithContent(parentNodeId, nodeContent);
     }
 
     const originalContent = this.getChildContentAt(parentNodeId);
@@ -103,6 +102,20 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
     );
     AbstractExpressionTree.validateTree(tree);
     return tree;
+  }
+
+  public removeNodeAt(nodeId: string): void {
+    const siblingIds = this.getSiblingIds(nodeId);
+    if (siblingIds.length > 1) {
+      return super.removeNodeAt(nodeId);
+    }
+    const parentId = this.getParentNodeId(nodeId);
+    const siblingContent = this.getChildContentAt(siblingIds[0]);
+
+    this.replaceNodeContent(parentId, siblingContent);
+
+    super.removeNodeAt(siblingIds[0]);
+    super.removeNodeAt(nodeId);
   }
 
   // *tmc* I don't think generics are necessary or even useful?

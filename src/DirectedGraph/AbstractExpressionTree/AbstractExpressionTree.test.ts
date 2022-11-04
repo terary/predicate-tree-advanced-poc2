@@ -1,6 +1,7 @@
 import { AbstractExpressionTree } from "./AbstractExpressionTree";
 import { DirectedGraphError } from "../DirectedGraphError";
 import {
+  make3Children2Subtree3Children,
   makePojo3Children9Grandchildren,
   makePojo3Children,
   makePojo2Children1subtree9leaves,
@@ -14,7 +15,7 @@ import type {
   TPredicateTypes,
 } from "./types";
 
-class ClassTestAbstractExpressionTree<T> extends AbstractExpressionTree<TOperand, TJunction> {}
+class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TOperand, TJunction> {}
 describe("AbstractExpressionTree", () => {
   describe(".appendChildNode(nodeId, content)", () => {
     // .appendChildNode(nodeId, content)
@@ -227,7 +228,7 @@ describe("AbstractExpressionTree", () => {
       const subtreeIds = dTree.getSubgraphIdsAt(dTree.rootNodeId);
       const subtree = dTree.getChildContentAt(
         subtreeIds[0]
-      ) as unknown as ClassTestAbstractExpressionTree<TJunction | TOperand>;
+      ) as unknown as ClassTestAbstractExpressionTree;
 
       const x = (dTree.getTreeContentAt(dTree.rootNodeId) as TPredicateTypes[]).sort(
         SortPredicateTest
@@ -278,6 +279,65 @@ describe("AbstractExpressionTree", () => {
         ClassTestAbstractExpressionTree.fromPojo(pojo);
       };
       expect(willThrow).toThrow(Error);
+    });
+  });
+  describe(".removeNodeAt", () => {
+    it("Should remove single node if not single child, elevate single child.", () => {
+      const dTree = new ClassTestAbstractExpressionTree();
+
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+      } = make3Children2Subtree3Children(dTree);
+
+      // pre conditions
+      expect(
+        dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [OO["child_0"], OO["child_0_0"], OO["child_0_1"], OO["child_0_2"]].sort(
+          SortPredicateTest
+        )
+      );
+      expect(dTree.countTotalNodes()).toBe(13);
+
+      // exercise 1, has 2 or more siblings
+      dTree.removeNodeAt(dTreeIds["child_0_0"]);
+
+      // post conditions 1
+      expect(dTree.countTotalNodes()).toBe(12);
+      expect(
+        dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [OO["child_0"], OO["child_0_1"], OO["child_0_2"]].sort(SortPredicateTest)
+      );
+
+      // exercise 2 - only 1 sibling
+      dTree.removeNodeAt(dTreeIds["child_0_1"]);
+
+      // post conditions 2
+      expect(dTree.countTotalNodes()).toBe(10);
+      expect(
+        dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));
+    });
+    it("Should inherently remove subtrees along removed paths.", () => {
+      const dTree = new ClassTestAbstractExpressionTree();
+
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+      } = make3Children2Subtree3Children(dTree);
+
+      const subgraphNew = dTree.createSubGraphAt(dTreeIds["child_0"]);
+
+      const subgraphIds = dTree.getSubgraphIdsAt(dTreeIds["child_0"]);
+      expect(subgraphNew).toStrictEqual([subgraphNew.rootNodeId]);
     });
   });
 });

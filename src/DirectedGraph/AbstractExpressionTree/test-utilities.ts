@@ -159,6 +159,229 @@ pojo2Children1subtree9leaves_content["child_2_2"] = {
   subjectId: "customer.child_2_2",
   value: "child_2_2",
 };
+// --------
+const make3Children2Subtree3Children = (dTree: ITree<TPredicateTypes>) => {
+  const dTreeIds: { [id: string]: string } = {};
+
+  dTree.replaceNodeContent(dTree.rootNodeId, originalWidgetsSubtree["root"]);
+
+  dTreeIds["root"] = dTree.rootNodeId;
+
+  //child0, subtree0, child1, subtree1, child2
+  dTreeIds["child_0"] = dTree.appendChildNodeWithContent(
+    dTree.rootNodeId,
+    originalWidgetsSubtree["child_0"]
+  );
+  // const subtree0 = dTree.createSubGraphAt(dTreeIds["child_0"]);
+  const subtree0 = dTree.createSubGraphAt(dTree.rootNodeId);
+  dTreeIds["subtree0:root"] = subtree0.rootNodeId;
+  subtree0.replaceNodeContent(subtree0.rootNodeId, originalWidgetsSubtree["subtree0:root"]);
+
+  dTreeIds["child_1"] = dTree.appendChildNodeWithContent(
+    dTree.rootNodeId,
+    originalWidgetsSubtree["child_1"]
+  );
+
+  const subtree1 = dTree.createSubGraphAt(dTree.rootNodeId);
+  dTreeIds["subtree1:root"] = subtree1.rootNodeId;
+  subtree1.replaceNodeContent(subtree1.rootNodeId, originalWidgetsSubtree["subtree1:root"]);
+
+  dTreeIds["child_2"] = dTree.appendChildNodeWithContent(
+    dTree.rootNodeId,
+    originalWidgetsSubtree["child_2"]
+  );
+
+  /// --- children of child0
+  dTreeIds["child_0_0"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_0"],
+    originalWidgetsSubtree["child_0_0"]
+  );
+
+  dTreeIds["child_0_1"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_0"],
+    originalWidgetsSubtree["child_0_1"]
+  );
+
+  dTreeIds["child_0_2"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_0"],
+    originalWidgetsSubtree["child_0_2"]
+  );
+
+  /// --- children of subtree0
+  dTreeIds["subtree0:child_0"] = subtree0.appendChildNodeWithContent(
+    dTreeIds["subtree0:root"],
+    originalWidgetsSubtree["subtree0:child_0"]
+  );
+
+  dTreeIds["subtree0:child_1"] = subtree0.appendChildNodeWithContent(
+    dTreeIds["subtree0:root"],
+    originalWidgetsSubtree["subtree0:child_1"]
+  );
+
+  dTreeIds["subtree0:child_2"] = subtree0.appendChildNodeWithContent(
+    dTreeIds["subtree0:root"],
+    originalWidgetsSubtree["subtree0:child_2"]
+  );
+
+  /// --- children of child_1
+  dTreeIds["child_1_0"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_1"],
+    originalWidgetsSubtree["child_1_0"]
+  );
+  dTreeIds["child_1_1"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_1"],
+    originalWidgetsSubtree["child_1_1"]
+  );
+  dTreeIds["child_1_2"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_1"],
+    originalWidgetsSubtree["child_1_2"]
+  );
+
+  /// --- children of subtree1
+  dTreeIds["subtree1:child_0"] = subtree1.appendChildNodeWithContent(
+    dTreeIds["subtree1:root"],
+    originalWidgetsSubtree["subtree1:child_0"]
+  );
+  dTreeIds["subtree1:child_1"] = subtree1.appendChildNodeWithContent(
+    dTreeIds["subtree1:root"],
+    originalWidgetsSubtree["subtree1:child_1"]
+  );
+
+  dTreeIds["subtree1:child_2"] = subtree1.appendChildNodeWithContent(
+    dTreeIds["subtree1:root"],
+    originalWidgetsSubtree["subtree1:child_2"]
+  );
+
+  // --- children of child_2
+  dTreeIds["child_2_0"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_2"],
+    originalWidgetsSubtree["child_2_0"]
+  );
+  dTreeIds["child_2_1"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_2"],
+    originalWidgetsSubtree["child_2_1"]
+  );
+  dTreeIds["child_2_2"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_2"],
+    originalWidgetsSubtree["child_2_2"]
+  );
+
+  // *tmc* good check to have, but gums up debugging
+  // expect(dTree.countTotalNodes()).toEqual(5);
+
+  return {
+    dTreeIds,
+    dTree: dTree as ITree<TPredicateTypes>,
+    subtree0: subtree0 as ITree<TPredicateTypes>,
+    subtree1: subtree1 as ITree<TPredicateTypes>,
+    originalWidgets: originalWidgetsSubtree,
+  };
+};
+
+const originalWidgetsSubtree: { [nodeId: string]: TPredicateTypes } = {
+  root: {
+    operator: "$and",
+  },
+  child_0: {
+    operator: "$or",
+  },
+  child_0_0: {
+    operator: "$eq",
+    subjectId: "customer.child_0_0",
+    value: "child_0_0",
+  },
+  child_0_1: {
+    operator: "$eq",
+    subjectId: "customer.child_0_1",
+    value: "child_0_0",
+  },
+  child_0_2: {
+    operator: "$eq",
+    subjectId: "customer.child_0_2",
+    value: "child_0_0",
+  },
+
+  child_1: {
+    operator: "$or",
+  },
+
+  child_1_0: {
+    operator: "$eq",
+    subjectId: "customer.child_1_0",
+    value: "child_1_0",
+  },
+  child_1_1: {
+    operator: "$eq",
+    subjectId: "customer.child_1_1",
+    value: "child_1_0",
+  },
+  child_1_2: {
+    operator: "$eq",
+    subjectId: "customer.child_1_2",
+    value: "child_1_0",
+  },
+
+  child_2: {
+    operator: "$or",
+  },
+  child_2_0: {
+    operator: "$eq",
+    subjectId: "customer.child_2_0",
+    value: "child_2_0",
+  },
+  child_2_1: {
+    operator: "$eq",
+    subjectId: "customer.child_2_1",
+    value: "child_2_0",
+  },
+  child_2_2: {
+    operator: "$eq",
+    subjectId: "customer.child_2_2",
+    value: "child_2_0",
+  },
+
+  "subtree0:root": {
+    operator: "$and",
+    //    label: "subtree0:root",
+  },
+
+  "subtree0:child_0": {
+    operator: "$eq",
+    subjectId: "customer.subtree0:child_0",
+    value: "subtree0:child_0",
+  },
+  "subtree0:child_1": {
+    operator: "$eq",
+    subjectId: "customer.subtree0:child_1",
+    value: "subtree0:child_1",
+  },
+  "subtree0:child_2": {
+    operator: "$eq",
+    subjectId: "customer.subtree0:child_2",
+    value: "subtree0:child_2",
+  },
+
+  "subtree1:root": {
+    operator: "$or",
+    // label: "subtree1:root",
+  },
+  "subtree1:child_0": {
+    operator: "$eq",
+    subjectId: "customer.subtree1:child_0",
+    value: "subtree1:child_0",
+  },
+  "subtree1:child_1": {
+    operator: "$eq",
+    subjectId: "customer.subtree1:child_1",
+    value: "subtree1:child_1",
+  },
+  "subtree1:child_2": {
+    operator: "$eq",
+    subjectId: "customer.subtree1:child_2",
+    value: "subtree1:child_2",
+  },
+};
+Object.freeze(originalWidgetsSubtree);
 
 // --------
 const makePojo2Children1subtree9leaves_content = {
@@ -398,6 +621,7 @@ const SortPredicateTest = (
 };
 
 export {
+  make3Children2Subtree3Children, // don't know why the 'as' is necessary
   makePojo3Children9Grandchildren,
   makePojo3Children,
   makePojo2Children1subtree9leaves,
