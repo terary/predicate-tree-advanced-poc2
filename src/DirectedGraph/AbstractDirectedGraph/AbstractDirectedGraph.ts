@@ -277,8 +277,8 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
   private getNewInstance(rootNodeId: string) {
     // used by createSubGraph to be flexible with actual constructor type
 
-    // @ts-ignore - function not constructable
     // can we rethink this.  Is there a better way?
+    // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
     return new this.constructor(rootNodeId) as typeof this;
   }
 
@@ -570,7 +570,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
     const rootNodePojo = pojoObject[rootNodeId];
 
-    // @ts-ignore - new' expression, whose target lacks a construct signature, implicitly has an 'any' type.
+    // @ts-ignore - expression is not newable, I think ok in js, not ts
     const dTree = new TreeClass<T>(); // as AbstractDirectedGraph<T>;
 
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
