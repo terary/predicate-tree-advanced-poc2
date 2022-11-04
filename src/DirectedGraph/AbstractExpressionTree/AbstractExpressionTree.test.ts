@@ -107,7 +107,7 @@ describe("AbstractExpressionTree", () => {
 
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate1);
-      expect(dTree.getChildContent(dTree.rootNodeId)).toEqual("&&");
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual("&&");
       //appendContentWithOr
       expect(dTree.getCountTotalNodes()).toBe(4);
 
@@ -139,20 +139,20 @@ describe("AbstractExpressionTree", () => {
 
       //      appendContentWithOr
       const dTree = new ClassTestAbstractExpressionTree();
-      expect(dTree.getChildContent(dTree.rootNodeId)).toBeNull();
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toBeNull();
 
       dTree.replaceNodeContent(dTree.rootNodeId, rootPredicate);
-      expect(dTree.getChildContent(dTree.rootNodeId)).toStrictEqual(rootPredicate);
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toStrictEqual(rootPredicate);
 
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
-      expect(dTree.getChildContent(dTree.rootNodeId)).toEqual("&&");
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual("&&");
 
       dTree.appendContentWithOr(dTree.rootNodeId, childPredicate1);
-      expect(dTree.getChildContent(dTree.rootNodeId)).toEqual("||");
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual("||");
 
       // and back-again
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
-      expect(dTree.getChildContent(dTree.rootNodeId)).toEqual("&&");
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual("&&");
 
       expect(dTree.getCountTotalNodes()).toBe(5);
     });
@@ -221,11 +221,11 @@ describe("AbstractExpressionTree", () => {
       const pojo = makePojo2Children1subtree9leaves();
       const { content: OO } = makePojo2Children1subtree9leaves;
       const dTree = ClassTestAbstractExpressionTree.fromPojo(pojo);
-      const childrenIds = dTree.getChildrenNodeIds(dTree.rootNodeId);
-      expect(dTree.getChildContent(childrenIds[0])).toStrictEqual({ operator: "$or" });
+      const childrenIds = dTree.getChildrenNodeIdsOf(dTree.rootNodeId);
+      expect(dTree.getChildContentAt(childrenIds[0])).toStrictEqual({ operator: "$or" });
 
       const subtreeIds = dTree.getSubgraphIdsAt(dTree.rootNodeId);
-      const subtree = dTree.getChildContent(
+      const subtree = dTree.getChildContentAt(
         subtreeIds[0]
       ) as unknown as ClassTestAbstractExpressionTree<TJunction | TOperand>;
 
@@ -238,7 +238,6 @@ describe("AbstractExpressionTree", () => {
         (
           [
             { operator: "$and" },
-            { operator: "$or" },
             { operator: "$or" },
             { operator: "$or" },
             OO["child_0_0"],
@@ -265,7 +264,7 @@ describe("AbstractExpressionTree", () => {
         ).sort(SortPredicateTest)
       );
 
-      expect(dTree.countTotalNodes()).toEqual(10);
+      expect(dTree.countTotalNodes()).toEqual(9);
       expect(subtree.countTotalNodes()).toEqual(4);
     });
     it("Should validate/throw error if pojo contains tree that is invalid", () => {

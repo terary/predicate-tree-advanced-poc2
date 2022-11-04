@@ -12,8 +12,6 @@ import {
   filterPojoContent,
   WidgetType,
 } from "../test-helpers/test.utilities";
-import { defaultTo } from "lodash";
-import { Http2ServerRequest } from "http2";
 
 class TestAbstractDirectedGraph extends AbstractDirectedGraph<WidgetType> {
   public getParentNodeId(nodeId: string): string {
