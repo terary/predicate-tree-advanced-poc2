@@ -57,7 +57,7 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
       // return super.appendChildNodeWithContent(parentNodeId, nodeContent);
     }
 
-    const originalContent = this.getChildContent(parentNodeId);
+    const originalContent = this.getChildContentAt(parentNodeId);
     const originalContentId = super.appendChildNodeWithContent(parentNodeId, originalContent);
     this.replaceNodeContent(
       parentNodeId,
@@ -110,7 +110,7 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
     const allNodeIds = tree.getTreeNodeIdsAt(tree.rootNodeId);
     allNodeIds.forEach((nodeId) => {
       if (tree.isBranch(nodeId)) {
-        const childrenIds = tree.getChildrenNodeIds(nodeId);
+        const childrenIds = tree.getChildrenNodeIdsOf(nodeId);
         if (childrenIds.length < 2) {
           throw new Error("REPLACE - tree fails no-single-child rule.");
         }

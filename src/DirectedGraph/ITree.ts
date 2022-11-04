@@ -3,16 +3,18 @@ interface ITreeVisitor<T> {
   visit: (nodeId: string, nodeContent: TGenericNodeContent<T>, parentId: string) => void;
   includeSubtrees: boolean;
 }
+/*
+At/Of convention
+Basically At includes
+but dTree.getChildContent(dTreeIds["subtree0:root"])
+returns the subtree 
+is the different here - 
+getChildContent[Of] vs  getChildrenContent[At]
 
-// type TGenericNodeContent<T> = null | T | ITree<T>;
-// type InternalNodeType<T> = {
-//   nodeContent: T | null | ITree<T>;
-// };
-
-// type TGenericNodeContent<T> = null | T | ITree<T>;
-// type TGenericNodeType<T> = {
-//   nodeContent: TGenericNodeContent<T>;
-// };
+if you think of a triangle of 3 dots 
+getChild[At] take the top dot.
+getChildren[Of] takes the 2 bottom dots
+*/
 
 interface ITree<T> {
   rootNodeId: string;
@@ -34,15 +36,24 @@ interface ITree<T> {
     nodeContent: TGenericNodeContent<T>
   ): string;
   // maybe null
-  getChildContent(nodeId: string): TGenericNodeContent<T>;
+  getChildContentAt(nodeId: string): TGenericNodeContent<T>;
   // getNodeAt(nodeId: string): TGenericNodeType<T> | undefined;
-  getChildrenContent(nodeId: string): TGenericNodeContent<T>[];
-  getChildrenNodeIds(parentNodeId: string): string[];
-  getDescendantContent(nodeId: string): TGenericNodeContent<T>[];
+  getChildrenContentOf(
+    nodeId: string,
+    shouldIncludeSubtrees?: boolean
+  ): TGenericNodeContent<T>[];
+  getChildrenNodeIdsOf(parentNodeId: string, shouldIncludeSubtrees?: boolean): string[];
+  getDescendantContentOf(
+    nodeId: string,
+    shouldIncludeSubtrees?: boolean
+  ): TGenericNodeContent<T>[];
   getParentNodeId(nodeId: string): string;
   getSiblingIds(nodeId: string): string[];
-  getSubgraphIdsAt(nodeId: string): string[];
-  getTreeContentAt(nodeId: string): TGenericNodeContent<T>[];
+  getSubgraphIdsAt(nodeId?: string): string[];
+  getTreeContentAt(nodeId: string, shouldIncludeSubtrees?: boolean): TGenericNodeContent<T>[];
+
+  // nodeIds of subtrees doesn't make sense.  Internally the tree is different so
+  // subtree nodeIds won't be accessible to parent tree
   getTreeNodeIdsAt(nodeId: string): string[];
 
   isBranch(nodeId: string): boolean;
@@ -51,6 +62,7 @@ interface ITree<T> {
   isSubtree(nodeId: string): boolean;
   move(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
   moveChildren(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
+  // moveTree(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
   replaceNodeContent(nodeId: string, nodeContent: TGenericNodeContent<T>): void;
   removeNodeAt(nodeId: string): void;
   toPojo(): TTreePojo<T>;
