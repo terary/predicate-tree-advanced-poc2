@@ -26,7 +26,7 @@ const make3ChildrenSubgraph2Children = (dTree: ITree<WidgetType>) => {
   );
 
   const subgraph = dTree.createSubGraphAt(dTreeIds["child_1"]);
-
+  dTreeIds["child_1:subgraph_root"] = subgraph.rootNodeId;
   subgraph.replaceNodeContent(subgraph.rootNodeId, { label: "subgraph:root" });
   dTreeIds["child_1:subgraph_0"] = subgraph.appendChildNodeWithContent(subgraph.rootNodeId, {
     label: "child_1:subgraph_0",
@@ -42,6 +42,123 @@ const make3ChildrenSubgraph2Children = (dTree: ITree<WidgetType>) => {
     dTreeIds,
     dTree: dTree as ITree<WidgetType>,
     subgraph: subgraph as ITree<WidgetType>,
+  };
+};
+
+const make3Children2Subtree3Children = (dTree: ITree<WidgetType>) => {
+  const dTreeIds: { [id: string]: string } = {};
+  dTree.replaceNodeContent(dTree.rootNodeId, { label: "root" });
+
+  dTreeIds["root"] = dTree.rootNodeId;
+
+  //child0, subtree0, child1, subtree1, child2
+  dTreeIds["child_0"] = dTree.appendChildNodeWithContent(
+    dTree.rootNodeId,
+    originalWidgetsSubtree["child_0"]
+  );
+  // const subtree0 = dTree.createSubGraphAt(dTreeIds["child_0"]);
+  const subtree0 = dTree.createSubGraphAt(dTree.rootNodeId);
+  dTreeIds["subtree0:root"] = subtree0.rootNodeId;
+  subtree0.replaceNodeContent(subtree0.rootNodeId, originalWidgetsSubtree["subtree0:root"]);
+
+  dTreeIds["child_1"] = dTree.appendChildNodeWithContent(
+    dTree.rootNodeId,
+    originalWidgetsSubtree["child_1"]
+  );
+
+  const subtree1 = dTree.createSubGraphAt(dTree.rootNodeId);
+  dTreeIds["subtree1:root"] = subtree1.rootNodeId;
+  subtree1.replaceNodeContent(subtree1.rootNodeId, originalWidgetsSubtree["subtree1:root"]);
+
+  dTreeIds["child_2"] = dTree.appendChildNodeWithContent(
+    dTree.rootNodeId,
+    originalWidgetsSubtree["child_2"]
+  );
+
+  /// --- children of child0
+  dTreeIds["child_0_0"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_0"],
+    originalWidgetsSubtree["child_0_0"]
+  );
+
+  dTreeIds["child_0_1"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_0"],
+    originalWidgetsSubtree["child_0_1"]
+  );
+
+  dTreeIds["child_0_2"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_0"],
+    originalWidgetsSubtree["child_0_2"]
+  );
+
+  /// --- children of subtree0
+  dTreeIds["subtree0:child_0"] = subtree0.appendChildNodeWithContent(
+    dTreeIds["subtree0:root"],
+    originalWidgetsSubtree["subtree0:child_0"]
+  );
+
+  dTreeIds["subtree0:child_1"] = subtree0.appendChildNodeWithContent(
+    dTreeIds["subtree0:root"],
+    originalWidgetsSubtree["subtree0:child_1"]
+  );
+
+  dTreeIds["subtree0:child_2"] = subtree0.appendChildNodeWithContent(
+    dTreeIds["subtree0:root"],
+    originalWidgetsSubtree["subtree0:child_2"]
+  );
+
+  /// --- children of child_1
+  dTreeIds["child_1_0"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_1"],
+    originalWidgetsSubtree["child_1_0"]
+  );
+  dTreeIds["child_1_1"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_1"],
+    originalWidgetsSubtree["child_1_1"]
+  );
+  dTreeIds["child_1_2"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_1"],
+    originalWidgetsSubtree["child_1_2"]
+  );
+
+  /// --- children of subtree1
+  dTreeIds["subtree1:child_0"] = subtree1.appendChildNodeWithContent(
+    dTreeIds["subtree1:root"],
+    originalWidgetsSubtree["subtree1:child_0"]
+  );
+  dTreeIds["subtree1:child_1"] = subtree1.appendChildNodeWithContent(
+    dTreeIds["subtree1:root"],
+    originalWidgetsSubtree["subtree1:child_1"]
+  );
+
+  dTreeIds["subtree1:child_2"] = subtree1.appendChildNodeWithContent(
+    dTreeIds["subtree1:root"],
+    originalWidgetsSubtree["subtree1:child_2"]
+  );
+
+  // --- children of child_2
+  dTreeIds["child_2_0"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_2"],
+    originalWidgetsSubtree["child_2_0"]
+  );
+  dTreeIds["child_2_1"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_2"],
+    originalWidgetsSubtree["child_2_1"]
+  );
+  dTreeIds["child_2_2"] = dTree.appendChildNodeWithContent(
+    dTreeIds["child_2"],
+    originalWidgetsSubtree["child_2_2"]
+  );
+
+  // *tmc* good check to have, but gums up debugging
+  // expect(dTree.countTotalNodes()).toEqual(5);
+
+  return {
+    dTreeIds,
+    dTree: dTree as ITree<WidgetType>,
+    subtree0: subtree0 as ITree<WidgetType>,
+    subtree1: subtree1 as ITree<WidgetType>,
+    originalWidgets: originalWidgetsSubtree,
   };
 };
 
@@ -170,6 +287,81 @@ const originalWidgets = {
   },
 };
 Object.freeze(originalWidgets);
+
+const originalWidgetsSubtree = {
+  root: {
+    label: "root",
+  },
+  child_0: {
+    label: "child_0",
+  },
+  child_0_0: {
+    label: "child_0_0",
+  },
+
+  child_0_1: {
+    label: "child_0_1",
+  },
+  child_0_2: {
+    label: "child_0_2",
+  },
+
+  child_1: {
+    label: "child_1",
+  },
+
+  child_1_0: {
+    label: "child_1_0",
+  },
+  child_1_1: {
+    label: "child_1_1",
+  },
+  child_1_2: {
+    label: "child_1_2",
+  },
+
+  child_2: {
+    label: "child_2",
+  },
+  child_2_0: {
+    label: "child_2_0",
+  },
+  child_2_1: {
+    label: "child_2_1",
+  },
+  child_2_2: {
+    label: "child_2_2",
+  },
+
+  "subtree0:root": {
+    label: "subtree0:root",
+  },
+
+  "subtree0:child_0": {
+    label: "subtree0:child_0",
+  },
+  "subtree0:child_1": {
+    label: "subtree0:child_1",
+  },
+  "subtree0:child_2": {
+    label: "subtree0:child_2",
+  },
+
+  "subtree1:root": {
+    label: "subtree1:root",
+  },
+  "subtree1:child_0": {
+    label: "subtree1:child_0",
+  },
+  "subtree1:child_1": {
+    label: "subtree1:child_1",
+  },
+  "subtree1:child_2": {
+    label: "subtree1:child_2",
+  },
+};
+Object.freeze(originalWidgetsSubtree);
+
 const WidgetSort = (a: any, b: any) => {
   if (a === null || b === null) {
     return 0;
@@ -199,6 +391,7 @@ export {
   make3Children9GrandchildrenTree,
   make3Children9GrandchildrenTreeAbstract,
   make3ChildrenSubgraph2Children,
+  make3Children2Subtree3Children,
   WidgetSort,
   WidgetType,
 };

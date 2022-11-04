@@ -1,8 +1,12 @@
 import { AbstractDirectedGraph } from "../../DirectedGraph/AbstractDirectedGraph";
 import { ITree } from "../../DirectedGraph/ITree";
 import { TGenericNodeContent } from "../../DirectedGraph/types";
-import type { PredicateNodeTypes, PredicateTypes, LeafType } from "../TreeObfuscator.test";
-import { TreeObfuscator } from "../TreeObfuscator";
+import type {
+  PredicateNodeTypes,
+  PredicateTypes,
+  LeafType,
+} from "../TreeObfuscator.test.ts.hidden";
+import { TreeObfuscator } from "../TreeObfuscator.ts.hidden";
 class ExtAbstractTestClass extends TreeObfuscator<PredicateTypes> {}
 
 const make3Children9GrandchildrenTreeAbstract = (dTree: ExtAbstractTestClass) => {
