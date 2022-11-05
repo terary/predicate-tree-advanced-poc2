@@ -2,6 +2,10 @@ import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { ITree } from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 
+const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
+  return nodeContent.nodeContent;
+};
+
 interface IAppendChildNodeIds {
   newNodeId: string;
   originalContentNodeId?: string; // ONLY set if isNewBranch is true, represents where the content went
@@ -27,6 +31,12 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
   ): IAppendChildNodeIds {
     return this.appendContentWithJunction(parentNodeId, "||" as unknown as P, nodeContent);
   }
+  private getChildrenWithNullValues(parentNodeId: string): string[] {
+    const childrenIds = this.getChildrenNodeIdsOf(parentNodeId);
+    return childrenIds.filter((childId) => {
+      return this.getChildContentAt(childId) === null;
+    });
+  }
 
   private appendContentWithJunction(
     parentNodeId: string,
@@ -35,8 +45,16 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
   ): IAppendChildNodeIds {
     if (this.isBranch(parentNodeId)) {
       super.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
+      const nullValueChildren = this.getChildrenWithNullValues(parentNodeId);
+      let newNodeId;
+      if (nullValueChildren.length > 0) {
+        newNodeId = nullValueChildren[0];
+        super.replaceNodeContent(newNodeId, nodeContent);
+      } else {
+        newNodeId = super.appendChildNodeWithContent(parentNodeId, nodeContent);
+      }
       return {
-        newNodeId: super.appendChildNodeWithContent(parentNodeId, nodeContent),
+        newNodeId,
         originalContentNodeId: undefined,
         junctionNodeId: parentNodeId,
         isNewBranch: false,
@@ -77,15 +95,34 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     }
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
-
-  static fromPojo<T>(srcPojoTree: TTreePojo<T>): ITree<T> {
+  static fromPojo2<P>(
+    srcPojoTree: TTreePojo<P>,
+    transform = defaultFromPojoTransform,
+    classConstructor: Function
+  ): AbstractExpressionTree<P> {
     const tree = AbstractDirectedGraph.fromPojo(
       srcPojoTree,
-      undefined,
+      transform,
+      // undefined,
+      classConstructor
+      // AbstractExpressionTree
+    );
+    AbstractExpressionTree.validateTree(tree);
+    return tree as AbstractExpressionTree<P>;
+  }
+
+  static fromPojo<P>(
+    srcPojoTree: TTreePojo<P>,
+    transform = defaultFromPojoTransform
+  ): AbstractExpressionTree<P> {
+    const tree = AbstractDirectedGraph.fromPojo(
+      srcPojoTree,
+      transform,
+      // undefined,
       AbstractExpressionTree
     );
     AbstractExpressionTree.validateTree(tree);
-    return tree;
+    return tree as AbstractExpressionTree<P>;
   }
 
   public removeNodeAt(nodeId: string): void {

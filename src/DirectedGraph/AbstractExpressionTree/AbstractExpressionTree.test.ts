@@ -14,6 +14,17 @@ import type {
   TPredicateNodeTypes,
   TPredicateTypes,
 } from "./types";
+`
+the single subtree node idea wont work, nor do we want it to work.
+
+Things like getChildren.. become difficult to understand.
+
+Using subtree for *not* operation will require predicates to go inside the tree,
+which makes getChildren a little odd but it's easier understood and implement
+
+
+`;
+
 import { ITree } from "../ITree";
 class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
 describe("AbstractExpressionTree", () => {
@@ -46,11 +57,50 @@ describe("AbstractExpressionTree", () => {
       dTree.appendChildNodeWithContent(dTree.rootNodeId, childPredicate0);
       dTree.appendChildNodeWithContent(dTree.rootNodeId, childPredicate1);
       //appendContentWithOr
+      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
+        [rootPredicate, childPredicate0, childPredicate1].sort(SortPredicateTest)
+      );
+
       expect(dTree.getCountTotalNodes()).toBe(3);
     });
   });
   describe(".appendChildNodeWith[Junction](nodeId, content)", () => {
-    it("(appendContentWithOr) should have appendChildWithAnd, appendChildWithOr,", () => {
+    it("(.appendContentWithOr) should have appendChildWithAnd, appendChildWithOr,", () => {
+      const rootPredicate = {
+        subjectId: "customers.root",
+        operator: "$eq" as TOperandOperators,
+        value: "root",
+      };
+      const childPredicate0 = {
+        subjectId: "customers.child0",
+        operator: "$eq" as TOperandOperators,
+        value: "child0",
+      };
+      const childPredicate1 = {
+        subjectId: "customers.child1",
+        operator: "$eq" as TOperandOperators,
+        value: "child1",
+      };
+
+      const dTree = new ClassTestAbstractExpressionTree();
+      dTree.replaceNodeContent(dTree.rootNodeId, rootPredicate);
+      expect(dTree.getCountTotalNodes()).toBe(1);
+
+      dTree.appendContentWithOr(dTree.rootNodeId, childPredicate0);
+      dTree.appendContentWithOr(dTree.rootNodeId, childPredicate1);
+      //appendContentWithOr
+      expect(dTree.getCountTotalNodes()).toBe(4);
+
+      `
+      appendChildWithJunction(nodeId, [junctionOperator], exp0, exp1, ...)
+        The rules will be
+          - if nodeId is leaf, create branch (as current), set junction to given junction
+          - if nodeId is branch, overwrite junction operator with given operator
+
+          Should consider *not* exposes appendChildWithContent
+      `;
+    });
+    it("(.appendContentWith[Junction]) should deplore children with null value.", () => {
       const rootPredicate = {
         subjectId: "customers.root",
         operator: "$eq" as TOperandOperators,
