@@ -22,14 +22,22 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
-    return this.appendContentWithJunction(parentNodeId, "&&" as unknown as P, nodeContent);
+    return this.appendContentWithJunction(
+      parentNodeId,
+      { operator: "$and" } as unknown as P,
+      nodeContent
+    );
   }
 
   public appendContentWithOr(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
-    return this.appendContentWithJunction(parentNodeId, "||" as unknown as P, nodeContent);
+    return this.appendContentWithJunction(
+      parentNodeId,
+      { operator: "$and" } as unknown as P,
+      nodeContent
+    );
   }
   private getChildrenWithNullValues(parentNodeId: string): string[] {
     const childrenIds = this.getChildrenNodeIdsOf(parentNodeId);
@@ -95,6 +103,7 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     }
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
+
   static fromPojo2<P>(
     srcPojoTree: TTreePojo<P>,
     transform = defaultFromPojoTransform,
@@ -140,7 +149,7 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
   }
 
   // *tmc* I don't think generics are necessary or even useful?
-  private static validateTree<T>(tree: ITree<T>) {
+  protected static validateTree<T>(tree: ITree<T>) {
     const allNodeIds = tree.getTreeNodeIdsAt(tree.rootNodeId);
     allNodeIds.forEach((nodeId) => {
       if (tree.isBranch(nodeId)) {
