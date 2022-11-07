@@ -589,6 +589,17 @@ const SortPredicateTest = (
 ) => {
   const p1 = predicate1 as TPredicateTypes;
   const p2 = predicate2 as TPredicateTypes;
+
+  if (p1 === null && p2 !== null) {
+    return 1;
+  }
+  if (p1 !== null && p2 === null) {
+    return -1;
+  }
+  if (p1 === null && p2 === null) {
+    return 0;
+  }
+
   if (isBranchPredicate(p1) && isBranchPredicate(p2)) {
     if (p1.operator > p2.operator) {
       return 1;

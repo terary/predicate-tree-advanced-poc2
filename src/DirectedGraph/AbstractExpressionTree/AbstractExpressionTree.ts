@@ -35,7 +35,7 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
   ): IAppendChildNodeIds {
     return this.appendContentWithJunction(
       parentNodeId,
-      { operator: "$and" } as unknown as P,
+      { operator: "$or" } as unknown as P,
       nodeContent
     );
   }

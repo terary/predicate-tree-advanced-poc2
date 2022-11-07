@@ -26,6 +26,7 @@ which makes getChildren a little odd but it's easier understood and implement
 `;
 
 import { ITree } from "../ITree";
+import { PredicateTreeJs } from "../../../dev-debug/PredicateTreeJs/PredicateTreeJs";
 class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
 describe("AbstractExpressionTree", () => {
   describe(".appendChildNode(nodeId, content)", () => {
@@ -122,18 +123,63 @@ describe("AbstractExpressionTree", () => {
       expect(dTree.getCountTotalNodes()).toBe(1);
 
       dTree.appendContentWithOr(dTree.rootNodeId, childPredicate0);
+
+      expect(dTree.getTreeContentAt(dTree.rootNodeId)).toStrictEqual([
+        // { operator: "$and" },
+        rootPredicate,
+        childPredicate0,
+        { operator: "$or" },
+      ]);
+
       dTree.appendContentWithOr(dTree.rootNodeId, childPredicate1);
       //appendContentWithOr
       expect(dTree.getCountTotalNodes()).toBe(4);
+    });
+    it("(.appendContentWith[Junction]) should deplore children with null value.", () => {
+      const rootPredicate = {
+        subjectId: "customers.root",
+        operator: "$eq" as TOperandOperators,
+        value: "root",
+      };
+      const childPredicate0 = {
+        subjectId: "customers.child0",
+        operator: "$eq" as TOperandOperators,
+        value: "child0",
+      };
+      const childPredicate1 = {
+        subjectId: "customers.child1",
+        operator: "$eq" as TOperandOperators,
+        value: "child1",
+      };
 
-      `
-      appendChildWithJunction(nodeId, [junctionOperator], exp0, exp1, ...)
-        The rules will be
-          - if nodeId is leaf, create branch (as current), set junction to given junction
-          - if nodeId is branch, overwrite junction operator with given operator
+      const dTree = new ClassTestAbstractExpressionTree();
+      dTree.replaceNodeContent(dTree.rootNodeId, rootPredicate);
+      expect(dTree.getCountTotalNodes()).toBe(1);
 
-          Should consider *not* exposes appendChildWithContent
-      `;
+      // set-up
+      dTree.appendContentWithOr(dTree.rootNodeId, null);
+
+      // pre-conditions -- null valued node
+      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
+        ([{ operator: "$or" }, null, rootPredicate] as TPredicateNodeTypes[]).sort(
+          SortPredicateTest
+        )
+      );
+
+      // exercise
+      dTree.appendContentWithOr(dTree.rootNodeId, childPredicate0);
+
+      //post condition -- replace null valued node
+      const x = dTree.getTreeContentAt(dTree.rootNodeId);
+      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
+        ([{ operator: "$or" }, childPredicate0, rootPredicate] as TPredicateNodeTypes[]).sort(
+          SortPredicateTest
+        )
+      );
+
+      dTree.appendContentWithOr(dTree.rootNodeId, childPredicate1);
+      //appendContentWithOr
+      // expect(dTree.getCountTotalNodes()).toBe(4);
     });
     it("(appendContentWithAnd)should have appendChildWithAnd, appendChildWithOr,", () => {
       const rootPredicate = {
@@ -158,7 +204,7 @@ describe("AbstractExpressionTree", () => {
 
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate1);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual("&&");
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({ operator: "$and" });
       //appendContentWithOr
       expect(dTree.getCountTotalNodes()).toBe(4);
 
@@ -196,14 +242,14 @@ describe("AbstractExpressionTree", () => {
       expect(dTree.getChildContentAt(dTree.rootNodeId)).toStrictEqual(rootPredicate);
 
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual("&&");
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({ operator: "$and" });
 
       dTree.appendContentWithOr(dTree.rootNodeId, childPredicate1);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual("||");
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({ operator: "$or" });
 
       // and back-again
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual("&&");
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({ operator: "$and" });
 
       expect(dTree.getCountTotalNodes()).toBe(5);
     });
