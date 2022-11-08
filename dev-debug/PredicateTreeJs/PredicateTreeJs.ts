@@ -165,34 +165,32 @@ class PredicateTreeJs extends AbstractExpressionTree<TPredicateTypesJs> {
     return matcher as (record: object) => boolean;
   }
 
-  static fromPojo2<P>(
+  // need to unfuck fromPojo
+  static fromPojo<P>(
     srcPojoTree: TTreePojo<P>,
-    transform = defaultFromPojoTransform,
-    classConstructor: Function
-  ): AbstractExpressionTree<P> {
-    const tree = AbstractDirectedGraph.fromPojo(
+    transform = defaultFromPojoTransform
+  ): PredicateTreeJs {
+    // @ts-ignore
+    return AbstractExpressionTree.fromPojoAs(
       srcPojoTree,
       transform,
-      // undefined,
-      PredicateTreeJs
-      // AbstractExpressionTree
-    );
-    AbstractExpressionTree.validateTree(tree);
-    return tree as AbstractExpressionTree<P>;
+      AbstractExpressionTree
+    ) as PredicateTreeJs;
   }
 
-  static fromPojo3<P>(
+  static x_fromPojo3<P>(
     srcPojoTree: TTreePojo<P>,
     transform = x_defaultFromPojoTransform
   ): PredicateTreeJs {
     const t = new PredicateTreeJs();
 
-    const tree = AbstractExpressionTree.fromPojo2(
+    // const tree = AbstractExpressionTree.fromPojo2(
+    const tree = AbstractExpressionTree.fromPojo(
       srcPojoTree,
       // @ts-ignore - transformation typing
-      transform,
+      transform
       // undefined,
-      PredicateTreeJs
+      // PredicateTreeJs
     );
 
     // @ts-ignore - incompatible tree types
@@ -201,6 +199,19 @@ class PredicateTreeJs extends AbstractExpressionTree<TPredicateTypesJs> {
     return tree as PredicateTreeJs;
     // return tree as AbstractExpressionTree<P>;
   }
+
+  // class PredicateTreeJs extends AbstractExpressionTree<TPredicateTypesJs> {
+
+  // static x_fromPojo<P>(
+  //   srcPojoTree: TTreePojo<P>,
+  //   transform = defaultFromPojoTransform
+  // ): PredicateTreeJs {
+  //   return AbstractExpressionTree.fromPojoAs<PredicateTreeJs>(
+  //     srcPojoTree,
+  //     transform,
+  //     PredicateTreeJs
+  //   );
+  // }
 }
 
 export { PredicateTreeJs };

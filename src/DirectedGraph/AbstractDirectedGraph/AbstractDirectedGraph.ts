@@ -70,8 +70,8 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     const pojo = this.toPojoAt(nodeId);
     return AbstractDirectedGraph.fromPojo(
       pojo,
-      defaultFromPojoTransform,
-      AbstractDirectedGraph
+      defaultFromPojoTransform
+      // AbstractDirectedGraph
     );
   }
 
@@ -542,9 +542,21 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     });
   };
 
-  static fromPojo<T>(
+  public static fromPojo<T>(
     srcPojoTree: TTreePojo<T>,
-    transform = defaultFromPojoTransform,
+    // transform = defaultFromPojoTransform,
+    transform: (nodeContent: TNodePojo<T>) => TGenericNodeContent<T> = defaultFromPojoTransform
+    // TreeClass: Function // () => ITree<T>
+  ): ITree<T> {
+    return AbstractDirectedGraph._fromPojo(srcPojoTree, transform, AbstractDirectedGraph);
+  }
+
+  protected static _fromPojo<T>(
+    srcPojoTree: TTreePojo<T>,
+    // transform = defaultFromPojoTransform,
+    transform: (
+      nodeContent: TNodePojo<T>
+    ) => TGenericNodeContent<T> = defaultFromPojoTransform,
     TreeClass: Function // () => ITree<T>
   ): ITree<T> {
     const pojoObject = { ...srcPojoTree };

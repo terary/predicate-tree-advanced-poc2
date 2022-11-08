@@ -135,6 +135,21 @@ describe("AbstractExpressionTree", () => {
       //appendContentWithOr
       expect(dTree.getCountTotalNodes()).toBe(4);
     });
+
+    `
+
+    does appendContent[Junction, or other], all enforce no single child?
+
+
+The major thing now is to work out 'fromPojo'  There shouldn't be ....fromPojo2 or fromPojo3 
+I think overload works here?
+Need to have clearly defined thing 
+tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
+
+
+
+`;
+
     it("(.appendContentWith[Junction]) should deplore children with null value.", () => {
       const rootPredicate = {
         subjectId: "customers.root",

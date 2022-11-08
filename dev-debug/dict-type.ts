@@ -93,7 +93,8 @@ pTree.appendContentWithAnd(pTree.rootNodeId, childPredicate1);
 
 const pojo = pTree.toPojo();
 const prettyPrint = true;
-const pTreeJs = PredicateTreeJs.fromPojo3(pojo);
+// const pTreeJs = PredicateTreeJs.fromPojo3(pojo);
+const pTreeJs = PredicateTreeJs.fromPojo(pojo);
 console.log({ pTreeJs });
 const matcher = pTreeJs.toJsMatcherFunction(subjects, !prettyPrint);
 

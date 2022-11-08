@@ -2,7 +2,10 @@ import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { ITree } from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 
-const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
+// const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
+//   return nodeContent.nodeContent;
+// };
+const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
 
@@ -104,16 +107,16 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  static fromPojo2<P>(
+  static fromPojoAs<P>(
     srcPojoTree: TTreePojo<P>,
     transform = defaultFromPojoTransform,
     classConstructor: Function
   ): AbstractExpressionTree<P> {
     const tree = AbstractDirectedGraph.fromPojo(
       srcPojoTree,
-      transform,
+      transform
       // undefined,
-      classConstructor
+      // classConstructor
       // AbstractExpressionTree
     );
     AbstractExpressionTree.validateTree(tree);
@@ -122,13 +125,29 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
 
   static fromPojo<P>(
     srcPojoTree: TTreePojo<P>,
-    transform = defaultFromPojoTransform
-  ): AbstractExpressionTree<P> {
-    const tree = AbstractDirectedGraph.fromPojo(
+    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+
+    //    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+  ): ITree<P> {
+    //AbstractExpressionTree<P> {
+    const tree = AbstractExpressionTree._fromPojo(
       srcPojoTree,
       transform,
-      // undefined,
       AbstractExpressionTree
+    );
+    AbstractExpressionTree.validateTree(tree);
+    return tree as AbstractExpressionTree<P>;
+  }
+
+  static x_fromPojo<P>(
+    srcPojoTree: TTreePojo<P>,
+    transform = defaultFromPojoTransform
+  ): AbstractExpressionTree<P> {
+    const tree = AbstractDirectedGraph.fromPojo<P>(
+      srcPojoTree,
+      transform
+      // undefined,
+      // AbstractExpressionTree
     );
     AbstractExpressionTree.validateTree(tree);
     return tree as AbstractExpressionTree<P>;
