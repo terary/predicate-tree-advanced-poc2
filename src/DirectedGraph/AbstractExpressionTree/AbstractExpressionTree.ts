@@ -2,9 +2,6 @@ import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { ITree } from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 
-// const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
-//   return nodeContent.nodeContent;
-// };
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
@@ -76,8 +73,6 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     const originalContentId = super.appendChildNodeWithContent(parentNodeId, originalContent);
     this.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
 
-    // const newNodeId = super.appendChildNodeWithContent(parentNodeId, nodeContent);
-    // return newNodeId;
     return {
       newNodeId: super.appendChildNodeWithContent(parentNodeId, nodeContent),
       originalContentNodeId: originalContentId,

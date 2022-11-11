@@ -68,11 +68,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
   public cloneAt(nodeId: string): ITree<T> {
     const pojo = this.toPojoAt(nodeId);
-    return AbstractDirectedGraph.fromPojo(
-      pojo,
-      defaultFromPojoTransform
-      // AbstractDirectedGraph
-    );
+    return AbstractDirectedGraph.fromPojo(pojo, defaultFromPojoTransform);
   }
 
   public countDescendantsOf(parentNodeId: string = this.rootNodeId) {
@@ -542,14 +538,9 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     });
   };
 
-  public static x(): number {
-    return 3;
-  }
   public static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
-    // transform = defaultFromPojoTransform,
     transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
-    // TreeClass: Function // () => ITree<T>
   ): Q {
     return AbstractDirectedGraph._fromPojo<P, Q>(
       srcPojoTree,
@@ -560,7 +551,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
   protected static _fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
-    // transform = defaultFromPojoTransform,
     transform: (
       nodeContent: TNodePojo<P>
     ) => TGenericNodeContent<P> = defaultFromPojoTransform,
