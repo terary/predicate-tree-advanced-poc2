@@ -542,23 +542,30 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     });
   };
 
-  public static fromPojo<T>(
-    srcPojoTree: TTreePojo<T>,
+  public static x(): number {
+    return 3;
+  }
+  public static fromPojo<P, Q>(
+    srcPojoTree: TTreePojo<P>,
     // transform = defaultFromPojoTransform,
-    transform: (nodeContent: TNodePojo<T>) => TGenericNodeContent<T> = defaultFromPojoTransform
+    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
     // TreeClass: Function // () => ITree<T>
-  ): ITree<T> {
-    return AbstractDirectedGraph._fromPojo(srcPojoTree, transform, AbstractDirectedGraph);
+  ): Q {
+    return AbstractDirectedGraph._fromPojo<P, Q>(
+      srcPojoTree,
+      transform,
+      AbstractDirectedGraph as unknown as () => Q
+    ) as unknown as Q;
   }
 
-  protected static _fromPojo<T>(
-    srcPojoTree: TTreePojo<T>,
+  protected static _fromPojo<P, Q>(
+    srcPojoTree: TTreePojo<P>,
     // transform = defaultFromPojoTransform,
     transform: (
-      nodeContent: TNodePojo<T>
-    ) => TGenericNodeContent<T> = defaultFromPojoTransform,
-    TreeClass: Function // () => ITree<T>
-  ): ITree<T> {
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform,
+    TreeClass: () => Q
+  ): Q {
     const pojoObject = { ...srcPojoTree };
 
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
@@ -566,7 +573,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     const rootNodePojo = pojoObject[rootNodeId];
 
     // @ts-ignore - expression is not newable, I think ok in js, not ts
-    const dTree = new TreeClass<T>(); // as AbstractDirectedGraph<T>;
+    const dTree = new TreeClass<P>(); // as AbstractDirectedGraph<T>;
 
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];

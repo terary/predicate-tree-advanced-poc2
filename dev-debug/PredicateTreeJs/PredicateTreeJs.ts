@@ -165,53 +165,31 @@ class PredicateTreeJs extends AbstractExpressionTree<TPredicateTypesJs> {
     return matcher as (record: object) => boolean;
   }
 
-  // need to unfuck fromPojo
-  static fromPojo<P>(
+  static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform = defaultFromPojoTransform
-  ): PredicateTreeJs {
-    // @ts-ignore
-    return AbstractExpressionTree.fromPojoAs(
+    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+  ): Q {
+    const tree = AbstractExpressionTree._fromPojo<P, PredicateTreeJs>(
       srcPojoTree,
       transform,
-      AbstractExpressionTree
-    ) as PredicateTreeJs;
-  }
-
-  static x_fromPojo3<P>(
-    srcPojoTree: TTreePojo<P>,
-    transform = x_defaultFromPojoTransform
-  ): PredicateTreeJs {
-    const t = new PredicateTreeJs();
-
-    // const tree = AbstractExpressionTree.fromPojo2(
-    const tree = AbstractExpressionTree.fromPojo(
-      srcPojoTree,
-      // @ts-ignore - transformation typing
-      transform
-      // undefined,
-      // PredicateTreeJs
+      PredicateTreeJs as unknown as () => PredicateTreeJs
     );
-
-    // @ts-ignore - incompatible tree types
-    // t._nodeDictionary = tree._nodeDictionary;
-    // t._incrementor = tree._incrementor;
-    return tree as PredicateTreeJs;
-    // return tree as AbstractExpressionTree<P>;
+    AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
+    return tree as unknown as Q; // PredicateTreeJs;
   }
 
-  // class PredicateTreeJs extends AbstractExpressionTree<TPredicateTypesJs> {
-
-  // static x_fromPojo<P>(
-  //   srcPojoTree: TTreePojo<P>,
-  //   transform = defaultFromPojoTransform
-  // ): PredicateTreeJs {
-  //   return AbstractExpressionTree.fromPojoAs<PredicateTreeJs>(
-  //     srcPojoTree,
-  //     transform,
-  //     PredicateTreeJs
-  //   );
-  // }
+  static x_fromPojo<P, Q>(
+    srcPojoTree: TTreePojo<P>,
+    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+  ): Q {
+    const tree = AbstractExpressionTree._fromPojo<P, Q>(
+      srcPojoTree,
+      transform,
+      AbstractExpressionTree as unknown as () => Q
+    );
+    AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
+    return tree as Q;
+  }
 }
 
 export { PredicateTreeJs };

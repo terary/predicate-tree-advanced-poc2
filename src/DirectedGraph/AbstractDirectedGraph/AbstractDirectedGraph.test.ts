@@ -1289,12 +1289,18 @@ describe("AbstractDirectedGraph", () => {
 
       const subgraphPojo = subgraph.toPojo() as TTreePojo<WidgetType>;
 
-      const reTree = TestAbstractDirectedGraph.fromPojo(
+      const reTree = TestAbstractDirectedGraph.fromPojo<
+        WidgetType,
+        AbstractDirectedGraph<WidgetType>
+      >(
         treePojo,
         undefined
         // TestAbstractDirectedGraph
       );
-      const reSubtreeFromPojo = TestAbstractDirectedGraph.fromPojo(
+      const reSubtreeFromPojo = TestAbstractDirectedGraph.fromPojo<
+        WidgetType,
+        AbstractDirectedGraph<WidgetType>
+      >(
         subgraphPojo,
         undefined
         // TestAbstractDirectedGraph
@@ -1346,7 +1352,10 @@ describe("AbstractDirectedGraph", () => {
         { label: "child_0_1" },
         { label: "child_0_2" },
       ]);
-      const newTree = AbstractDirectedGraph.fromPojo<WidgetType>(
+      const newTree = AbstractDirectedGraph.fromPojo<
+        WidgetType,
+        AbstractDirectedGraph<WidgetType>
+      >(
         subtreePojo,
         undefined
         // TestAbstractDirectedGraph
@@ -1584,7 +1593,10 @@ describe("AbstractDirectedGraph", () => {
       const treeJsonString =
         '{"e883f4a3-b021-4ebe-8e41-ddef57e18624":{"parentId":"e883f4a3-b021-4ebe-8e41-ddef57e18624","nodeContent":{"label":"root"}},"4fca03eb-0f55-4851-814d-bbce9227486f":{"parentId":"e883f4a3-b021-4ebe-8e41-ddef57e18624","nodeContent":{"label":"child_0"}},"a4e88f12-93fb-416c-9f64-6cf7cfe2925d":{"parentId":"4fca03eb-0f55-4851-814d-bbce9227486f","nodeContent":{"label":"child_0_0"}},"d54acedf-912f-422f-9412-b530b0a815f4":{"parentId":"4fca03eb-0f55-4851-814d-bbce9227486f","nodeContent":{"label":"child_0_1"}},"6019df67-4dd3-4644-854b-7f2978408949":{"parentId":"4fca03eb-0f55-4851-814d-bbce9227486f","nodeContent":{"label":"child_0_2"}},"ebb08b47-7c62-4515-a3b4-1c569b03220d":{"parentId":"e883f4a3-b021-4ebe-8e41-ddef57e18624","nodeContent":{"label":"child_1"}},"18a8db96-c924-4cc5-853b-03bcb36da227":{"parentId":"ebb08b47-7c62-4515-a3b4-1c569b03220d","nodeContent":{"label":"child_1_0"}},"25791177-7b24-416f-b25c-54ed52fb53e2":{"parentId":"ebb08b47-7c62-4515-a3b4-1c569b03220d","nodeContent":{"label":"child_1_1"}},"758e30f5-d0af-476e-bbf0-45356b4848bc":{"parentId":"ebb08b47-7c62-4515-a3b4-1c569b03220d","nodeContent":{"label":"child_1_2"}},"2d2b98c3-e8fc-4dc3-b161-1469d1c04ea2":{"parentId":"e883f4a3-b021-4ebe-8e41-ddef57e18624","nodeContent":{"label":"child_2"}},"8586a3ca-8f71-4d6c-a414-5f0557a6e217":{"parentId":"2d2b98c3-e8fc-4dc3-b161-1469d1c04ea2","nodeContent":{"label":"child_2_0"}},"69d3aa07-e25f-45ca-af8b-820f9525f17c":{"parentId":"2d2b98c3-e8fc-4dc3-b161-1469d1c04ea2","nodeContent":{"label":"child_2_1"}},"58c712ac-0d75-4512-bee2-a795f52ecf8b":{"parentId":"2d2b98c3-e8fc-4dc3-b161-1469d1c04ea2","nodeContent":{"label":"child_2_2"}}}';
       const treePojoObject = JSON.parse(treeJsonString);
-      const dTree = AbstractDirectedGraph.fromPojo(
+      const dTree = AbstractDirectedGraph.fromPojo<
+        WidgetType,
+        AbstractDirectedGraph<WidgetType>
+      >(
         treePojoObject,
         undefined
         // AbstractDirectedGraph
@@ -1638,7 +1650,10 @@ describe("AbstractDirectedGraph", () => {
         },
       };
 
-      const dTree = AbstractDirectedGraph.fromPojo<WidgetType>(
+      const dTree = AbstractDirectedGraph.fromPojo<
+        WidgetType,
+        AbstractDirectedGraph<WidgetType>
+      >(
         treePojoObject,
         undefined
         // AbstractDirectedGraph

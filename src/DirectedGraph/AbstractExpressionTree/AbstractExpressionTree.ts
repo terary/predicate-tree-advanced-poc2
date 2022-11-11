@@ -107,50 +107,20 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  static fromPojoAs<P>(
-    srcPojoTree: TTreePojo<P>,
-    transform = defaultFromPojoTransform,
-    classConstructor: Function
-  ): AbstractExpressionTree<P> {
-    const tree = AbstractDirectedGraph.fromPojo(
-      srcPojoTree,
-      transform
-      // undefined,
-      // classConstructor
-      // AbstractExpressionTree
-    );
-    AbstractExpressionTree.validateTree(tree);
-    return tree as AbstractExpressionTree<P>;
-  }
-
-  static fromPojo<P>(
+  static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
     transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
 
     //    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
-  ): ITree<P> {
+  ): Q {
     //AbstractExpressionTree<P> {
-    const tree = AbstractExpressionTree._fromPojo(
+    const tree = AbstractExpressionTree._fromPojo<P, Q>(
       srcPojoTree,
       transform,
-      AbstractExpressionTree
+      AbstractExpressionTree as unknown as () => Q
     );
-    AbstractExpressionTree.validateTree(tree);
-    return tree as AbstractExpressionTree<P>;
-  }
-
-  static x_fromPojo<P>(
-    srcPojoTree: TTreePojo<P>,
-    transform = defaultFromPojoTransform
-  ): AbstractExpressionTree<P> {
-    const tree = AbstractDirectedGraph.fromPojo<P>(
-      srcPojoTree,
-      transform
-      // undefined,
-      // AbstractExpressionTree
-    );
-    AbstractExpressionTree.validateTree(tree);
-    return tree as AbstractExpressionTree<P>;
+    AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
+    return tree as Q;
   }
 
   public removeNodeAt(nodeId: string): void {

@@ -325,14 +325,22 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       const pojo = makePojo3Children9Grandchildren();
       // const pojo = makePojo3Children();
 
-      const dTree = ClassTestAbstractExpressionTree.fromPojo(pojo);
+      const dTree = ClassTestAbstractExpressionTree.fromPojo<
+        TPredicateTypes,
+        AbstractExpressionTree<TPredicateTypes>
+        // @ts-ignore - pojo  type definition
+      >(pojo);
       const x = dTree.countTotalNodes();
       expect(dTree.countTotalNodes()).toEqual(13);
     });
     it("Should support subtrees.", () => {
       const pojo = makePojo2Children1subtree9leaves();
       const { content: OO } = makePojo2Children1subtree9leaves;
-      const dTree = ClassTestAbstractExpressionTree.fromPojo(pojo);
+      const dTree = ClassTestAbstractExpressionTree.fromPojo<
+        TPredicateTypes,
+        AbstractExpressionTree<TPredicateTypes>
+        // @ts-ignore - pojo  type definition
+      >(pojo);
       const childrenIds = dTree.getChildrenNodeIdsOf(dTree.rootNodeId);
       expect(dTree.getChildContentAt(childrenIds[0])).toStrictEqual({ operator: "$or" });
 
