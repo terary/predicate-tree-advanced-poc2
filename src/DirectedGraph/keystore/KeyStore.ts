@@ -79,6 +79,17 @@ class KeyStore<T> {
       });
   }
 
+  reverseLookUpExactlyOneOrThrow(value: T): string {
+    const candidates = this.reverseLookUp(value);
+    if (candidates.length !== 1) {
+      throw new KeyStoreError(
+        `Key: '${value}' has ${candidates.length} matches. Can not determine 1:1 mapping.`
+      );
+    }
+
+    return candidates[0];
+  }
+
   /**
    * @deprecated
    */

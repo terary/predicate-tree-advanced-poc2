@@ -330,7 +330,6 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         AbstractExpressionTree<TPredicateTypes>
         // @ts-ignore - pojo  type definition
       >(pojo);
-      const x = dTree.countTotalNodes();
       expect(dTree.countTotalNodes()).toEqual(13);
     });
     it("Should support subtrees.", () => {

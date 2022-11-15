@@ -1,17 +1,10 @@
 import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { ITree } from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
-
+import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
-
-interface IAppendChildNodeIds {
-  newNodeId: string;
-  originalContentNodeId?: string; // ONLY set if isNewBranch is true, represents where the content went
-  junctionNodeId: string; // this will ALWAYS be the nodeId provided to append*(nodeId)
-  isNewBranch: boolean;
-}
 
 export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
   constructor(rootNodeId = "_root_", nodeContent?: P) {
@@ -39,14 +32,9 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
       nodeContent
     );
   }
-  private getChildrenWithNullValues(parentNodeId: string): string[] {
-    const childrenIds = this.getChildrenNodeIdsOf(parentNodeId);
-    return childrenIds.filter((childId) => {
-      return this.getChildContentAt(childId) === null;
-    });
-  }
 
-  private appendContentWithJunction(
+  // made public to implement interface is Obfuscated Derived Classes
+  public appendContentWithJunction(
     parentNodeId: string,
     junctionContent: TGenericNodeContent<P>,
     nodeContent: TGenericNodeContent<P>
@@ -88,25 +76,20 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     // at this time, only *fromPojo is calling this function.
     // need to move traverse tree logic from utilities to
     // to static methods?
-    // return this.appendContentWithAnd(parentNodeId, nodeContent);
-    return this.fromPojoAppendChildNodeWithContent(parentNodeId, nodeContent);
+    return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+    // return this.fromPojoAppendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  public fromPojoAppendChildNodeWithContent(
-    parentNodeId: string,
-    nodeContent: TGenericNodeContent<P>
-  ): string {
-    if (this.isBranch(parentNodeId)) {
-      return super.appendChildNodeWithContent(parentNodeId, nodeContent);
-    }
-    return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+  private getChildrenWithNullValues(parentNodeId: string): string[] {
+    const childrenIds = this.getChildrenNodeIdsOf(parentNodeId);
+    return childrenIds.filter((childId) => {
+      return this.getChildContentAt(childId) === null;
+    });
   }
 
   static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
     transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
-
-    //    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
   ): Q {
     //AbstractExpressionTree<P> {
     const tree = AbstractExpressionTree._fromPojo<P, Q>(
@@ -116,6 +99,18 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     );
     AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
     return tree as Q;
+  }
+
+  // should this be public?
+  public fromPojoAppendChildNodeWithContent(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<P>
+  ): string {
+    // I think this isBranch check is unnecessary
+    // if (this.isBranch(parentNodeId)) {
+    //   return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+    // }
+    return this.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
   public removeNodeAt(nodeId: string): void {

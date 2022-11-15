@@ -57,21 +57,6 @@ const predicate2jsPredicate = (predicate: TPredicateTypes): TPredicateTypesJs =>
   }
 };
 
-const x_defaultFromPojoTransform = <T>(
-  nodeContent: TNodePojo<TPredicateTypes>
-): TGenericNodeContent<TPredicateTypesJs> => {
-  const p = nodeContent.nodeContent;
-  return predicate2jsPredicate(p);
-  // if (["$and", "$or"].includes(p?.operator)) {
-  //   return ["$and", "&&"].includes(p?.operator) ? { operator: "&&" } : { operator: "||" };
-  // }
-  // return {
-  //   operator: "==",
-  //   subjectId: (p as TOperand)?.subjectId,
-  //   value: (p as TOperand)?.value,
-  // };
-};
-
 const rootPredicate: TJunction = {
   operator: "$and",
 };

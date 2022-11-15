@@ -569,7 +569,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     delete pojoObject[rootNodeId];
 
     AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
-      dTree.rootNodeId, // rootNodeId -
+      dTree._rootNodeId, // .rootNodeId, // rootNodeId -
       rootNodeId,
       dTree,
       pojoObject,
