@@ -6,6 +6,7 @@ import { KeyStore } from "../DirectedGraph/keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../DirectedGraph/types";
 import { IAppendChildNodeIds } from "../DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
+import { subtract } from "lodash";
 
 class ObfuscatedError extends Error {
   constructor(message: string) {
@@ -31,8 +32,20 @@ abstract class AbstractObfuscatedExpressionTree<P>
     this._internalTree = tree;
 
     this._keyStore = new KeyStore<string>();
-
-    this._rootKey = this._keyStore.putValue(this._internalTree.rootNodeId);
+    this._internalTree.getTreeNodeIdsAt(this._internalTree.rootNodeId).forEach((nodeId) => {
+      this._keyStore.putValue(nodeId);
+    });
+    this._rootKey = this._keyStore.reverseLookUpExactlyOneOrThrow(
+      this._internalTree.rootNodeId
+    );
+    this._internalTree.getSubgraphIdsAt(this._internalTree.rootNodeId).forEach((subtreeId) => {
+      const subtree = this._internalTree.getChildContentAt(subtreeId);
+      this._internalTree.replaceNodeContent(
+        subtreeId,
+        // @ts-ignore
+        new ObfuscatedSubtree<P>(subtree as ITree<P>)
+      );
+    });
   }
 
   get rootNodeId(): string {
@@ -187,3 +200,4 @@ abstract class AbstractObfuscatedExpressionTree<P>
 }
 
 export { AbstractObfuscatedExpressionTree };
+class ObfuscatedSubtree<T> extends AbstractObfuscatedExpressionTree<T> {}

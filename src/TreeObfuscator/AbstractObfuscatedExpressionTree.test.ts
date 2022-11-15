@@ -1,7 +1,18 @@
 import { AbstractExpressionTree } from "../DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
 import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpressionTree";
 import { isUUIDv4 } from "../common/utilities/isFunctions";
-import { makePojo3Children9Grandchildren } from "../DirectedGraph/AbstractExpressionTree/test-utilities";
+import {
+  makePojo3Children9Grandchildren,
+  make3Children2Subtree3Children,
+  SortPredicateTest,
+} from "../DirectedGraph/AbstractExpressionTree/test-utilities";
+import type {
+  TJunction,
+  TOperand,
+  TOperandOperators,
+  TPredicateNodeTypes,
+  TPredicateTypes,
+} from "../DirectedGraph/AbstractExpressionTree/types";
 
 class TestWidget {
   private _name: string;
@@ -121,7 +132,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
     });
   });
   describe(".fromPojo", () => {
-    it.only("Should create a tree from Plain Ole Javascript Object.", () => {
+    it("Should create a tree from Plain Ole Javascript Object.", () => {
       const pojo = makePojo3Children9Grandchildren();
 
       const oTree = TestObfuscatedTree.fromPojo<
@@ -137,7 +148,60 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // I think the tree is correct.  However, this._nodeDictionary has one entry
       // which means it's getting stored twice or its getting stored wrong.
       // next subtree
-      expect(1).toBe(2);
     });
+  });
+  describe("constructor", () => {
+    it.only("Should remove single node if not single child, elevate single child.", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      const exposedTree = new ExposedTree();
+
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
+
+      const privateTree = new TestObfuscatedTree(exposedTree);
+
+      // pre conditions
+      expect(
+        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [OO["child_0"], OO["child_0_0"], OO["child_0_1"], OO["child_0_2"]].sort(
+          SortPredicateTest
+        )
+      );
+      expect(privateTree.countTotalNodes()).toBe(13);
+
+      // exercise 1, has 2 or more siblings
+      privateTree.removeNodeAt(dTreeIds["child_0_0"]);
+
+      // post conditions 1
+      expect(privateTree.countTotalNodes()).toBe(12);
+      expect(
+        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [OO["child_0"], OO["child_0_1"], OO["child_0_2"]].sort(SortPredicateTest)
+      );
+
+      // exercise 2 - only 1 sibling
+      privateTree.removeNodeAt(dTreeIds["child_0_1"]);
+
+      // post conditions 2
+      expect(privateTree.countTotalNodes()).toBe(10);
+      expect(
+        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));
+    });
+    // This seems to be a better approach
+    //   have to workout creation/constructor
+    //   subtree specifically.  Does subtree necessary have to be ITree?
+    //   should subtree have property ConstructorFunction ?
+    //
+    //   also it appear internalTree loses type information
+    //   it becomes ExposedTree and not original tree.
   });
 });
