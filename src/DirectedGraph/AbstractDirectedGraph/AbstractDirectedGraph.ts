@@ -3,6 +3,7 @@ import { DirectedGraphError } from "../DirectedGraphError";
 import { Incrementor } from "../Incrementor";
 import { ITree, ITreeVisitor } from "../ITree";
 import type { TNodePojo, TTreePojo, TGenericNodeContent, TGenericNodeType } from "../types";
+import { takeRight } from "lodash";
 
 const defaultToPojoTransformer = <T>(nodeContent: T) => {
   return nodeContent as unknown as TNodePojo<T>;
@@ -296,6 +297,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
     const parentNodeId = this._getParentNodeId(nodeId);
     const childrenIds = this._getChildrenNodeIds(parentNodeId);
+    // const childrenIds = this.getChildrenNodeIdsOf(parentNodeId);
 
     const index = childrenIds.indexOf(nodeId);
     /* istanbul ignore next - likely unnecessary check */
@@ -444,17 +446,21 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     this._visitAllAt(visitor, nodeId, parentNodeId);
   }
 
+  // why is this public? are both these visitAll necessary?
   public _visitAllAt(
     visitor: ITreeVisitor<T>,
     nodeId: string = this._rootNodeId,
     parentNodeId: string = this._rootNodeId
   ): void {
     const childrenIds = this.getChildrenNodeIdsOf(nodeId, visitor.includeSubtrees);
-    const content = this._getChildContent(nodeId); // .getContentAt(nodeId);
+    const content = this._getChildContent(nodeId);
+    // is this _getChildC... necessary?
+    // can we use normal, the need for all that weird private stuff _ is gone
 
     if (visitor.includeSubtrees && content instanceof AbstractDirectedGraph) {
       content._visitAllAt(visitor);
     } else {
+      // this.visitNode(visitor, nodeId, content, parentNodeId);
       visitor.visit(nodeId, content, parentNodeId);
     }
 

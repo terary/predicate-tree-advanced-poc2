@@ -113,8 +113,11 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     return this.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
+  private _getSiblingIds(nodeId: string) {
+    return super.getSiblingIds(nodeId);
+  }
   public removeNodeAt(nodeId: string): void {
-    const siblingIds = this.getSiblingIds(nodeId);
+    const siblingIds = this._getSiblingIds(nodeId);
     if (siblingIds.length > 1) {
       return super.removeNodeAt(nodeId);
     }

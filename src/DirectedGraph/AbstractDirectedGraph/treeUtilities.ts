@@ -2,34 +2,6 @@ import type { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { DirectedGraphError } from "../DirectedGraphError";
 import { ITree } from "../ITree";
 
-const SubGraphNodeTypeName = "subtree"; // should be static property of AbstractClass
-const traverseAndExtractChildren = <T>(
-  treeParentId: string,
-  jsonParentId: string,
-  dTree: ITree<T>,
-  treeObject: TTreePojo<T>,
-  transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>
-): void => {
-  const childrenNodes = extractChildrenNodes<T>(jsonParentId, treeObject);
-
-  Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
-    if (nodePojo.nodeType === SubGraphNodeTypeName) {
-      const subtree = dTree.createSubGraphAt(treeParentId);
-      subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
-      traverseAndExtractChildren(
-        subtree.rootNodeId,
-        nodeId,
-        subtree as ITree<T>,
-        treeObject,
-        transformer
-      );
-    } else {
-      const childId = dTree.appendChildNodeWithContent(treeParentId, transformer(nodePojo));
-      traverseAndExtractChildren(childId, nodeId, dTree, treeObject, transformer);
-    }
-  });
-};
-
 const parseCandidateRootNodeId = <T>(treeObject: TTreePojo<T>): string[] => {
   const candidateRootIds: string[] = [];
   Object.entries(treeObject).forEach(([key, node]) => {
@@ -76,5 +48,4 @@ export default {
   extractChildrenNodes,
   parseCandidateRootNodeId,
   parseUniquePojoRootKeyOrThrow,
-  traverseAndExtractChildren,
 };

@@ -1,6 +1,10 @@
 import { AbstractExpressionTree } from "../DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
 import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpressionTree";
 import { isUUIDv4 } from "../common/utilities/isFunctions";
+import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
+import { ITreeVisitor } from "../DirectedGraph/ITree";
+import { TGenericNodeContent } from "../DirectedGraph/types";
+
 import {
   makePojo3Children9Grandchildren,
   make3Children2Subtree3Children,
@@ -25,7 +29,18 @@ class TestWidget {
   }
 }
 
-class TestObfuscatedTree<P> extends AbstractObfuscatedExpressionTree<P> {}
+class TestObfuscatedTree<P> extends AbstractObfuscatedExpressionTree<P> {
+  public getIdKeyReverseMap() {
+    return this.buildReverseMap();
+  }
+
+  // public reverseMapKeys(keys: string[]) {
+  //   return super.reverseMapKeys(keys);
+  // }
+  // reverseMapTestNodeIds(nodeIds: string[]): string{
+  //   this.
+  // }
+}
 class TestClearTextTree<P> extends AbstractExpressionTree<P> {}
 
 describe("AbstractObfuscatedExpressionTree", () => {
@@ -127,8 +142,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // .isBranch
       expect(oTree.isLeaf(junctionNodeIds.junctionNodeId)).toBe(false);
       expect(oTree.isLeaf(junctionNodeIds.newNodeId)).toBe(true);
-
-      expect(1).toBe(2);
     });
   });
   describe(".fromPojo", () => {
@@ -150,11 +163,11 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // next subtree
     });
   });
-  describe("constructor", () => {
-    it.only("Should remove single node if not single child, elevate single child.", () => {
+  describe(".removeNode", () => {
+    it("Should remove single node if not single child, elevate single child.", () => {
+      //
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
       const exposedTree = new ExposedTree();
-
       const {
         dTreeIds,
         // dTree: dTree as ITree<TPredicateTypes>,
@@ -165,6 +178,12 @@ describe("AbstractObfuscatedExpressionTree", () => {
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
+      expect(privateTree.countTotalNodes()).toEqual(exposedTree.countTotalNodes());
+
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
 
       // pre conditions
       expect(
@@ -196,12 +215,5 @@ describe("AbstractObfuscatedExpressionTree", () => {
         privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));
     });
-    // This seems to be a better approach
-    //   have to workout creation/constructor
-    //   subtree specifically.  Does subtree necessary have to be ITree?
-    //   should subtree have property ConstructorFunction ?
-    //
-    //   also it appear internalTree loses type information
-    //   it becomes ExposedTree and not original tree.
   });
 });

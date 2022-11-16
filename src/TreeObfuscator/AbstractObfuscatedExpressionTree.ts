@@ -7,18 +7,8 @@ import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../DirectedGraph/types";
 import { IAppendChildNodeIds } from "../DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
 import { subtract } from "lodash";
-
-class ObfuscatedError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "ObfuscatedError";
-  }
-
-  get code() {
-    return "ERR_OBFUSCATE_ERROR";
-  }
-}
-
+import { CallTracker } from "assert";
+import { ObfuscatedError } from "./ObfuscatedError";
 abstract class AbstractObfuscatedExpressionTree<P>
   extends AbstractExpressionTree<P>
   implements IObfuscatedExpressionTree<P>
@@ -39,7 +29,10 @@ abstract class AbstractObfuscatedExpressionTree<P>
       this._internalTree.rootNodeId
     );
     this._internalTree.getSubgraphIdsAt(this._internalTree.rootNodeId).forEach((subtreeId) => {
+      // maybe instead of getSubgraphIdsAt, just shouldIncludeSubtree above?
       const subtree = this._internalTree.getChildContentAt(subtreeId);
+      this._keyStore.putValue(subtreeId);
+
       this._internalTree.replaceNodeContent(
         subtreeId,
         // @ts-ignore
@@ -89,6 +82,30 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return junctionNodeIds;
   }
 
+  // for testing purpose only.
+  // wonder if there isn't a better way
+  protected buildReverseMap(reverseMap: { [nodeId: string]: string } = {}): {
+    [nodeId: string]: string;
+  } {
+    this._keyStore.allKeys().forEach((nodeKey) => {
+      try {
+        const nodeId = this._keyStore.getValue(nodeKey);
+        reverseMap[nodeId] = nodeKey;
+      } catch (error) {
+        reverseMap[nodeKey] = nodeKey;
+      }
+      // const nodeId = this._keyStore.reverseLookUpExactlyOneOrThrow(nodeKey);
+      // reverseMap[nodeId] = nodeKey;
+    });
+
+    const subtreeIds = this._internalTree.getSubgraphIdsAt(this._internalTree.rootNodeId);
+    subtreeIds.forEach((subtreeId) => {
+      const subtree = this._internalTree.getChildContentAt(subtreeId) as ObfuscatedSubtree<P>;
+      subtree.buildReverseMap(reverseMap);
+    });
+    return reverseMap;
+  }
+
   public countTotalNodes(nodeKey: string = this.rootNodeId) {
     // const nodeId = this._getNodeIdOrThrow(nodeKey);
     return this.getTreeNodeIdsAt(nodeKey).length;
@@ -135,6 +152,11 @@ abstract class AbstractObfuscatedExpressionTree<P>
     );
   }
 
+  public getSiblingIds(nodeKey: string): string[] {
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+    return this.reverseMapKeys(this._internalTree.getSiblingIds(nodeId));
+  }
+
   public getTreeContentAt(
     nodeKey: string,
     shouldIncludeSubtrees?: boolean
@@ -160,8 +182,31 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return nodeId;
   }
 
-  private reverseMapKeys(keys: string[]): string[] {
-    return keys.map((nodeId) => this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId));
+  public removeNodeAt(nodeKey: string): void {
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+    const removeNode = super.removeNodeAt.bind(this._internalTree, nodeId);
+    removeNode();
+    // const siblingIds = this._internalTree.getSiblingIds(nodeId);
+    // is caller or bind?
+    // you are duplicating work because the base class cant call these methods
+    // need a hardDelete that bypasses the two-child rule
+    // if (siblingIds.length > 1) {
+    //   return super.removeNodeAt(nodeId);
+    // }
+    // const parentId = this.getParentNodeId(nodeId);
+    // const siblingContent = this.getChildContentAt(siblingIds[0]);
+
+    // this.replaceNodeContent(parentId, siblingContent);
+
+    // super.removeNodeAt(siblingIds[0]);
+    // super.removeNodeAt(nodeId);
+  }
+
+  protected reverseMapKeys(keys: string[]): string[] {
+    // not sure this is necessary
+    return keys.map((nodeId) => {
+      return this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
+    });
   }
 
   static fromPojo<P, Q>(
