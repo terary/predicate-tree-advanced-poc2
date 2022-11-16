@@ -71,11 +71,9 @@ abstract class AbstractObfuscatedExpressionTree<P>
       junctionNodeIds.junctionNodeId
     );
 
-    if (junctionNodeIds.originalContentNodeId !== undefined) {
-      junctionNodeIds.originalContentNodeId = this._keyStore.putValue(
-        junctionNodeIds.originalContentNodeId
-      );
-    }
+    junctionNodeIds.originalContentNodeId = this._keyStore.putValue(
+      junctionNodeIds.originalContentNodeId as string
+    );
 
     junctionNodeIds.newNodeId = this._keyStore.putValue(junctionNodeIds.newNodeId);
 
@@ -88,14 +86,8 @@ abstract class AbstractObfuscatedExpressionTree<P>
     [nodeId: string]: string;
   } {
     this._keyStore.allKeys().forEach((nodeKey) => {
-      try {
-        const nodeId = this._keyStore.getValue(nodeKey);
-        reverseMap[nodeId] = nodeKey;
-      } catch (error) {
-        reverseMap[nodeKey] = nodeKey;
-      }
-      // const nodeId = this._keyStore.reverseLookUpExactlyOneOrThrow(nodeKey);
-      // reverseMap[nodeId] = nodeKey;
+      const nodeId = this._keyStore.getValue(nodeKey);
+      reverseMap[nodeId] = nodeKey;
     });
 
     const subtreeIds = this._internalTree.getSubgraphIdsAt(this._internalTree.rootNodeId);
@@ -107,7 +99,6 @@ abstract class AbstractObfuscatedExpressionTree<P>
   }
 
   public countTotalNodes(nodeKey: string = this.rootNodeId) {
-    // const nodeId = this._getNodeIdOrThrow(nodeKey);
     return this.getTreeNodeIdsAt(nodeKey).length;
   }
 
@@ -174,36 +165,21 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this._keyStore.getValue(nodeId);
   }
 
-  private _getNodeIdOrThrow(nodeKey: string): string {
+  // protected - for testing only
+  _getNodeIdOrThrow(nodeKey: string): string {
     const nodeId = this._getNodeId(nodeKey);
     if (nodeId === undefined) {
-      throw new ObfuscatedError(`Failed to find nodeId with key: ${nodeKey}.`);
+      throw new ObfuscatedError(`Failed to find nodeId with key: '${nodeKey}'.`);
     }
     return nodeId;
   }
 
   public removeNodeAt(nodeKey: string): void {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
-    const removeNode = super.removeNodeAt.bind(this._internalTree, nodeId);
-    removeNode();
-    // const siblingIds = this._internalTree.getSiblingIds(nodeId);
-    // is caller or bind?
-    // you are duplicating work because the base class cant call these methods
-    // need a hardDelete that bypasses the two-child rule
-    // if (siblingIds.length > 1) {
-    //   return super.removeNodeAt(nodeId);
-    // }
-    // const parentId = this.getParentNodeId(nodeId);
-    // const siblingContent = this.getChildContentAt(siblingIds[0]);
-
-    // this.replaceNodeContent(parentId, siblingContent);
-
-    // super.removeNodeAt(siblingIds[0]);
-    // super.removeNodeAt(nodeId);
+    super.removeNodeAt.call(this._internalTree, nodeId);
   }
 
   protected reverseMapKeys(keys: string[]): string[] {
-    // not sure this is necessary
     return keys.map((nodeId) => {
       return this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
     });

@@ -17,6 +17,7 @@ import type {
   TPredicateNodeTypes,
   TPredicateTypes,
 } from "../DirectedGraph/AbstractExpressionTree/types";
+import { ObfuscatedError } from "./ObfuscatedError";
 
 class TestWidget {
   private _name: string;
@@ -34,12 +35,9 @@ class TestObfuscatedTree<P> extends AbstractObfuscatedExpressionTree<P> {
     return this.buildReverseMap();
   }
 
-  // public reverseMapKeys(keys: string[]) {
-  //   return super.reverseMapKeys(keys);
-  // }
-  // reverseMapTestNodeIds(nodeIds: string[]): string{
-  //   this.
-  // }
+  public getNodeIdOrThrow(nodeKey: string) {
+    return this._getNodeIdOrThrow(nodeKey);
+  }
 }
 class TestClearTextTree<P> extends AbstractExpressionTree<P> {}
 
@@ -165,7 +163,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
   });
   describe(".removeNode", () => {
     it("Should remove single node if not single child, elevate single child.", () => {
-      //
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
       const exposedTree = new ExposedTree();
       const {
@@ -214,6 +211,48 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(
         privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));
+    });
+  });
+  describe(".getSiblingIds", () => {
+    it("Should return siblings of a given node.", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      const exposedTree = new ExposedTree();
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
+
+      const privateTree = new TestObfuscatedTree(exposedTree);
+
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
+
+      expect(privateTree.getSiblingIds(privateTree.rootNodeId)).toStrictEqual([]);
+      expect(privateTree.getSiblingIds(dTreeIds["child_0"])).toStrictEqual([
+        dTreeIds["child_1"],
+        dTreeIds["child_2"],
+      ]);
+    });
+  });
+  describe("private/protected methods", () => {
+    it(".getNodeIdOrThrow - will throw if key is not found.", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      const exposedTree = new ExposedTree();
+      const privateTree = new TestObfuscatedTree(exposedTree);
+
+      const willThrow = () => {
+        privateTree.getNodeIdOrThrow("_DOES_NOT_EXIST_");
+      };
+
+      expect(willThrow).toThrow(
+        new ObfuscatedError("Failed to find nodeId with key: '_DOES_NOT_EXIST_'.")
+      );
     });
   });
 });
