@@ -255,4 +255,77 @@ describe("AbstractObfuscatedExpressionTree", () => {
       );
     });
   });
+  describe(".visit", () => {
+    it.only("Blue skies", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      const exposedTree = new ExposedTree();
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
+
+      const privateTree = new TestObfuscatedTree(exposedTree);
+
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
+
+      const parentVisitor = new TestTreeVisitor();
+      const subTreeVisitor0 = new TestTreeVisitor();
+      const subTreeVisitor1 = new TestTreeVisitor();
+
+      privateTree.visitAllAt(parentVisitor);
+      subtree0.visitAllAt(subTreeVisitor0);
+      subtree1.visitAllAt(subTreeVisitor1);
+      const x = parentVisitor.contentItems.sort(SortPredicateTest);
+      //      dTree._internalTree has  13 items - parentVisitor has 18 (maybe non-uniqueID whichs is ok)
+      const x1 = OO["root"];
+
+      expect(parentVisitor.contentItems.sort(SortPredicateTest)).toStrictEqual(
+        [
+          OO["root"],
+          OO["child_0"],
+          OO["child_0_0"],
+          OO["child_0_1"],
+          OO["child_0_2"],
+          OO["child_1"],
+          OO["child_1_0"],
+          OO["child_1_1"],
+          OO["child_1_2"],
+          OO["child_2"],
+          OO["child_2_0"],
+          OO["child_2_1"],
+          OO["child_2_2"],
+
+          OO["subtree0:root"],
+          OO["subtree0:child_0"],
+          OO["subtree0:child_1"],
+          OO["subtree0:child_2"],
+          OO["subtree1:root"],
+          OO["subtree1:child_0"],
+          OO["subtree1:child_1"],
+          OO["subtree1:child_2"],
+        ].sort(SortPredicateTest)
+      );
+      expect(subTreeVisitor0.contentItems).toStrictEqual([
+        OO["subtree0:root"],
+        OO["subtree0:child_0"],
+        OO["subtree0:child_1"],
+        OO["subtree0:child_2"],
+      ]);
+      expect(subTreeVisitor1.contentItems).toStrictEqual([
+        OO["subtree1:root"],
+        OO["subtree1:child_0"],
+        OO["subtree1:child_1"],
+        OO["subtree1:child_2"],
+      ]);
+
+      // const subtreePojo = dTree.toPojo(); dTree should have toPojo,?
+    });
+  });
 });

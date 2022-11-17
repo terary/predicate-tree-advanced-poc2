@@ -452,7 +452,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     nodeId: string = this._rootNodeId,
     parentNodeId: string = this._rootNodeId
   ): void {
-    const childrenIds = this.getChildrenNodeIdsOf(nodeId, visitor.includeSubtrees);
+    const childrenIds = this._getChildrenNodeIds(nodeId, visitor.includeSubtrees);
     const content = this._getChildContent(nodeId);
     // is this _getChildC... necessary?
     // can we use normal, the need for all that weird private stuff _ is gone

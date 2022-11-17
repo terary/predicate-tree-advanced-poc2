@@ -6,9 +6,8 @@ import { KeyStore } from "../DirectedGraph/keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../DirectedGraph/types";
 import { IAppendChildNodeIds } from "../DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
-import { subtract } from "lodash";
-import { CallTracker } from "assert";
 import { ObfuscatedError } from "./ObfuscatedError";
+import { AbstractDirectedGraph } from "../DirectedGraph/AbstractDirectedGraph";
 abstract class AbstractObfuscatedExpressionTree<P>
   extends AbstractExpressionTree<P>
   implements IObfuscatedExpressionTree<P>
@@ -182,6 +181,55 @@ abstract class AbstractObfuscatedExpressionTree<P>
   protected reverseMapKeys(keys: string[]): string[] {
     return keys.map((nodeId) => {
       return this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
+    });
+  }
+
+  private wrapVisitor(visitor: ITreeVisitor<P>) {
+    return {
+      includeSubtrees: visitor.includeSubtrees,
+      visit: (nodeKey: string, nodeContent: TGenericNodeContent<P>, parentKey: string) => {
+        // const nodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
+        // const parentKey = this._keyStore.reverseLookUpExactlyOneOrThrow(parentId);
+        visitor.visit(nodeKey, nodeContent, parentKey);
+      },
+    };
+  }
+  public x_visitAllAt(visitor: ITreeVisitor<P>, nodeId?: string): void {
+    const visitorWrapper = {
+      includeSubtrees: visitor.includeSubtrees,
+      visit: (nodeId: string, nodeContent: TGenericNodeContent<P>, parentId: string) => {
+        const nodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
+        const parentKey = this._keyStore.reverseLookUpExactlyOneOrThrow(parentId);
+        visitor.visit(nodeKey, nodeContent, parentKey);
+      },
+    };
+    this._internalTree.visitAllAt(visitorWrapper);
+  }
+
+  public visitAllAt(
+    visitor: ITreeVisitor<P>,
+    nodeId: string = this.rootNodeId,
+    parentNodeId: string = this.rootNodeId
+  ): void {
+    const childrenIds = this.getChildrenNodeIdsOf(nodeId, visitor.includeSubtrees);
+    const content = this.getChildContentAt(nodeId);
+    const wrappedVisitor = this.wrapVisitor(visitor);
+
+    // if (content._internalTree && content._internalTree instanceof AbstractDirectedGraph) {
+    if (visitor.includeSubtrees && content instanceof AbstractObfuscatedExpressionTree) {
+      content._internalTree._visitAllAt(wrappedVisitor);
+    } else if (
+      visitor.includeSubtrees &&
+      content instanceof AbstractObfuscatedExpressionTree
+    ) {
+      content._visitAllAt(visitor);
+    } else {
+      // @ts-ignore - content is possible null
+      visitor.visit(nodeId, content, parentNodeId);
+    }
+
+    childrenIds.forEach((childId) => {
+      this.visitAllAt(wrappedVisitor, childId, nodeId);
     });
   }
 
