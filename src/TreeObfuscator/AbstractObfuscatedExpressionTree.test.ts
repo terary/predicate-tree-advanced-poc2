@@ -255,8 +255,8 @@ describe("AbstractObfuscatedExpressionTree", () => {
       );
     });
   });
-  describe(".visit", () => {
-    it.only("Blue skies", () => {
+  describe(".visitAllAt", () => {
+    it("Blue skies", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
       const exposedTree = new ExposedTree();
       const {

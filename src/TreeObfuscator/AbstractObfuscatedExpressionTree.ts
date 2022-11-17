@@ -194,17 +194,6 @@ abstract class AbstractObfuscatedExpressionTree<P>
       },
     };
   }
-  public x_visitAllAt(visitor: ITreeVisitor<P>, nodeId?: string): void {
-    const visitorWrapper = {
-      includeSubtrees: visitor.includeSubtrees,
-      visit: (nodeId: string, nodeContent: TGenericNodeContent<P>, parentId: string) => {
-        const nodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
-        const parentKey = this._keyStore.reverseLookUpExactlyOneOrThrow(parentId);
-        visitor.visit(nodeKey, nodeContent, parentKey);
-      },
-    };
-    this._internalTree.visitAllAt(visitorWrapper);
-  }
 
   public visitAllAt(
     visitor: ITreeVisitor<P>,
@@ -215,16 +204,9 @@ abstract class AbstractObfuscatedExpressionTree<P>
     const content = this.getChildContentAt(nodeId);
     const wrappedVisitor = this.wrapVisitor(visitor);
 
-    // if (content._internalTree && content._internalTree instanceof AbstractDirectedGraph) {
     if (visitor.includeSubtrees && content instanceof AbstractObfuscatedExpressionTree) {
       content._internalTree._visitAllAt(wrappedVisitor);
-    } else if (
-      visitor.includeSubtrees &&
-      content instanceof AbstractObfuscatedExpressionTree
-    ) {
-      content._visitAllAt(visitor);
     } else {
-      // @ts-ignore - content is possible null
       visitor.visit(nodeId, content, parentNodeId);
     }
 
