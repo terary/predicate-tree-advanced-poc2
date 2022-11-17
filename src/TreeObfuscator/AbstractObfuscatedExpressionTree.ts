@@ -142,6 +142,12 @@ abstract class AbstractObfuscatedExpressionTree<P>
     );
   }
 
+  public getParentNodeId(nodeKey: string): string {
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+    const parentNodeId = this._internalTree.getParentNodeId(nodeId);
+    return this._keyStore.reverseLookUpExactlyOneOrThrow(parentNodeId);
+  }
+
   public getSiblingIds(nodeKey: string): string[] {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
     return this.reverseMapKeys(this._internalTree.getSiblingIds(nodeId));
@@ -171,6 +177,11 @@ abstract class AbstractObfuscatedExpressionTree<P>
       throw new ObfuscatedError(`Failed to find nodeId with key: '${nodeKey}'.`);
     }
     return nodeId;
+  }
+
+  public isLeaf(nodeKey: string): boolean {
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+    return this._internalTree.isLeaf(nodeId);
   }
 
   public removeNodeAt(nodeKey: string): void {
@@ -212,6 +223,32 @@ abstract class AbstractObfuscatedExpressionTree<P>
 
     childrenIds.forEach((childId) => {
       this.visitAllAt(wrappedVisitor, childId, nodeId);
+    });
+  }
+
+  public visitLeavesOf(visitor: ITreeVisitor<P>, nodeKey: string = this.rootNodeId): void {
+    const wrappedVisitor = this.wrapVisitor(visitor);
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+    // this._internalTree.visitLeavesOf(wrappedVisitor, nodeId);
+
+    const childrenIds = this.getDescendantNodeIds(nodeKey, visitor.includeSubtrees);
+
+    const leavesOf = childrenIds.filter((childId) => {
+      return this.isLeaf(childId) && !this.isSubtree(childId);
+    });
+
+    if (visitor.includeSubtrees) {
+      leavesOf.push(...this.getSubgraphIdsAt(nodeKey));
+    }
+
+    leavesOf.forEach((leafNodeKey) => {
+      const parentKey = this.getParentNodeId(leafNodeKey);
+      const content = this.getChildContentAt(leafNodeKey);
+      if (content instanceof AbstractObfuscatedExpressionTree) {
+        content._internalTree.visitLeavesOf(visitor);
+      } else {
+        visitor.visit(leafNodeKey, content, parentKey);
+      }
     });
   }
 

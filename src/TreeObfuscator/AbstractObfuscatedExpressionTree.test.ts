@@ -18,6 +18,7 @@ import type {
   TPredicateTypes,
 } from "../DirectedGraph/AbstractExpressionTree/types";
 import { ObfuscatedError } from "./ObfuscatedError";
+import { values } from "lodash";
 
 class TestWidget {
   private _name: string;
@@ -255,8 +256,8 @@ describe("AbstractObfuscatedExpressionTree", () => {
       );
     });
   });
-  describe(".visitAllAt", () => {
-    it("Blue skies", () => {
+  describe("visitors", () => {
+    it(".visitAllAt - Blue skies", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
       const exposedTree = new ExposedTree();
       const {
@@ -279,13 +280,12 @@ describe("AbstractObfuscatedExpressionTree", () => {
       const subTreeVisitor0 = new TestTreeVisitor();
       const subTreeVisitor1 = new TestTreeVisitor();
 
+      // exercise
       privateTree.visitAllAt(parentVisitor);
       subtree0.visitAllAt(subTreeVisitor0);
       subtree1.visitAllAt(subTreeVisitor1);
-      const x = parentVisitor.contentItems.sort(SortPredicateTest);
-      //      dTree._internalTree has  13 items - parentVisitor has 18 (maybe non-uniqueID whichs is ok)
-      const x1 = OO["root"];
 
+      // post conditions
       expect(parentVisitor.contentItems.sort(SortPredicateTest)).toStrictEqual(
         [
           OO["root"],
@@ -320,6 +320,108 @@ describe("AbstractObfuscatedExpressionTree", () => {
       ]);
       expect(subTreeVisitor1.contentItems).toStrictEqual([
         OO["subtree1:root"],
+        OO["subtree1:child_0"],
+        OO["subtree1:child_1"],
+        OO["subtree1:child_2"],
+      ]);
+
+      // const subtreePojo = dTree.toPojo(); dTree should have toPojo,?
+    });
+    it(".visitLeavesOf - Blue skies", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      const exposedTree = new ExposedTree();
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
+
+      const privateTree = new TestObfuscatedTree(exposedTree);
+
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
+
+      const parentVisitor = new TestTreeVisitor();
+      parentVisitor.includeSubtrees = false;
+      const parentVisitorWithSubtree = new TestTreeVisitor();
+      parentVisitorWithSubtree.includeSubtrees = true;
+      const subTreeVisitor0 = new TestTreeVisitor();
+      const subTreeVisitor1 = new TestTreeVisitor();
+
+      // exercise
+      privateTree.visitLeavesOf(parentVisitor);
+      privateTree.visitLeavesOf(parentVisitorWithSubtree);
+      subtree0.visitLeavesOf(subTreeVisitor0);
+      subtree1.visitLeavesOf(subTreeVisitor1);
+
+      // const x = parentVisitor.contentItems.sort(SortPredicateTest);
+      // post conditions
+      expect(parentVisitorWithSubtree.contentItems.sort(SortPredicateTest)).toStrictEqual(
+        [
+          // OO["root"],
+          // OO["child_0"],
+          OO["child_0_0"],
+          OO["child_0_1"],
+          OO["child_0_2"],
+          // OO["child_1"],
+          OO["child_1_0"],
+          OO["child_1_1"],
+          OO["child_1_2"],
+          // OO["child_2"],
+          OO["child_2_0"],
+          OO["child_2_1"],
+          OO["child_2_2"],
+
+          // // OO["subtree0:root"],
+          OO["subtree0:child_0"],
+          OO["subtree0:child_1"],
+          OO["subtree0:child_2"],
+          // // OO["subtree1:root"],
+          OO["subtree1:child_0"],
+          OO["subtree1:child_1"],
+          OO["subtree1:child_2"],
+        ].sort(SortPredicateTest)
+      );
+
+      expect(parentVisitor.contentItems.sort(SortPredicateTest)).toStrictEqual(
+        [
+          // OO["root"],
+          // OO["child_0"],
+          OO["child_0_0"],
+          OO["child_0_1"],
+          OO["child_0_2"],
+          // OO["child_1"],
+          OO["child_1_0"],
+          OO["child_1_1"],
+          OO["child_1_2"],
+          // OO["child_2"],
+          OO["child_2_0"],
+          OO["child_2_1"],
+          OO["child_2_2"],
+
+          // // OO["subtree0:root"],
+          // OO["subtree0:child_0"],
+          // OO["subtree0:child_1"],
+          // OO["subtree0:child_2"],
+          // // OO["subtree1:root"],
+          // OO["subtree1:child_0"],
+          // OO["subtree1:child_1"],
+          // OO["subtree1:child_2"],
+        ].sort(SortPredicateTest)
+      );
+      expect(subTreeVisitor0.contentItems).toStrictEqual([
+        // OO["subtree0:root"],
+        OO["subtree0:child_0"],
+        OO["subtree0:child_1"],
+        OO["subtree0:child_2"],
+      ]);
+      expect(subTreeVisitor1.contentItems).toStrictEqual([
+        // OO["subtree1:root"],
         OO["subtree1:child_0"],
         OO["subtree1:child_1"],
         OO["subtree1:child_2"],
