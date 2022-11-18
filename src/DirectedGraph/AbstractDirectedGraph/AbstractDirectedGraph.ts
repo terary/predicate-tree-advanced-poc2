@@ -255,7 +255,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return childNodeId;
   }
 
-  private getNewInstance(rootNodeId: string) {
+  protected getNewInstance(rootNodeId: string) {
     // used by createSubGraph to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?

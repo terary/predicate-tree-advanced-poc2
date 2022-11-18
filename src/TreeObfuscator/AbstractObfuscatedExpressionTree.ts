@@ -97,6 +97,32 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return reverseMap;
   }
 
+  public createSubGraphAt(rootNodeKey: string): ITree<P> {
+    const rootNodeId = this._getNodeIdOrThrow(rootNodeKey);
+    const subtree = AbstractObfuscatedExpressionTree.createSubgraphAt(rootNodeId, this);
+    // @ts-ignore - typescript doesn't seem to like [''] accessor
+    this._keyStore.putValue(subtree["_rootNodeId"], subtree.rootNodeId);
+    return subtree;
+  }
+
+  protected static createSubgraphAt<P>(
+    nodeId: string,
+    parentGraph: AbstractObfuscatedExpressionTree<P>
+  ): ITree<P> {
+    const subgraph = parentGraph.getNewInstance<AbstractObfuscatedExpressionTree<P>>(nodeId);
+    const subgraphParentNodeId = parentGraph._internalTree.appendChildNodeWithContent(
+      nodeId,
+      subgraph as unknown as ITree<P>
+    );
+
+    subgraph._rootNodeId = subgraphParentNodeId;
+    subgraph._nodeDictionary = {};
+    subgraph._nodeDictionary[subgraph._rootNodeId] = { nodeContent: null };
+    subgraph._incrementor = parentGraph._incrementor;
+
+    return subgraph as unknown as ITree<P>;
+  }
+
   public countTotalNodes(nodeKey: string = this.rootNodeId) {
     return this.getTreeNodeIdsAt(nodeKey).length;
   }
@@ -140,6 +166,17 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this.reverseMapKeys(
       this._internalTree.getDescendantNodeIds(parentNodeId, shouldIncludeSubtrees)
     );
+  }
+
+  protected getNewInstance<U>(rootNodeId: string): U {
+    // used by createSubGraph to be flexible with actual constructor type
+
+    // can we rethink this.  Is there a better way?
+    // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
+    const internSubtree = new this._internalTree.constructor(rootNodeId) as typeof this;
+    // const privateTree = new ObfuscatedSubtree(internSubtree);
+    return new ObfuscatedSubtree(internSubtree) as unknown as U;
+    // return new this.constructor(rootNodeId) as typeof this;
   }
 
   public getParentNodeId(nodeKey: string): string {
@@ -187,6 +224,11 @@ abstract class AbstractObfuscatedExpressionTree<P>
   public removeNodeAt(nodeKey: string): void {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
     super.removeNodeAt.call(this._internalTree, nodeId);
+  }
+
+  public replaceNodeContent(nodeKey: string, nodeContent: TGenericNodeContent<P>): void {
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+    this._internalTree.replaceNodeContent(nodeId, nodeContent);
   }
 
   protected reverseMapKeys(keys: string[]): string[] {

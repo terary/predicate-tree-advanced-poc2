@@ -430,4 +430,64 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // const subtreePojo = dTree.toPojo(); dTree should have toPojo,?
     });
   });
+  describe("Integrity Check", () => {
+    it.only("It should retrieve  the same object inserted.", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      const exposedTree = new ExposedTree();
+      const privateTree = new TestObfuscatedTree(exposedTree);
+
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(privateTree);
+
+      // const reverseMap = privateTree.getIdKeyReverseMap();
+      // Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+      //   dTreeIds[debugLabel] = reverseMap[debugLabel];
+      // });
+
+      // exercise
+      expect(privateTree.getChildContentAt(dTreeIds["root"])).toBe(OO["root"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_0"])).toBe(OO["child_0"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_0_0"])).toBe(OO["child_0_0"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_0_1"])).toBe(OO["child_0_1"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_0_2"])).toBe(OO["child_0_2"]);
+
+      expect(privateTree.getChildContentAt(dTreeIds["child_1"])).toBe(OO["child_1"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_1_0"])).toBe(OO["child_1_0"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_1_1"])).toBe(OO["child_1_1"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_1_2"])).toBe(OO["child_1_2"]);
+
+      expect(privateTree.getChildContentAt(dTreeIds["child_2"])).toBe(OO["child_2"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_2_0"])).toBe(OO["child_2_0"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_2_1"])).toBe(OO["child_2_1"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_2_2"])).toBe(OO["child_2_2"]);
+
+      expect(privateTree.getChildContentAt(subtree0.rootNodeId)).toBe(subtree0);
+      expect(subtree0.getChildContentAt(dTreeIds["subtree0:child_0"])).toBe(
+        OO["subtree0:child_0"]
+      );
+      expect(subtree0.getChildContentAt(dTreeIds["subtree0:child_1"])).toBe(
+        OO["subtree0:child_1"]
+      );
+      expect(subtree0.getChildContentAt(dTreeIds["subtree0:child_2"])).toBe(
+        OO["subtree0:child_2"]
+      );
+
+      expect(privateTree.getChildContentAt(subtree1.rootNodeId)).toBe(subtree1);
+      expect(subtree1.getChildContentAt(dTreeIds["subtree1:child_0"])).toBe(
+        OO["subtree1:child_0"]
+      );
+      expect(subtree1.getChildContentAt(dTreeIds["subtree1:child_1"])).toBe(
+        OO["subtree1:child_1"]
+      );
+      expect(subtree1.getChildContentAt(dTreeIds["subtree1:child_2"])).toBe(
+        OO["subtree1:child_2"]
+      );
+    });
+  });
 });
