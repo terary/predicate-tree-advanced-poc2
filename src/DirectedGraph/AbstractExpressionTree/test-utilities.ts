@@ -172,8 +172,8 @@ const make3Children2Subtree3Children = (dTree: ITree<TPredicateTypes>) => {
     dTree.rootNodeId,
     originalWidgetsSubtree["child_0"]
   );
-  // const subtree0 = dTree.createSubGraphAt(dTreeIds["child_0"]);
-  const subtree0 = dTree.createSubGraphAt(dTree.rootNodeId);
+  // const subtree0 = dTree.createSubtreeAt(dTreeIds["child_0"]);
+  const subtree0 = dTree.createSubtreeAt(dTree.rootNodeId);
   dTreeIds["subtree0:root"] = subtree0.rootNodeId;
   subtree0.replaceNodeContent(subtree0.rootNodeId, originalWidgetsSubtree["subtree0:root"]);
 
@@ -182,7 +182,7 @@ const make3Children2Subtree3Children = (dTree: ITree<TPredicateTypes>) => {
     originalWidgetsSubtree["child_1"]
   );
 
-  const subtree1 = dTree.createSubGraphAt(dTree.rootNodeId);
+  const subtree1 = dTree.createSubtreeAt(dTree.rootNodeId);
   dTreeIds["subtree1:root"] = subtree1.rootNodeId;
   subtree1.replaceNodeContent(subtree1.rootNodeId, originalWidgetsSubtree["subtree1:root"]);
 

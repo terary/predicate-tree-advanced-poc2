@@ -31,8 +31,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
     this._rootKey = this._keyStore.reverseLookUpExactlyOneOrThrow(
       this._internalTree.rootNodeId
     );
-    this._internalTree.getSubgraphIdsAt(this._internalTree.rootNodeId).forEach((subtreeId) => {
-      // maybe instead of getSubgraphIdsAt, just shouldIncludeSubtree above?
+    this._internalTree.getSubtreeIdsAt(this._internalTree.rootNodeId).forEach((subtreeId) => {
       const subtree = this._internalTree.getChildContentAt(subtreeId);
       this._keyStore.putValue(subtreeId);
 
@@ -93,7 +92,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
       reverseMap[nodeId] = nodeKey;
     });
 
-    const subtreeIds = this._internalTree.getSubgraphIdsAt(this._internalTree.rootNodeId);
+    const subtreeIds = this._internalTree.getSubtreeIdsAt(this._internalTree.rootNodeId);
     subtreeIds.forEach((subtreeId) => {
       const subtree = this._internalTree.getChildContentAt(subtreeId) as ObfuscatedSubtree<P>;
       subtree.buildReverseMap(reverseMap);
@@ -146,40 +145,40 @@ abstract class AbstractObfuscatedExpressionTree<P>
     );
   }
 
-  // protected getNewInstance<U>(subtreeParentNodeId: string): U {
-  public createSubGraphAt(subtreeParentNodeId: string): ITree<P> {
-    // used by createSubGraph to be flexible with actual constructor type
+  /**
+   * The tricky bit here is that the subtree._rootNodeKey and subtree._rootNodeId
+   * must be the same as parent's node.nodeKey and node.nodeId
+   * @param targetParentNodeId
+   * @returns
+   */
+  public createSubtreeAt(targetParentNodeId: string): ITree<P> {
+    // used by createSubTree to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?
-    const subgraphParentNodeId = this._internalTree.appendChildNodeWithContent(
-      subtreeParentNodeId,
+    const subtreeParentNodeId = this._internalTree.appendChildNodeWithContent(
+      targetParentNodeId,
       null
     );
 
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
-    const privateTree = new this._internalTree.constructor(subgraphParentNodeId); // as typeof this._internalTree;
+    const privateTree = new this._internalTree.constructor(subtreeParentNodeId); // as typeof this._internalTree;
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
     const subtree = new this.constructor(privateTree) as typeof this;
-    this._internalTree.replaceNodeContent(subgraphParentNodeId, subtree);
+    this._internalTree.replaceNodeContent(subtreeParentNodeId, subtree);
 
-    const subgraphParentNodeKey = this._keyStore.putValue(subgraphParentNodeId);
+    const subtreeParentNodeKey = this._keyStore.putValue(subtreeParentNodeId);
     subtree._keyStore = new KeyStore(); // this is bad idea if we want to initialize with nodeContent
-    subtree._keyStore.putValue(subgraphParentNodeId, subgraphParentNodeKey);
+    subtree._keyStore.putValue(subtreeParentNodeId, subtreeParentNodeKey);
 
-    // const parentNodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(subgraphParentNodeId);
-    // subtree._keyStore.putValue(this.ro, parentNodeKey);
-    // this._keyStore.replaceValue(rootKey, subgraphParentNodeKey);
-
-    subtree._rootNodeId = subgraphParentNodeId;
+    subtree._rootNodeId = subtreeParentNodeId;
     subtree._nodeDictionary = {
-      [subgraphParentNodeId]: { nodeContent: null },
+      [subtreeParentNodeId]: { nodeContent: null },
     };
 
-    subtree._rootKey = subgraphParentNodeKey;
+    subtree._rootKey = subtreeParentNodeKey;
     subtree._internalTree["_incrementor"] = this._internalTree["_incrementor"];
 
     return subtree; //
-    // return subtree as unknown as U; //
   }
 
   public getParentNodeId(nodeKey: string): string {
@@ -283,7 +282,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
     });
 
     if (visitor.includeSubtrees) {
-      leavesOf.push(...this.getSubgraphIdsAt(nodeKey));
+      leavesOf.push(...this.getSubtreeIdsAt(nodeKey));
     }
 
     leavesOf.forEach((leafNodeKey) => {

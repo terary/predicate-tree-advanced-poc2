@@ -4,7 +4,7 @@ import { ITree } from "../ITree";
 
 class ExtAbstractTestClass extends AbstractDirectedGraph<WidgetType> {}
 
-const make3ChildrenSubgraph2Children = (dTree: ITree<WidgetType>) => {
+const make3ChildrenSubtree2Children = (dTree: ITree<WidgetType>) => {
   // const dTree = new DirectedGraph<WidgetType>();
   const dTreeIds: { [id: string]: string } = {};
   dTree.replaceNodeContent(dTree.rootNodeId, { label: "root" });
@@ -25,14 +25,14 @@ const make3ChildrenSubgraph2Children = (dTree: ITree<WidgetType>) => {
     originalWidgets["child_2"]
   );
 
-  const subgraph = dTree.createSubGraphAt(dTreeIds["child_1"]);
-  dTreeIds["child_1:subgraph_root"] = subgraph.rootNodeId;
-  subgraph.replaceNodeContent(subgraph.rootNodeId, { label: "subgraph:root" });
-  dTreeIds["child_1:subgraph_0"] = subgraph.appendChildNodeWithContent(subgraph.rootNodeId, {
-    label: "child_1:subgraph_0",
+  const subtree = dTree.createSubtreeAt(dTreeIds["child_1"]);
+  dTreeIds["child_1:subtree_root"] = subtree.rootNodeId;
+  subtree.replaceNodeContent(subtree.rootNodeId, { label: "subtree:root" });
+  dTreeIds["child_1:subtree_0"] = subtree.appendChildNodeWithContent(subtree.rootNodeId, {
+    label: "child_1:subtree_0",
   });
-  dTreeIds["child_1:subgraph_1"] = subgraph.appendChildNodeWithContent(subgraph.rootNodeId, {
-    label: "child_1:subgraph_1",
+  dTreeIds["child_1:subtree_1"] = subtree.appendChildNodeWithContent(subtree.rootNodeId, {
+    label: "child_1:subtree_1",
   });
 
   // *tmc* good check to have, but gums up debugging
@@ -41,7 +41,7 @@ const make3ChildrenSubgraph2Children = (dTree: ITree<WidgetType>) => {
   return {
     dTreeIds,
     dTree: dTree as ITree<WidgetType>,
-    subgraph: subgraph as ITree<WidgetType>,
+    subtree: subtree as ITree<WidgetType>,
   };
 };
 
@@ -57,7 +57,7 @@ const make3Children2Subtree3Children = (dTree: ITree<WidgetType>) => {
     originalWidgetsSubtree["child_0"]
   );
 
-  const subtree0 = dTree.createSubGraphAt(dTree.rootNodeId);
+  const subtree0 = dTree.createSubtreeAt(dTree.rootNodeId);
   dTreeIds["subtree0:root"] = subtree0.rootNodeId;
   subtree0.replaceNodeContent(subtree0.rootNodeId, originalWidgetsSubtree["subtree0:root"]);
 
@@ -66,7 +66,7 @@ const make3Children2Subtree3Children = (dTree: ITree<WidgetType>) => {
     originalWidgetsSubtree["child_1"]
   );
 
-  const subtree1 = dTree.createSubGraphAt(dTree.rootNodeId);
+  const subtree1 = dTree.createSubtreeAt(dTree.rootNodeId);
   dTreeIds["subtree1:root"] = subtree1.rootNodeId;
   subtree1.replaceNodeContent(subtree1.rootNodeId, originalWidgetsSubtree["subtree1:root"]);
 
@@ -390,7 +390,7 @@ export {
   originalWidgets,
   make3Children9GrandchildrenTree,
   make3Children9GrandchildrenTreeAbstract,
-  make3ChildrenSubgraph2Children,
+  make3ChildrenSubtree2Children,
   make3Children2Subtree3Children,
   WidgetSort,
   WidgetType,

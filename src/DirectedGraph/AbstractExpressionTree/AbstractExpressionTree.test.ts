@@ -343,7 +343,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       const childrenIds = dTree.getChildrenNodeIdsOf(dTree.rootNodeId);
       expect(dTree.getChildContentAt(childrenIds[0])).toStrictEqual({ operator: "$or" });
 
-      const subtreeIds = dTree.getSubgraphIdsAt(dTree.rootNodeId);
+      const subtreeIds = dTree.getSubtreeIdsAt(dTree.rootNodeId);
       const subtree = dTree.getChildContentAt(
         subtreeIds[0]
       ) as unknown as ClassTestAbstractExpressionTree;

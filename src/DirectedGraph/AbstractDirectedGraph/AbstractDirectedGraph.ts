@@ -24,7 +24,7 @@ const makeDescendantRegExp = (nodeId: string, delim: string, options = "") => {
 type transformToPojoType = typeof defaultToPojoTransformer;
 abstract class AbstractDirectedGraph<T> implements ITree<T> {
   static EmptyNode = null;
-  static SubGraphNodeTypeName = "subtree";
+  static SubtreeNodeTypeName = "subtree";
 
   protected _nodeDictionary: {
     [nodeId: string]: TGenericNodeType<T>;
@@ -251,21 +251,25 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return childNodeId;
   }
 
-  // protected getNewInstance(parentNodeId: string) {
-  //  public x_createSubGraphAt(rootNodeId: string): ITree<T> {
-  public createSubGraphAt(parentNodeId: string): ITree<T> {
-    // used by createSubGraph to be flexible with actual constructor type
+  /**
+   * The tricky bit here is that the  subtree._rootNodeId
+   * must be the same as parent's node.nodeId
+   * @param targetParentNodeId
+   * @returns
+   */
+  public createSubtreeAt(parentNodeId: string): ITree<T> {
+    // used by createSubtree to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
     const subtree = new this.constructor(parentNodeId) as typeof this;
 
-    const subgraphParentNodeId = this._appendChildNodeWithContent(
+    const subtreeParentNodeId = this._appendChildNodeWithContent(
       parentNodeId,
       subtree as unknown as ITree<T>
     );
 
-    subtree._rootNodeId = subgraphParentNodeId;
+    subtree._rootNodeId = subtreeParentNodeId;
     subtree._nodeDictionary = {};
     subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
     subtree._incrementor = this._incrementor;
@@ -319,7 +323,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return childrenIds;
   }
 
-  public getSubgraphIdsAt(nodeId: string = this.rootNodeId) {
+  public getSubtreeIdsAt(nodeId: string = this.rootNodeId) {
     const allNodeIds = this.getDescendantNodeIds(nodeId, true);
     const self = this;
     return allNodeIds.filter((nodeId: string) => {
@@ -437,7 +441,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
   protected _replaceNodeContent(nodeId: string, nodeContent: TGenericNodeContent<T>): void {
     if (this.isRoot(nodeId) && nodeContent instanceof AbstractDirectedGraph) {
-      throw new DirectedGraphError(`Can not replace root with subgraph.`);
+      throw new DirectedGraphError(`Can not replace root with subtree.`);
     }
 
     this._nodeDictionary[nodeId] = { nodeContent };
@@ -510,8 +514,8 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     const childrenNodes = treeUtils.extractChildrenNodes<T>(jsonParentId, treeObject);
 
     Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
-      if (nodePojo.nodeType === AbstractDirectedGraph.SubGraphNodeTypeName) {
-        const subtree = dTree.createSubGraphAt(treeParentId);
+      if (nodePojo.nodeType === AbstractDirectedGraph.SubtreeNodeTypeName) {
+        const subtree = dTree.createSubtreeAt(treeParentId);
         subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
         AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
           subtree.rootNodeId,
@@ -605,7 +609,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
       });
 
       workingPojoDocument[currentNodeId] = {
-        nodeType: AbstractDirectedGraph.SubGraphNodeTypeName,
+        nodeType: AbstractDirectedGraph.SubtreeNodeTypeName,
         nodeContent: nodeContent.getChildContentAt(nodeContent.rootNodeId),
         parentId: parentNodeId,
       };

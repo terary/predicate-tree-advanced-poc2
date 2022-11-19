@@ -30,7 +30,7 @@ interface ITree<T> {
   countDescendantsOf(nodeId?: string): number;
   countTotalNodes(nodeId?: string): number;
 
-  createSubGraphAt(nodeId: string): ITree<T>;
+  createSubtreeAt(nodeId: string): ITree<T>;
   fromPojoAppendChildNodeWithContent(
     treeParentId: string,
     nodeContent: TGenericNodeContent<T>
@@ -49,7 +49,7 @@ interface ITree<T> {
   ): TGenericNodeContent<T>[];
   getParentNodeId(nodeId: string): string;
   getSiblingIds(nodeId: string): string[];
-  getSubgraphIdsAt(nodeId?: string): string[];
+  getSubtreeIdsAt(nodeId?: string): string[];
   getTreeContentAt(nodeId: string, shouldIncludeSubtrees?: boolean): TGenericNodeContent<T>[];
 
   // nodeIds of subtrees doesn't make sense.  Internally the tree is different so
