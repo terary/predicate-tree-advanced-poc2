@@ -101,23 +101,6 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return reverseMap;
   }
 
-  public createSubGraphAt(rootNodeKey: string): ITree<P> {
-    const rootNodeId = this._getNodeIdOrThrow(rootNodeKey);
-    const subtree = AbstractObfuscatedExpressionTree.createSubgraphAt(rootNodeId, this);
-    // @ts-ignore - typescript doesn't seem to like [''] accessor
-    //     this._keyStore.putValue(subtree["_rootNodeId"], subtree.rootNodeId);
-    return subtree;
-  }
-
-  protected static createSubgraphAt<P>(
-    nodeId: string,
-    parentGraph: AbstractObfuscatedExpressionTree<P>
-  ): ITree<P> {
-    const subtree = parentGraph.getNewInstance<AbstractObfuscatedExpressionTree<P>>(nodeId);
-
-    return subtree as unknown as ITree<P>;
-  }
-
   public countTotalNodes(nodeKey: string = this.rootNodeId) {
     return this.getTreeNodeIdsAt(nodeKey).length;
   }
@@ -163,7 +146,8 @@ abstract class AbstractObfuscatedExpressionTree<P>
     );
   }
 
-  protected getNewInstance<U>(subtreeParentNodeId: string): U {
+  // protected getNewInstance<U>(subtreeParentNodeId: string): U {
+  public createSubGraphAt(subtreeParentNodeId: string): ITree<P> {
     // used by createSubGraph to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?
@@ -194,7 +178,8 @@ abstract class AbstractObfuscatedExpressionTree<P>
     subtree._rootKey = subgraphParentNodeKey;
     subtree._internalTree["_incrementor"] = this._internalTree["_incrementor"];
 
-    return subtree as unknown as U; //
+    return subtree; //
+    // return subtree as unknown as U; //
   }
 
   public getParentNodeId(nodeKey: string): string {
