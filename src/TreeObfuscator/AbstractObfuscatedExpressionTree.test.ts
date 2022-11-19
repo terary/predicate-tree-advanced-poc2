@@ -431,7 +431,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
     });
   });
   describe("Integrity Check", () => {
-    it.only("It should retrieve  the same object inserted.", () => {
+    it("It should retrieve  the same object inserted.", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
       const exposedTree = new ExposedTree();
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -467,6 +467,8 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(privateTree.getChildContentAt(dTreeIds["child_2_1"])).toBe(OO["child_2_1"]);
       expect(privateTree.getChildContentAt(dTreeIds["child_2_2"])).toBe(OO["child_2_2"]);
 
+      const xr = subtree0.rootNodeId;
+      const x = privateTree.getChildContentAt(subtree0.rootNodeId);
       expect(privateTree.getChildContentAt(subtree0.rootNodeId)).toBe(subtree0);
       expect(subtree0.getChildContentAt(dTreeIds["subtree0:child_0"])).toBe(
         OO["subtree0:child_0"]

@@ -16,8 +16,12 @@ abstract class AbstractObfuscatedExpressionTree<P>
   private _rootKey: string;
   private _keyStore: KeyStore<string>;
 
-  constructor(tree: AbstractExpressionTree<P> = new AbstractExpressionTree()) {
-    super();
+  constructor(
+    tree: AbstractExpressionTree<P> = new AbstractExpressionTree(),
+    rootNodeId?: string,
+    nodeContent?: P
+  ) {
+    super(rootNodeId, nodeContent);
     this._internalTree = tree;
 
     this._keyStore = new KeyStore<string>();
@@ -101,7 +105,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
     const rootNodeId = this._getNodeIdOrThrow(rootNodeKey);
     const subtree = AbstractObfuscatedExpressionTree.createSubgraphAt(rootNodeId, this);
     // @ts-ignore - typescript doesn't seem to like [''] accessor
-    this._keyStore.putValue(subtree["_rootNodeId"], subtree.rootNodeId);
+    //     this._keyStore.putValue(subtree["_rootNodeId"], subtree.rootNodeId);
     return subtree;
   }
 
@@ -109,18 +113,9 @@ abstract class AbstractObfuscatedExpressionTree<P>
     nodeId: string,
     parentGraph: AbstractObfuscatedExpressionTree<P>
   ): ITree<P> {
-    const subgraph = parentGraph.getNewInstance<AbstractObfuscatedExpressionTree<P>>(nodeId);
-    const subgraphParentNodeId = parentGraph._internalTree.appendChildNodeWithContent(
-      nodeId,
-      subgraph as unknown as ITree<P>
-    );
+    const subtree = parentGraph.getNewInstance<AbstractObfuscatedExpressionTree<P>>(nodeId);
 
-    subgraph._rootNodeId = subgraphParentNodeId;
-    subgraph._nodeDictionary = {};
-    subgraph._nodeDictionary[subgraph._rootNodeId] = { nodeContent: null };
-    subgraph._incrementor = parentGraph._incrementor;
-
-    return subgraph as unknown as ITree<P>;
+    return subtree as unknown as ITree<P>;
   }
 
   public countTotalNodes(nodeKey: string = this.rootNodeId) {
@@ -168,15 +163,38 @@ abstract class AbstractObfuscatedExpressionTree<P>
     );
   }
 
-  protected getNewInstance<U>(rootNodeId: string): U {
+  protected getNewInstance<U>(subtreeParentNodeId: string): U {
     // used by createSubGraph to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?
+    const subgraphParentNodeId = this._internalTree.appendChildNodeWithContent(
+      subtreeParentNodeId,
+      null
+    );
+
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
-    const internSubtree = new this._internalTree.constructor(rootNodeId) as typeof this;
-    // const privateTree = new ObfuscatedSubtree(internSubtree);
-    return new ObfuscatedSubtree(internSubtree) as unknown as U;
-    // return new this.constructor(rootNodeId) as typeof this;
+    const privateTree = new this._internalTree.constructor(subgraphParentNodeId); // as typeof this._internalTree;
+    // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
+    const subtree = new this.constructor(privateTree) as typeof this;
+    this._internalTree.replaceNodeContent(subgraphParentNodeId, subtree);
+
+    const subgraphParentNodeKey = this._keyStore.putValue(subgraphParentNodeId);
+    subtree._keyStore = new KeyStore(); // this is bad idea if we want to initialize with nodeContent
+    subtree._keyStore.putValue(subgraphParentNodeId, subgraphParentNodeKey);
+
+    // const parentNodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(subgraphParentNodeId);
+    // subtree._keyStore.putValue(this.ro, parentNodeKey);
+    // this._keyStore.replaceValue(rootKey, subgraphParentNodeKey);
+
+    subtree._rootNodeId = subgraphParentNodeId;
+    subtree._nodeDictionary = {
+      [subgraphParentNodeId]: { nodeContent: null },
+    };
+
+    subtree._rootKey = subgraphParentNodeKey;
+    subtree._internalTree["_incrementor"] = this._internalTree["_incrementor"];
+
+    return subtree as unknown as U; //
   }
 
   public getParentNodeId(nodeKey: string): string {
