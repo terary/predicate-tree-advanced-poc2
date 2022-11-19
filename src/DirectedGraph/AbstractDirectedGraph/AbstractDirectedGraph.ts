@@ -118,10 +118,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return this._getTreeNodeIdsAt(nodeId).length;
   }
 
-  public createSubGraphAt(rootNodeId: string): ITree<T> {
-    return AbstractDirectedGraph.createSubgraphAt(rootNodeId, this);
-  }
-
   private filterIds(filterFn: (key: string) => boolean) {
     return Object.keys(this._nodeDictionary).filter(filterFn);
   }
@@ -255,12 +251,26 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return childNodeId;
   }
 
-  protected getNewInstance(rootNodeId: string) {
+  // protected getNewInstance(parentNodeId: string) {
+  //  public x_createSubGraphAt(rootNodeId: string): ITree<T> {
+  public createSubGraphAt(parentNodeId: string): ITree<T> {
     // used by createSubGraph to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
-    return new this.constructor(rootNodeId) as typeof this;
+    const subtree = new this.constructor(parentNodeId) as typeof this;
+
+    const subgraphParentNodeId = this._appendChildNodeWithContent(
+      parentNodeId,
+      subtree as unknown as ITree<T>
+    );
+
+    subtree._rootNodeId = subgraphParentNodeId;
+    subtree._nodeDictionary = {};
+    subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
+    subtree._incrementor = this._incrementor;
+
+    return subtree;
   }
 
   public getParentNodeId(nodeId: string): string {
@@ -488,24 +498,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
         visitor.visit(nodeId, content, parentId);
       }
     });
-  }
-
-  protected static createSubgraphAt<T>(
-    nodeId: string,
-    parentGraph: AbstractDirectedGraph<T>
-  ): ITree<T> {
-    const subgraph = parentGraph.getNewInstance(nodeId);
-    const subgraphParentNodeId = parentGraph._appendChildNodeWithContent(
-      nodeId,
-      subgraph as unknown as ITree<T>
-    );
-
-    subgraph._rootNodeId = subgraphParentNodeId;
-    subgraph._nodeDictionary = {};
-    subgraph._nodeDictionary[subgraph._rootNodeId] = { nodeContent: null };
-    subgraph._incrementor = parentGraph._incrementor;
-
-    return subgraph as unknown as ITree<T>;
   }
 
   private static fromPojoTraverseAndExtractChildren = <T>(

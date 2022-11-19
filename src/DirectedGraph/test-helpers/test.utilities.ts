@@ -56,7 +56,7 @@ const make3Children2Subtree3Children = (dTree: ITree<WidgetType>) => {
     dTree.rootNodeId,
     originalWidgetsSubtree["child_0"]
   );
-  // const subtree0 = dTree.createSubGraphAt(dTreeIds["child_0"]);
+
   const subtree0 = dTree.createSubGraphAt(dTree.rootNodeId);
   dTreeIds["subtree0:root"] = subtree0.rootNodeId;
   subtree0.replaceNodeContent(subtree0.rootNodeId, originalWidgetsSubtree["subtree0:root"]);
