@@ -164,7 +164,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
   });
 
   describe(".toPojo", () => {
-    it.only("Should produce pojo for whole tree.", () => {
+    it("Should produce pojo for whole tree.", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
       const exposedTree = new ExposedTree();
       const {
@@ -184,8 +184,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
         dTreeIds[debugLabel] = reverseMap[nodeId];
       });
 
-      const treePojo = privateTree.toPojo();
-      console.log({ treePojo });
+      //      const treePojo = privateTree.toPojo();
 
       // content should be same
       // node relationship should be maintained

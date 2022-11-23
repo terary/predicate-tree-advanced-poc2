@@ -629,8 +629,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     const treePojo = this._toPojo(nodeId, nodeId, transformer);
     const treePojoObfuscated = this.obfuscatePojo(treePojo);
 
-    console.log({ treePojo, treePojoObfuscated });
-
     const c0 = Object.keys(treePojo).length;
     const c1 = Object.keys(treePojoObfuscated).length;
     const c2 = this.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES);

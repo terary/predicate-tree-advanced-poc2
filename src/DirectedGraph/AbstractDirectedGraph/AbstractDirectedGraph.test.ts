@@ -1394,7 +1394,7 @@ describe("AbstractDirectedGraph", () => {
         { label: "child_0_2" },
       ]);
     });
-    it.only("Should export (toPojo) subtree like normal tree.", () => {
+    it("Should export (toPojo) subtree like normal tree.", () => {
       const {
         dTreeIds,
         dTree,
@@ -1415,10 +1415,16 @@ describe("AbstractDirectedGraph", () => {
       );
 
       expect(Object.keys(treePojo).length).toEqual(21);
-      // dTree.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES);
       expect(
         dTree.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES)
       ).toEqual(Object.keys(treePojo).length);
+      expect(
+        subtree0.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES)
+      ).toEqual(Object.keys(subtree0Pojo).length);
+      expect(
+        subtree1.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES)
+      ).toEqual(Object.keys(subtree1Pojo).length);
+
       expect(Object.keys(subtree0Pojo).length).toEqual(4);
       expect(Object.keys(subtree1Pojo).length).toEqual(4);
     });
