@@ -34,6 +34,7 @@ import {
 } from "../test-helpers/test.utilities";
 import { ObfuscatedError } from "../../TreeObfuscator/ObfuscatedError";
 import treeUtilities from "./treeUtilities";
+import exp from "constants";
 
 const shouldIncludeSubtrees = true;
 
@@ -1264,7 +1265,7 @@ describe("AbstractDirectedGraph", () => {
       );
     });
   }); // describe("Visitors"
-  describe("SubTree fromPojo/toPojo", () => {
+  describe(".fromPojo() / .toPojo()", () => {
     it("Should pass simple smoke test.", () => {
       const parentVisitor = new TestTreeVisitor();
       const wholeTreeVisitor = new TestTreeVisitor();
@@ -1427,6 +1428,29 @@ describe("AbstractDirectedGraph", () => {
 
       expect(Object.keys(subtree0Pojo).length).toEqual(4);
       expect(Object.keys(subtree1Pojo).length).toEqual(4);
+    });
+    it("Should produce pojo at a specified node.", () => {
+      const {
+        dTreeIds,
+        dTree,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+
+      const childPojo_0 = dTree.toPojoAt(dTreeIds["child_0"]);
+      const childPojoContent_0 = filterPojoContent(childPojo_0);
+
+      const childPojo_0_0 = dTree.toPojoAt(dTreeIds["child_0_0"]);
+      const childPojoContent_0_0 = filterPojoContent(childPojo_0_0);
+
+      expect(childPojoContent_0).toStrictEqual([
+        OO["child_0"],
+        OO["child_0_0"],
+        OO["child_0_1"],
+        OO["child_0_2"],
+      ]);
+      expect(childPojoContent_0_0).toStrictEqual([OO["child_0_0"]]);
     });
   }); // subtree fromPojo
   describe("Subtree - get[Child | Children | Tree][Content | Ids ] (getChildrenIds getTreeContent)", () => {
