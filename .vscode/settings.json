@@ -12,6 +12,7 @@
     "firstname",
     "lastname",
     "nany",
+    "obfus",
     "Projectable",
     "projectables",
     "subtreeroot",

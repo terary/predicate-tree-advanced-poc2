@@ -162,6 +162,39 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // next subtree
     });
   });
+
+  describe(".toPojo", () => {
+    it.only("Should produce pojo for whole tree.", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      const exposedTree = new ExposedTree();
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
+
+      const privateTree = new TestObfuscatedTree(exposedTree);
+      expect(privateTree.countTotalNodes()).toEqual(exposedTree.countTotalNodes());
+
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
+
+      const treePojo = privateTree.toPojo();
+      console.log({ treePojo });
+
+      // content should be same
+      // node relationship should be maintained
+    });
+    it.skip("Should produce pojo at a specified node.", () => {});
+    it.skip("Should produce pojo of tree.", () => {});
+    it.skip("Should always include subtree.", () => {});
+  });
+
   describe(".removeNode", () => {
     it("Should remove single node if not single child, elevate single child.", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}

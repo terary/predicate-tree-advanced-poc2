@@ -25,10 +25,11 @@ interface ITree<T> {
   ) => string; // why use arrow notation?
   cloneAt(nodeId: string): ITree<T>;
 
+  // should these all be ...At(...)
   countGreatestDepthOf(nodeId?: string): number;
   countLeavesOf(nodeId?: string): number;
   countDescendantsOf(nodeId?: string): number;
-  countTotalNodes(nodeId?: string): number;
+  countTotalNodes(nodeId?: string, shouldIncludeSubtrees?: boolean): number;
 
   createSubtreeAt(nodeId: string): ITree<T>;
   fromPojoAppendChildNodeWithContent(
@@ -50,7 +51,7 @@ interface ITree<T> {
   getParentNodeId(nodeId: string): string;
   getSiblingIds(nodeId: string): string[];
   getSubtreeIdsAt(nodeId?: string): string[];
-  getTreeContentAt(nodeId: string, shouldIncludeSubtrees?: boolean): TGenericNodeContent<T>[];
+  getTreeContentAt(nodeId?: string, shouldIncludeSubtrees?: boolean): TGenericNodeContent<T>[];
 
   // nodeIds of subtrees doesn't make sense.  Internally the tree is different so
   // subtree nodeIds won't be accessible to parent tree
@@ -65,7 +66,7 @@ interface ITree<T> {
   // moveTree(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
   replaceNodeContent(nodeId: string, nodeContent: TGenericNodeContent<T>): void;
   removeNodeAt(nodeId: string): void;
-  toPojo(): TTreePojo<T>;
+  // toPojo(): TTreePojo<T>;
   toPojoAt(nodeId?: string): TTreePojo<T>;
   visitAllAt(visitor: ITreeVisitor<T>, nodeId?: string, parentNodeId?: string): void;
   visitLeavesOf(visitor: ITreeVisitor<T>, nodeId?: string, parentNodeId?: string): void;

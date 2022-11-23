@@ -4,6 +4,8 @@ import { Incrementor } from "../Incrementor";
 import { ITree, ITreeVisitor } from "../ITree";
 import type { TNodePojo, TTreePojo, TGenericNodeContent, TGenericNodeType } from "../types";
 import { takeRight } from "lodash";
+import { KeyObject } from "crypto";
+import { KeyStore } from "../keystore/KeyStore";
 
 const defaultToPojoTransformer = <T>(nodeContent: T) => {
   return nodeContent as unknown as TNodePojo<T>;
@@ -25,7 +27,7 @@ type transformToPojoType = typeof defaultToPojoTransformer;
 abstract class AbstractDirectedGraph<T> implements ITree<T> {
   static EmptyNode = null;
   static SubtreeNodeTypeName = "subtree";
-
+  static SHOULD_INCLUDE_SUBTREES = true;
   protected _nodeDictionary: {
     [nodeId: string]: TGenericNodeType<T>;
   } = {};
@@ -114,8 +116,19 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     }).length;
   }
 
-  public countTotalNodes(nodeId: string = this.rootNodeId) {
-    return this._getTreeNodeIdsAt(nodeId).length;
+  public countTotalNodes(nodeId: string = this.rootNodeId, shouldIncludeSubtrees?: boolean) {
+    let totalNodes = this._getTreeNodeIdsAt(nodeId).length;
+
+    if (!shouldIncludeSubtrees) {
+      return totalNodes;
+    }
+
+    this.getSubtreeIdsAt(nodeId).forEach((subtreeId) => {
+      const subtree = this.getChildContentAt(subtreeId) as ITree<T>;
+
+      totalNodes += subtree.countTotalNodes();
+    });
+    return totalNodes;
   }
 
   private filterIds(filterFn: (key: string) => boolean) {
@@ -331,7 +344,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     });
   }
 
-  public getTreeContentAt(nodeId: string, shouldIncludeSubtrees = false) {
+  public getTreeContentAt(nodeId: string = this.rootNodeId, shouldIncludeSubtrees = false) {
     if (this.nodeIdExists(nodeId)) {
       const descendContent = this.getDescendantContentOf(nodeId, shouldIncludeSubtrees);
       descendContent.push(this.getChildContentAt(nodeId));
@@ -419,6 +432,27 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     // *tmc* think "moveNode" is not very good name
     this.setNodeContentByNodeId(toNodeId, this._getChildContent(fromNodeId));
     this.removeSingleNode(fromNodeId);
+  }
+
+  private obfuscatePojo(pojo: TTreePojo<T>): TTreePojo<T> {
+    const obfusPojo = { ...pojo };
+    const keyStore = new KeyStore<string>();
+
+    // first pass - keys
+    Object.keys(obfusPojo).forEach((nodeId) => {
+      const nodeKey = keyStore.putValue(nodeId);
+      obfusPojo[nodeKey] = { ...obfusPojo[nodeId] };
+      delete obfusPojo[nodeId];
+    });
+
+    // second pass - update parentNodeId
+    Object.entries(obfusPojo).forEach(([nodeKey, node]) => {
+      obfusPojo[nodeKey].parentId = keyStore.reverseLookUpExactlyOneOrThrow(
+        obfusPojo[nodeKey].parentId
+      );
+    });
+
+    return obfusPojo;
   }
 
   public removeNodeAt(nodeId: string): void {
@@ -584,12 +618,24 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return dTree;
   }
 
-  public toPojo(): TTreePojo<T> {
-    return this._toPojo();
+  public x_toPojo(): TTreePojo<T> {
+    return this.obfuscatePojo(this._toPojo());
   }
 
-  public toPojoAt(nodeId: string, transformer?: transformToPojoType): TTreePojo<T> {
-    return this._toPojo(nodeId, nodeId, transformer);
+  public toPojoAt(
+    nodeId: string = this.rootNodeId,
+    transformer?: transformToPojoType
+  ): TTreePojo<T> {
+    const treePojo = this._toPojo(nodeId, nodeId, transformer);
+    const treePojoObfuscated = this.obfuscatePojo(treePojo);
+
+    console.log({ treePojo, treePojoObfuscated });
+
+    const c0 = Object.keys(treePojo).length;
+    const c1 = Object.keys(treePojoObfuscated).length;
+    const c2 = this.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES);
+
+    return treePojoObfuscated;
   }
 
   protected _toPojo(
@@ -603,7 +649,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
     if (nodeContent instanceof AbstractDirectedGraph) {
       // here insert the subtree record
-      const subtreePojo = nodeContent.toPojo();
+      const subtreePojo = nodeContent._toPojo();
       Object.entries(subtreePojo).forEach(([nodeId, nodeContent]) => {
         workingPojoDocument[nodeId] = nodeContent;
       });
@@ -619,7 +665,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
         nodeContent: transformTtoPojo(nodeContent) as unknown as T,
       };
 
-      const children = this._getChildrenNodeIds(currentNodeId);
+      const children = this._getChildrenNodeIds(currentNodeId, true);
       children.forEach((childId) => {
         this._toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument);
       });

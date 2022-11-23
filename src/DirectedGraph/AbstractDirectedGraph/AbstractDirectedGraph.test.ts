@@ -1,3 +1,23 @@
+const todo = `
+        
+Write out different options for 'calculations'
+if you choose to 'negate' 
+  - as subtree
+  - as singular node
+  - as integrated in the operations ('ne' vs 'eq').  Do all operations have negations?
+What if we want to use as arithmetic
+What if we want to use as file/director/disk structure
+What if we Date Validation to use as file/director/disk structure
+
+
+What if I want to use this to calculate permission tree
+How would this work with rest, rest represent a path, but what is the tree?
+Understand and make clear in any writing that 'negate' is for only predicate trees 
+Compare 3 trees, predicate,  arithmetic, (1 other)
+  what are the different implementations
+
+`;
+
 import { AbstractDirectedGraph } from "./AbstractDirectedGraph";
 import { ITree, ITreeVisitor } from "../ITree";
 import { TTreePojo } from "../types";
@@ -12,6 +32,10 @@ import {
   filterPojoContent,
   WidgetType,
 } from "../test-helpers/test.utilities";
+import { ObfuscatedError } from "../../TreeObfuscator/ObfuscatedError";
+import treeUtilities from "./treeUtilities";
+
+const shouldIncludeSubtrees = true;
 
 class TestAbstractDirectedGraph extends AbstractDirectedGraph<WidgetType> {
   public getParentNodeId(nodeId: string): string {
@@ -1285,9 +1309,9 @@ describe("AbstractDirectedGraph", () => {
         new TestAbstractDirectedGraph() as ITree<WidgetType>
       );
 
-      const treePojo = dTree.toPojo() as TTreePojo<WidgetType>;
+      const treePojo = dTree.toPojoAt() as TTreePojo<WidgetType>;
 
-      const subtreePojo = subtree.toPojo() as TTreePojo<WidgetType>;
+      const subtreePojo = subtree.toPojoAt() as TTreePojo<WidgetType>;
 
       const reTree = TestAbstractDirectedGraph.fromPojo<
         WidgetType,
@@ -1306,9 +1330,9 @@ describe("AbstractDirectedGraph", () => {
         // TestAbstractDirectedGraph
       );
 
-      const reTreeContents = filterPojoContent(reTree.toPojo());
-      const reSubtreeContents = filterPojoContent(reSubtreeFromPojo.toPojo());
-      const dTreeContents = filterPojoContent(dTree.toPojo());
+      const reTreeContents = filterPojoContent(reTree.toPojoAt());
+      const reSubtreeContents = filterPojoContent(reSubtreeFromPojo.toPojoAt());
+      const dTreeContents = filterPojoContent(dTree.toPojoAt());
       const originalSubtreeContents = subtree.getDescendantContentOf(subtree.rootNodeId);
       originalSubtreeContents.push(subtree.getChildContentAt(subtree.rootNodeId));
 
@@ -1370,7 +1394,7 @@ describe("AbstractDirectedGraph", () => {
         { label: "child_0_2" },
       ]);
     });
-    it("Should export (toPojo) subtree like normal tree.", () => {
+    it.only("Should export (toPojo) subtree like normal tree.", () => {
       const {
         dTreeIds,
         dTree,
@@ -1378,10 +1402,25 @@ describe("AbstractDirectedGraph", () => {
         subtree1,
         originalWidgets: OO,
       } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
-      const wholePojo = dTree.toPojoAt(subtree0.rootNodeId);
-      expect(Object.keys(wholePojo).length).toEqual(
-        subtree0.countTotalNodes(subtree0.rootNodeId)
+
+      const treePojo = dTree.toPojoAt();
+      const subtree0Pojo = dTree.toPojoAt(subtree0.rootNodeId);
+      const subtree1Pojo = dTree.toPojoAt(subtree1.rootNodeId);
+
+      const pojoContent = filterPojoContent(treePojo);
+      expect(pojoContent.sort(WidgetSort)).toStrictEqual(
+        dTree
+          .getTreeContentAt(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES)
+          .sort(WidgetSort)
       );
+
+      expect(Object.keys(treePojo).length).toEqual(21);
+      // dTree.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES);
+      expect(
+        dTree.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES)
+      ).toEqual(Object.keys(treePojo).length);
+      expect(Object.keys(subtree0Pojo).length).toEqual(4);
+      expect(Object.keys(subtree1Pojo).length).toEqual(4);
     });
   }); // subtree fromPojo
   describe("Subtree - get[Child | Children | Tree][Content | Ids ] (getChildrenIds getTreeContent)", () => {
