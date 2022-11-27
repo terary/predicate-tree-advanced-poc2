@@ -1409,6 +1409,8 @@ describe("AbstractDirectedGraph", () => {
       const subtree1Pojo = dTree.toPojoAt(subtree1.rootNodeId);
 
       const pojoContent = filterPojoContent(treePojo);
+      expect(Object.keys(treePojo).length).toEqual(21);
+
       expect(pojoContent.sort(WidgetSort)).toStrictEqual(
         dTree
           .getTreeContentAt(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES)

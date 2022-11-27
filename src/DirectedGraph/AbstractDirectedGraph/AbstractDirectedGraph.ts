@@ -623,10 +623,10 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     transformer?: transformToPojoType
   ): TTreePojo<T> {
     const treePojo = this.#toPojo(nodeId, nodeId, transformer);
-    return treePojo;
-    // const treePojoObfuscated = this.obfuscatePojo(treePojo);
+    // return treePojo;
+    const treePojoObfuscated = this.obfuscatePojo(treePojo);
 
-    // return treePojoObfuscated;
+    return treePojoObfuscated;
   }
 
   #toPojo(
@@ -646,11 +646,11 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
         workingPojoDocument[nodeId] = nodeContent;
       });
 
-      workingPojoDocument[currentNodeId] = {
-        nodeType: AbstractDirectedGraph.SubtreeNodeTypeName,
-        nodeContent: nodeContent.getChildContentAt(nodeContent.rootNodeId),
-        parentId: parentNodeId,
-      };
+      // workingPojoDocument[currentNodeId] = {
+      //   nodeType: AbstractDirectedGraph.SubtreeNodeTypeName,
+      //   nodeContent: nodeContent.getChildContentAt(nodeContent.rootNodeId),
+      //   parentId: parentNodeId,
+      // };
     } else {
       workingPojoDocument[currentNodeId] = {
         parentId: parentNodeId,
