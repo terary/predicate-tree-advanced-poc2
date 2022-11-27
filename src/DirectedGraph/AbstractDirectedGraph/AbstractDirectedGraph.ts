@@ -618,36 +618,30 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return dTree;
   }
 
-  public x_toPojo(): TTreePojo<T> {
-    return this.obfuscatePojo(this._toPojo());
-  }
-
   public toPojoAt(
     nodeId: string = this.rootNodeId,
     transformer?: transformToPojoType
   ): TTreePojo<T> {
-    const treePojo = this._toPojo(nodeId, nodeId, transformer);
-    const treePojoObfuscated = this.obfuscatePojo(treePojo);
+    const treePojo = this.#toPojo(nodeId, nodeId, transformer);
+    return treePojo;
+    // const treePojoObfuscated = this.obfuscatePojo(treePojo);
 
-    const c0 = Object.keys(treePojo).length;
-    const c1 = Object.keys(treePojoObfuscated).length;
-    const c2 = this.countTotalNodes(undefined, AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES);
-
-    return treePojoObfuscated;
+    // return treePojoObfuscated;
   }
 
-  protected _toPojo(
+  #toPojo(
     currentNodeId = this.rootNodeId,
     parentNodeId = this.rootNodeId,
 
     transformTtoPojo: transformToPojoType = defaultToPojoTransformer,
     workingPojoDocument: TTreePojo<T> = {}
   ): TTreePojo<T> {
-    const nodeContent = this._getChildContent(currentNodeId) as T;
+    const nodeContent = this.getChildContentAt(currentNodeId) as T;
+    // const nodeContent = this._getChildContent(currentNodeId) as T;
 
     if (nodeContent instanceof AbstractDirectedGraph) {
-      // here insert the subtree record
-      const subtreePojo = nodeContent._toPojo();
+      // const subtreePojo = nodeContent.#toPojo();
+      const subtreePojo = nodeContent.toPojoAt(nodeContent.rootNodeId);
       Object.entries(subtreePojo).forEach(([nodeId, nodeContent]) => {
         workingPojoDocument[nodeId] = nodeContent;
       });
@@ -663,9 +657,17 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
         nodeContent: transformTtoPojo(nodeContent) as unknown as T,
       };
 
-      const children = this._getChildrenNodeIds(currentNodeId, true);
+      // const children = this.getChildrenNodeIdsOf(
+      //   currentNodeId,
+      //   AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES
+      // );
+      const children = this._getChildrenNodeIds(
+        currentNodeId,
+        AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES
+      );
+
       children.forEach((childId) => {
-        this._toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument);
+        this.#toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument);
       });
     }
 

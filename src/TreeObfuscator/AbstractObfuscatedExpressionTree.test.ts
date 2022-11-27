@@ -4,7 +4,15 @@ import { isUUIDv4 } from "../common/utilities/isFunctions";
 import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
 import { ITreeVisitor } from "../DirectedGraph/ITree";
 import { TGenericNodeContent } from "../DirectedGraph/types";
-
+import { filterPojoContent } from "../DirectedGraph/test-helpers/test.utilities";
+// import {
+//   WidgetSort,
+//   make3Children9GrandchildrenTreeAbstract,
+//   make3ChildrenSubtree2Children,
+//   make3Children2Subtree3Children,
+//   filterPojoContent,
+//   WidgetType,
+// } from "../test-helpers/test.utilities";
 import {
   makePojo3Children9Grandchildren,
   make3Children2Subtree3Children,
@@ -177,17 +185,54 @@ describe("AbstractObfuscatedExpressionTree", () => {
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
-      expect(privateTree.countTotalNodes()).toEqual(exposedTree.countTotalNodes());
+      expect(privateTree.countTotalNodes(undefined, true)).toEqual(
+        exposedTree.countTotalNodes(undefined, true)
+      );
+      expect(privateTree.countTotalNodes(undefined, true)).toEqual(21);
 
       const reverseMap = privateTree.getIdKeyReverseMap();
       Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
         dTreeIds[debugLabel] = reverseMap[nodeId];
       });
 
-      //      const treePojo = privateTree.toPojo();
+      const treePojo = privateTree.toPojoAt();
+      const subtree0Pojo = subtree0.toPojoAt(subtree0.rootNodeId);
+      const subtree1Pojo = subtree1.toPojoAt(subtree1.rootNodeId);
 
-      // content should be same
-      // node relationship should be maintained
+      expect(Object.keys(treePojo).length).toEqual(21);
+
+      const pojoContent = filterPojoContent(treePojo);
+      expect(pojoContent.sort(SortPredicateTest)).toStrictEqual(
+        privateTree
+          .getTreeContentAt(
+            privateTree.rootNodeId,
+            AbstractObfuscatedExpressionTree.SHOULD_INCLUDE_SUBTREES
+          )
+          .sort(SortPredicateTest)
+      );
+
+      expect(Object.keys(treePojo).length).toEqual(21);
+      expect(
+        privateTree.countTotalNodes(
+          undefined,
+          AbstractObfuscatedExpressionTree.SHOULD_INCLUDE_SUBTREES
+        )
+      ).toEqual(Object.keys(treePojo).length);
+      expect(
+        subtree0.countTotalNodes(
+          undefined,
+          AbstractObfuscatedExpressionTree.SHOULD_INCLUDE_SUBTREES
+        )
+      ).toEqual(Object.keys(subtree0Pojo).length);
+      expect(
+        subtree1.countTotalNodes(
+          undefined,
+          AbstractObfuscatedExpressionTree.SHOULD_INCLUDE_SUBTREES
+        )
+      ).toEqual(Object.keys(subtree1Pojo).length);
+
+      expect(Object.keys(subtree0Pojo).length).toEqual(4);
+      expect(Object.keys(subtree1Pojo).length).toEqual(4);
     });
     it.skip("Should produce pojo at a specified node.", () => {});
     it.skip("Should produce pojo of tree.", () => {});

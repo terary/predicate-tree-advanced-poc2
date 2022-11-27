@@ -100,8 +100,10 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return reverseMap;
   }
 
-  public countTotalNodes(nodeKey: string = this.rootNodeId) {
-    return this.getTreeNodeIdsAt(nodeKey).length;
+  public countTotalNodes(nodeKey: string = this.rootNodeId, shouldIncludeSubtrees?: boolean) {
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+
+    return this._internalTree.countTotalNodes(nodeId, shouldIncludeSubtrees);
   }
 
   public getChildContentAt(nodeKey: string): P | ITree<P> | null {
@@ -193,12 +195,33 @@ abstract class AbstractObfuscatedExpressionTree<P>
   }
 
   public getTreeContentAt(
-    nodeKey: string,
+    nodeKey: string = this.rootNodeId,
     shouldIncludeSubtrees?: boolean
   ): TGenericNodeContent<P>[] {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
-    return this._internalTree.getTreeContentAt(nodeId);
+    const mainTreeContent = this._internalTree.getTreeContentAt(nodeId);
+    if (!shouldIncludeSubtrees) {
+      return mainTreeContent;
+    }
+
+    const subtreeIds = this._internalTree.getSubtreeIdsAt();
+    subtreeIds.forEach((subtreeId) => {
+      const subtree = this._internalTree.getChildContentAt(subtreeId) as ITree<P>;
+      if (subtree !== null) {
+        mainTreeContent.push(...subtree.getTreeContentAt());
+      }
+    });
+    return mainTreeContent;
+    // return this._internalTree.getTreeContentAt(nodeId);
   }
+
+  // public getTreeContentAt(
+  //   nodeKey: string,
+  //   shouldIncludeSubtrees?: boolean
+  // ): TGenericNodeContent<P>[] {
+  //   const nodeId = this._getNodeIdOrThrow(nodeKey);
+  //   return this._internalTree.getTreeContentAt(nodeId);
+  // }
 
   public getTreeNodeIdsAt(nodeKey: string): string[] {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
@@ -248,6 +271,14 @@ abstract class AbstractObfuscatedExpressionTree<P>
         visitor.visit(nodeKey, nodeContent, parentKey);
       },
     };
+  }
+
+  public toPojoAt(
+    nodeKey: string = this.rootNodeId
+    //    transformer?: transformToPojoType
+  ): TTreePojo<P> {
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+    return this._internalTree.toPojoAt(nodeId);
   }
 
   public visitAllAt(
