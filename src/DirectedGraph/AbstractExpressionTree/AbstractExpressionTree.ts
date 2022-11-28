@@ -92,10 +92,10 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
   ): Q {
     //AbstractExpressionTree<P> {
-    const tree = AbstractExpressionTree._fromPojo<P, Q>(
+    const tree = AbstractDirectedGraph.fromPojo<P, Q>(
       srcPojoTree,
-      transform,
-      AbstractExpressionTree as unknown as () => Q
+      transform
+      //      AbstractExpressionTree as unknown as () => Q
     );
     AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
     return tree as Q;

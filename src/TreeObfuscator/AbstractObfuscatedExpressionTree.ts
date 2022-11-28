@@ -284,7 +284,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
     const wrappedVisitor = this.wrapVisitor(visitor);
 
     if (visitor.includeSubtrees && content instanceof AbstractObfuscatedExpressionTree) {
-      content._internalTree._visitAllAt(wrappedVisitor);
+      content._internalTree.visitAllAt(wrappedVisitor);
     } else {
       visitor.visit(nodeId, content, parentNodeId);
     }
@@ -325,11 +325,11 @@ abstract class AbstractObfuscatedExpressionTree<P>
     //    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
   ): Q {
     //AbstractExpressionTree<P> {
-    const tree = AbstractExpressionTree._fromPojo<P, Q>(
-      srcPojoTree,
-      undefined,
+    const tree = AbstractExpressionTree.fromPojo<P, Q>(
+      srcPojoTree
+      //      undefined,
       //    transform,
-      AbstractObfuscatedExpressionTree as unknown as () => Q
+      //AbstractObfuscatedExpressionTree as unknown as () => Q
     );
     AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
     return tree as Q;

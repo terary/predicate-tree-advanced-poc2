@@ -61,6 +61,8 @@ interface ITree<T> {
   isLeaf(nodeId: string): boolean;
   isRoot(nodeId: string): boolean;
   isSubtree(nodeId: string): boolean;
+
+  // does 'move*' make sense as public?
   move(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
   moveChildren(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
   // moveTree(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
