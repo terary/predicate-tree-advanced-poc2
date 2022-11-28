@@ -1265,7 +1265,7 @@ describe("AbstractDirectedGraph", () => {
       );
     });
   }); // describe("Visitors"
-  describe(".fromPojo() / .toPojo()", () => {
+  describe(".fromPojo() / .toPojoAt()", () => {
     it("Should pass simple smoke test.", () => {
       const parentVisitor = new TestTreeVisitor();
       const wholeTreeVisitor = new TestTreeVisitor();
@@ -1430,6 +1430,27 @@ describe("AbstractDirectedGraph", () => {
 
       expect(Object.keys(subtree0Pojo).length).toEqual(4);
       expect(Object.keys(subtree1Pojo).length).toEqual(4);
+    });
+    it("Should create pojo document at any given node.", () => {
+      const {
+        dTreeIds,
+        dTree,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+
+      const littlePojo = dTree.toPojoAt(dTreeIds["child_0"]);
+
+      const pojoContent = filterPojoContent(littlePojo);
+      expect(Object.keys(littlePojo).length).toEqual(4);
+
+      expect(pojoContent.sort(WidgetSort)).toStrictEqual([
+        OO["child_0"],
+        OO["child_0_0"],
+        OO["child_0_1"],
+        OO["child_0_2"],
+      ]);
     });
     it("Should produce pojo at a specified node.", () => {
       const {
@@ -1698,8 +1719,6 @@ describe("AbstractDirectedGraph", () => {
           dTreeIds["child_2_2"],
         ].sort()
       );
-
-      // const subtreePojo = dTree.toPojo(); dTree should have toPojo,?
     });
   });
 

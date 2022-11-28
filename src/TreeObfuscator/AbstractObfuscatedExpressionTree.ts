@@ -207,21 +207,14 @@ abstract class AbstractObfuscatedExpressionTree<P>
     const subtreeIds = this._internalTree.getSubtreeIdsAt();
     subtreeIds.forEach((subtreeId) => {
       const subtree = this._internalTree.getChildContentAt(subtreeId) as ITree<P>;
+
+      /* istanbul ignore next - this should be a non-issue */
       if (subtree !== null) {
         mainTreeContent.push(...subtree.getTreeContentAt());
       }
     });
     return mainTreeContent;
-    // return this._internalTree.getTreeContentAt(nodeId);
   }
-
-  // public getTreeContentAt(
-  //   nodeKey: string,
-  //   shouldIncludeSubtrees?: boolean
-  // ): TGenericNodeContent<P>[] {
-  //   const nodeId = this._getNodeIdOrThrow(nodeKey);
-  //   return this._internalTree.getTreeContentAt(nodeId);
-  // }
 
   public getTreeNodeIdsAt(nodeKey: string): string[] {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
