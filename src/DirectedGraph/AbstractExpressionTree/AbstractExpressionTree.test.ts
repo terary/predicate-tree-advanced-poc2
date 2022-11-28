@@ -383,7 +383,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         ).sort(SortPredicateTest)
       );
 
-      expect(dTree.countTotalNodes()).toEqual(9);
+      expect(dTree.countTotalNodes()).toEqual(13);
       expect(subtree.countTotalNodes()).toEqual(4);
     });
     it("Should validate/throw error if pojo contains tree that is invalid", () => {
@@ -419,13 +419,13 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
           SortPredicateTest
         )
       );
-      expect(dTree.countTotalNodes()).toBe(13);
+      expect(dTree.countTotalNodes()).toBe(21);
 
       // exercise 1, has 2 or more siblings
       dTree.removeNodeAt(dTreeIds["child_0_0"]);
 
       // post conditions 1
-      expect(dTree.countTotalNodes()).toBe(12);
+      expect(dTree.countTotalNodes()).toBe(20);
       expect(
         dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual(
@@ -436,7 +436,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       dTree.removeNodeAt(dTreeIds["child_0_1"]);
 
       // post conditions 2
-      expect(dTree.countTotalNodes()).toBe(10);
+      expect(dTree.countTotalNodes()).toBe(18);
       expect(
         dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));

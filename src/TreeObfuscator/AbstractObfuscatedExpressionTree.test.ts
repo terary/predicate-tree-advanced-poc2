@@ -273,13 +273,13 @@ describe("AbstractObfuscatedExpressionTree", () => {
           SortPredicateTest
         )
       );
-      expect(privateTree.countTotalNodes()).toBe(13);
+      expect(privateTree.countTotalNodes()).toBe(21);
 
       // exercise 1, has 2 or more siblings
       privateTree.removeNodeAt(dTreeIds["child_0_0"]);
 
       // post conditions 1
-      expect(privateTree.countTotalNodes()).toBe(12);
+      expect(privateTree.countTotalNodes()).toBe(20);
       expect(
         privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual(
@@ -290,7 +290,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       privateTree.removeNodeAt(dTreeIds["child_0_1"]);
 
       // post conditions 2
-      expect(privateTree.countTotalNodes()).toBe(10);
+      expect(privateTree.countTotalNodes()).toBe(18);
       expect(
         privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));

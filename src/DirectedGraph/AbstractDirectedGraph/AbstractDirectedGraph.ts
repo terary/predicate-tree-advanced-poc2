@@ -116,7 +116,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     }).length;
   }
 
-  public countTotalNodes(nodeId: string = this.rootNodeId, shouldIncludeSubtrees?: boolean) {
+  public countTotalNodes(nodeId: string = this.rootNodeId, shouldIncludeSubtrees = true) {
     let totalNodes = this._getTreeNodeIdsAt(nodeId).length;
 
     if (!shouldIncludeSubtrees) {
@@ -434,27 +434,6 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     this.removeSingleNode(fromNodeId);
   }
 
-  private obfuscatePojo(pojo: TTreePojo<T>): TTreePojo<T> {
-    const obfusPojo = { ...pojo };
-    const keyStore = new KeyStore<string>();
-
-    // first pass - keys
-    Object.keys(obfusPojo).forEach((nodeId) => {
-      const nodeKey = keyStore.putValue(nodeId);
-      obfusPojo[nodeKey] = { ...obfusPojo[nodeId] };
-      delete obfusPojo[nodeId];
-    });
-
-    // second pass - update parentNodeId
-    Object.entries(obfusPojo).forEach(([nodeKey, node]) => {
-      obfusPojo[nodeKey].parentId = keyStore.reverseLookUpExactlyOneOrThrow(
-        obfusPojo[nodeKey].parentId
-      );
-    });
-
-    return obfusPojo;
-  }
-
   public removeNodeAt(nodeId: string): void {
     if (this.isRoot(nodeId)) {
       throw new Error("CUSTOM ERROR - can not remove root node");
@@ -618,21 +597,35 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return dTree;
   }
 
+  static obfuscatePojo<P>(pojo: TTreePojo<P>): TTreePojo<P> {
+    const obfusPojo = { ...pojo };
+    const x0 = Object.keys(obfusPojo).length;
+    const keyStore = new KeyStore<string>();
+
+    // first pass - keys
+    Object.keys(obfusPojo).forEach((nodeId) => {
+      const nodeKey = keyStore.putValue(nodeId);
+      obfusPojo[nodeKey] = { ...obfusPojo[nodeId] };
+      delete obfusPojo[nodeId];
+    });
+    const x1 = Object.keys(obfusPojo).length;
+
+    // second pass - update parentNodeId
+    Object.entries(obfusPojo).forEach(([nodeKey, node]) => {
+      obfusPojo[nodeKey].parentId = keyStore.reverseLookUpExactlyOneOrThrow(
+        obfusPojo[nodeKey].parentId
+      );
+    });
+    const x2 = Object.keys(obfusPojo).length;
+
+    return obfusPojo;
+  }
+
   public toPojoAt(
     nodeId: string = this.rootNodeId,
     transformer?: transformToPojoType
   ): TTreePojo<T> {
-    const treePojo = this.#toPojo(nodeId, nodeId, transformer);
-    const treePojoObfuscated = this.obfuscatePojo(treePojo);
-    const x0 = Object.keys(treePojo).length;
-    const x1 = Object.keys(treePojoObfuscated).length;
-    // all tests pass without obfuscating tree -
-    // need to look at the difference
-    return treePojo;
-    // return treePojoObfuscated;
-    // const treePojoObfuscated = this.obfuscatePojo(treePojo);
-
-    // return treePojoObfuscated;
+    return this.#toPojo(nodeId, nodeId, transformer);
   }
 
   #toPojo(
