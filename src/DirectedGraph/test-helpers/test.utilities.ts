@@ -379,6 +379,16 @@ const WidgetSort = (a: any, b: any) => {
   return -1;
 };
 
+const filterPojoContentPredicateValues = (pojo: object) => {
+  return Object.entries(pojo).map(([key, value]) => {
+    const { nodeContent } = value;
+    if (nodeContent.value) {
+      return nodeContent.value;
+    }
+    return nodeContent.operator;
+  });
+};
+
 const filterPojoContent = (pojo: object) => {
   return Object.entries(pojo).map(([key, value]) => {
     return value.nodeContent;
@@ -387,6 +397,7 @@ const filterPojoContent = (pojo: object) => {
 
 export {
   filterPojoContent,
+  filterPojoContentPredicateValues,
   originalWidgets,
   make3Children9GrandchildrenTree,
   make3Children9GrandchildrenTreeAbstract,

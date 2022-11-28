@@ -4,7 +4,10 @@ import { isUUIDv4 } from "../common/utilities/isFunctions";
 import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
 import { ITreeVisitor } from "../DirectedGraph/ITree";
 import { TGenericNodeContent } from "../DirectedGraph/types";
-import { filterPojoContent } from "../DirectedGraph/test-helpers/test.utilities";
+import {
+  filterPojoContent,
+  filterPojoContentPredicateValues,
+} from "../DirectedGraph/test-helpers/test.utilities";
 // import {
 //   WidgetSort,
 //   make3Children9GrandchildrenTreeAbstract,
@@ -199,9 +202,11 @@ describe("AbstractObfuscatedExpressionTree", () => {
       const subtree0Pojo = subtree0.toPojoAt(subtree0.rootNodeId);
       const subtree1Pojo = subtree1.toPojoAt(subtree1.rootNodeId);
 
+      const pojoContent = filterPojoContent(treePojo);
+      const pojoContentValues = filterPojoContentPredicateValues(treePojo);
+
       expect(Object.keys(treePojo).length).toEqual(21);
 
-      const pojoContent = filterPojoContent(treePojo);
       expect(pojoContent.sort(SortPredicateTest)).toStrictEqual(
         privateTree
           .getTreeContentAt(
