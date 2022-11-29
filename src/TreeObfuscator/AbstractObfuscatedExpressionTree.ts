@@ -339,19 +339,9 @@ abstract class AbstractObfuscatedExpressionTree<P>
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
-    const parentNodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(parentNodeId); //  this._getNodeIdOrThrow(parentNodeKey);
-
-    // this.appendChildNodeWithContent returns Key, not ID
+    const parentNodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(parentNodeId);
     const newNodeKey = this.appendChildNodeWithContent(parentNodeKey, nodeContent);
     return this._keyStore.getValue(newNodeKey);
-
-    // // I think this isBranch check is unnecessary
-    // if (this.isBranch(parentNodeKey)) {
-    //   newNodeId = super.appendChildNodeWithContent(parentNodeKey, nodeContent);
-    //   return this._keyStore.putValue(newNodeId);
-    // }
-    // newNodeId = super.appendChildNodeWithContent(parentNodeKey, nodeContent);
-    // return this._keyStore.putValue(newNodeId);
   }
 }
 

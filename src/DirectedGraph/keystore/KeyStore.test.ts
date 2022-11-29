@@ -1,7 +1,7 @@
 import { KeyStore } from "./KeyStore";
 import { isUUIDv4 } from "../../common/utilities/isFunctions";
 import { KeyStoreError } from "./KeyStoreError";
-import { reverse } from "lodash";
+import { keys, reverse } from "lodash";
 
 describe("KeyStore", () => {
   describe(".allKeys", () => {
@@ -78,8 +78,44 @@ describe("KeyStore", () => {
       expect(value).toBeUndefined();
     });
   }); // describe(".getValue"
+
+  describe(".reverseLookUpExactlyOneOrThrow", () => {
+    it("Should throw error if key does not exist", () => {
+      const keyStore = new KeyStore<string>();
+
+      // post condition
+      const willThrow = () => {
+        keyStore.reverseLookUpExactlyOneOrThrow("_DOES_NOT_EXIST_");
+      };
+      expect(willThrow).toThrow(
+        new KeyStoreError(
+          "Key: '_DOES_NOT_EXIST_' has 0 matches. Can not determine 1:1 mapping."
+        )
+      );
+    });
+  });
+
+  describe(".removeKey()", () => {
+    it("Should throw error if key does not exist", () => {
+      const keyStore = new KeyStore<string>();
+
+      const someKey = keyStore.putValue("SOME_VALUE");
+
+      // pre condition
+      expect(keyStore.getValue(someKey)).toBe("SOME_VALUE");
+
+      // exercise
+      keyStore.removeKey(someKey);
+
+      // post condition
+      const willThrow = () => {
+        keyStore.keyExistsOrThrow(someKey);
+      };
+      expect(willThrow).toThrow(KeyStoreError);
+    });
+  });
   describe(".keyExistsOrThrow()", () => {
-    it("SHould throw error if key does not exist", () => {
+    it("Should throw error if key does not exist", () => {
       const keyStore = new KeyStore<string>();
       const willThrow = () => {
         keyStore.keyExistsOrThrow("_DOES_NOT_EXIST_");

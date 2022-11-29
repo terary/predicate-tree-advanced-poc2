@@ -3,6 +3,7 @@ import { KeyStoreError } from "./KeyStoreError";
 
 let _counter = 0;
 
+/* istanbul ignore next -- this is used only for dev.  */
 const getNextChildNodeId = () => {
   return "k:" + _counter++;
 };
