@@ -20,9 +20,8 @@ Compare 3 trees, predicate,  arithmetic, (1 other)
 
 import { AbstractDirectedGraph } from "./AbstractDirectedGraph";
 import { ITree, ITreeVisitor } from "../ITree";
-import { TTreePojo } from "../types";
+import { TTreePojo, TNodePojo, TGenericNodeContent } from "../types";
 import { TestTreeVisitor } from "../test-helpers/TestTreeVisitor";
-
 import { DirectedGraphError } from "../DirectedGraphError";
 import {
   WidgetSort,
@@ -32,12 +31,7 @@ import {
   filterPojoContent,
   WidgetType,
 } from "../test-helpers/test.utilities";
-import { ObfuscatedError } from "../../TreeObfuscator/ObfuscatedError";
 import treeUtilities from "./treeUtilities";
-import exp from "constants";
-
-const shouldIncludeSubtrees = true;
-
 class TestAbstractDirectedGraph extends AbstractDirectedGraph<WidgetType> {
   public getParentNodeId(nodeId: string): string {
     return super.getParentNodeId(nodeId);
@@ -45,6 +39,46 @@ class TestAbstractDirectedGraph extends AbstractDirectedGraph<WidgetType> {
 }
 
 describe("AbstractDirectedGraph", () => {
+  it("Should pass simple smoke test.", () => {
+    const parentVisitor = new TestTreeVisitor();
+    const wholeTreeVisitor = new TestTreeVisitor();
+    const subTreeVisitor = new TestTreeVisitor();
+    parentVisitor.includeSubtrees = false;
+    wholeTreeVisitor.includeSubtrees = true;
+
+    const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
+      new TestAbstractDirectedGraph() as ITree<WidgetType>
+    );
+    dTree.visitAllAt(parentVisitor);
+    dTree.visitAllAt(wholeTreeVisitor);
+    subtree.visitAllAt(subTreeVisitor);
+
+    expect(parentVisitor.contentItems.sort(WidgetSort)).toStrictEqual(
+      [
+        { label: "root" },
+        { label: "child_0" },
+        { label: "child_1" },
+        { label: "child_2" },
+      ].sort(WidgetSort)
+    );
+    expect(wholeTreeVisitor.contentItems.sort(WidgetSort)).toStrictEqual(
+      [
+        { label: "root" },
+        { label: "child_0" },
+        { label: "child_1" }, // test data changes this to '{ label: "subtree:root" }'
+        { label: "child_2" },
+        { label: "subtree:root" },
+        { label: "child_1:subtree_0" },
+        { label: "child_1:subtree_1" },
+      ].sort(WidgetSort)
+    );
+    expect(subTreeVisitor.contentItems).toStrictEqual([
+      { label: "subtree:root" },
+      { label: "child_1:subtree_0" },
+      { label: "child_1:subtree_1" },
+    ]);
+  });
+
   describe("constructor", () => {
     it("Should accept optional root nodeContent", () => {
       const originalContent = { label: "root" };
@@ -62,14 +96,14 @@ describe("AbstractDirectedGraph", () => {
       expect(Object.is(nodeContentInitialized, originalContent)).toStrictEqual(true);
     });
   }); // describe('constructor'
+
   describe(".cloneAt()", () => {
-    it("should be awesome", () => {
+    it("Should create clone at specific node", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
         new TestAbstractDirectedGraph() as ITree<WidgetType>
       );
 
-      const preTreeContent = dTree.getTreeContentAt(dTree.rootNodeId);
-      const preSubtreeContent = subtree.getTreeContentAt(subtree.rootNodeId);
+      const preTreeContent = dTree.getTreeContentAt(dTreeIds["root"]);
 
       // pre condition
       expect(preTreeContent.sort(WidgetSort)).toStrictEqual(
@@ -86,9 +120,47 @@ describe("AbstractDirectedGraph", () => {
           {
             label: "child_2",
           },
-          // {
-          //   label: "subtree:root",
-          // },
+        ].sort(WidgetSort)
+      );
+
+      // exercise
+      const cloneTree = dTree.cloneAt(dTreeIds["child_0"]);
+
+      // post conditions
+      const postTreeContent = cloneTree.getTreeContentAt(cloneTree.rootNodeId);
+      expect(postTreeContent.sort(WidgetSort)).toStrictEqual(
+        [
+          // this is not a mistake. The object containing the IDs is misaligned a little.
+          // It has something to do with the nodeId vs. nodeContent not being the same thing
+          {
+            label: "child_0",
+          },
+        ].sort(WidgetSort)
+      );
+    });
+    it("Should create clone at specific node - default root", () => {
+      const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
+        new TestAbstractDirectedGraph() as ITree<WidgetType>
+      );
+
+      const preTreeContent = dTree.getTreeContentAt();
+      const preSubtreeContent = subtree.getTreeContentAt();
+
+      // pre condition
+      expect(preTreeContent.sort(WidgetSort)).toStrictEqual(
+        [
+          {
+            label: "root",
+          },
+          {
+            label: "child_0",
+          },
+          {
+            label: "child_1",
+          },
+          {
+            label: "child_2",
+          },
         ].sort(WidgetSort)
       );
 
@@ -111,9 +183,6 @@ describe("AbstractDirectedGraph", () => {
 
       // post conditions
       const postTreeContent = cloneTree.getTreeContentAt(cloneTree.rootNodeId);
-
-      const postSubtreeContent = subtree.getTreeContentAt(subtree.rootNodeId);
-      // need to find subTree
       expect(postTreeContent.sort(WidgetSort)).toStrictEqual(
         [
           {
@@ -128,13 +197,73 @@ describe("AbstractDirectedGraph", () => {
           {
             label: "child_2",
           },
-          // {
-          //   label: "subtree:root",
-          // },
+        ].sort(WidgetSort)
+      );
+    });
+    it("Should create clone at specific node - will also clone whole tree.", () => {
+      const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
+        new TestAbstractDirectedGraph() as ITree<WidgetType>
+      );
+
+      const preTreeContent = dTree.getTreeContentAt(dTree.rootNodeId);
+      const preSubtreeContent = subtree.getTreeContentAt();
+
+      // pre condition
+      expect(preTreeContent.sort(WidgetSort)).toStrictEqual(
+        [
+          {
+            label: "root",
+          },
+          {
+            label: "child_0",
+          },
+          {
+            label: "child_1",
+          },
+          {
+            label: "child_2",
+          },
+        ].sort(WidgetSort)
+      );
+
+      expect(preSubtreeContent.sort(WidgetSort)).toStrictEqual(
+        [
+          {
+            label: "subtree:root",
+          },
+          {
+            label: "child_1:subtree_0",
+          },
+          {
+            label: "child_1:subtree_1",
+          },
+        ].sort(WidgetSort)
+      );
+
+      // exercise
+      const cloneTree = dTree.cloneAt(dTree.rootNodeId);
+
+      // post conditions
+      const postTreeContent = cloneTree.getTreeContentAt(cloneTree.rootNodeId);
+      expect(postTreeContent.sort(WidgetSort)).toStrictEqual(
+        [
+          {
+            label: "root",
+          },
+          {
+            label: "child_0",
+          },
+          {
+            label: "child_1",
+          },
+          {
+            label: "child_2",
+          },
         ].sort(WidgetSort)
       );
     });
   });
+
   describe("counts", () => {
     describe(".countDescendantsOf([nodeId])", () => {
       it("Should return number of descendant.", () => {
@@ -172,6 +301,7 @@ describe("AbstractDirectedGraph", () => {
         );
       });
     }); // describe('countDescendantsOf'
+
     describe(".getCountMaxDepthAt([nodeId])", () => {
       it("Should count max depth", () => {
         // setup
@@ -211,6 +341,7 @@ describe("AbstractDirectedGraph", () => {
         );
       });
     }); // describe("getCountMaxDepthAt"
+
     describe(".getCountTotalNodes()", () => {
       it("Should return number of nodes (not nodeContent)", () => {
         const dTree = new TestAbstractDirectedGraph();
@@ -221,7 +352,8 @@ describe("AbstractDirectedGraph", () => {
 
         expect(dTree.getCountTotalNodes()).toBe(3);
       });
-      it("Should include subtree nodes", () => {
+
+      it("Should include subtree nodes by default.", () => {
         const dTree = new TestAbstractDirectedGraph();
         expect(dTree.getCountTotalNodes()).toBe(1);
 
@@ -231,13 +363,13 @@ describe("AbstractDirectedGraph", () => {
         const subtree = dTree.createSubtreeAt(childId_0);
         subtree.appendChildNodeWithContent(dTree.rootNodeId, { label: "child_1" });
 
+        // exercise
         expect(dTree.getCountTotalNodes()).toBe(3);
       });
     });
+
     describe(".countLeavesOf", () => {
       it("Should return count number of leaves", () => {
-        // const { dTreeIds, dTree } = make3Children9GrandchildrenTree();
-
         const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
           new TestAbstractDirectedGraph() as ITree<WidgetType>
         );
@@ -255,31 +387,6 @@ describe("AbstractDirectedGraph", () => {
         // leaf has no leaves
         expect(dTree.countLeavesOf(dTreeIds["child_0_0"])).toEqual(0);
       });
-
-      it("Should throw DirectGraphError if nodeId is not valid.", () => {
-        const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
-          new TestAbstractDirectedGraph() as ITree<WidgetType>
-        );
-
-        // const willThrowDoesNotExist = () => {
-        //   dTree.countLeavesOf("_DOES_NOT_EXIST_");
-        // };
-
-        // const willThrowNull = () => {
-        //   // @ts-ignore
-        //   dTree.countLeavesOf(null);
-        // };
-
-        // expect(willThrowDoesNotExist).toThrow(
-        //   new DirectedGraphError(
-        //     'Tried to retrieve node that does not exist. nodeId: "_DOES_NOT_EXIST_".'
-        //   )
-        // );
-
-        // expect(willThrowNull).toThrow(
-        //   new DirectedGraphError('Tried to retrieve node that does not exist. nodeId: "null".')
-        // );
-      });
     }); // describe(".countLeavesOf",
   });
 
@@ -295,9 +402,9 @@ describe("AbstractDirectedGraph", () => {
       expect(preNodeContent).not.toBeUndefined;
     });
   }); // describe('.getNodeContentByKey
+
   describe(".move(source, targe)", () => {
     it("Should get nodeIds and content of child, children, descendants, tree", () => {
-      const shouldIncludeSubtrees = true;
       const {
         dTreeIds,
         dTree,
@@ -348,7 +455,6 @@ describe("AbstractDirectedGraph", () => {
 
   describe(".moveChildren(source, target)", () => {
     it("Should get nodeIds and content of child, children, descendants, tree", () => {
-      const shouldIncludeSubtrees = true;
       const {
         dTreeIds,
         dTree,
@@ -357,6 +463,7 @@ describe("AbstractDirectedGraph", () => {
         originalWidgets: OO,
       } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
 
+      // pre conditions
       expect(dTree.getTreeContentAt(dTreeIds["child_0"]).sort(WidgetSort)).toStrictEqual(
         [OO["child_0"], OO["child_0_0"], OO["child_0_1"], OO["child_0_2"]].sort(WidgetSort)
       );
@@ -396,16 +503,7 @@ describe("AbstractDirectedGraph", () => {
       );
     });
   });
-  describe(".moveTree(from, to)", () => {
-    it.skip("Should do something that I am unsure of.", () => {
-      // I am not sure the intent of this method
-      // it *appears* it takes a branch and superimposes it
-      // on the target branch.. Almost like delete + move
-      // Not sure why that is a good idea.
-      // Will likely remove the method if not good use surfaces
-      // *tmc* NOT FOR PRODUCTION
-    });
-  });
+
   describe(".getTreeNodeIdsAt()", () => {
     it("Should get nodeIds for all descendants and the given nodeId", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
@@ -462,6 +560,7 @@ describe("AbstractDirectedGraph", () => {
       ).toStrictEqual(subtreeTreeContents.sort(WidgetSort));
     });
   });
+
   describe(".getChildrenContentOf", () => {
     // *tmc* - curious but this describe block seems to have little impact on coverage report
     it("Should get all children for given node (root/child).", () => {
@@ -749,6 +848,7 @@ describe("AbstractDirectedGraph", () => {
       // --------------
     });
   });
+
   describe(".getSiblingIds(nodeId)", () => {
     it("Should return the Ids of siblings of a given node.", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
@@ -793,6 +893,7 @@ describe("AbstractDirectedGraph", () => {
       );
     });
   });
+
   describe(".getSubtreeIdsAt()", () => {
     it("Should get an array of subtree ids", () => {
       const {
@@ -821,6 +922,7 @@ describe("AbstractDirectedGraph", () => {
       // expect(subtreeIds[0]).toStrictEqual(subtree.rootNodeId);
     });
   });
+
   describe("isFunctions", () => {
     it(".isLeaf(nodeId) / .isBranch(nodeId) / .isRoot(nodeId) / .isSubtree", () => {
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
@@ -894,6 +996,7 @@ describe("AbstractDirectedGraph", () => {
       // );
     });
   });
+
   describe("removeNodeAt", () => {
     it("should be awesome", () => {
       const dTree = new TestAbstractDirectedGraph();
@@ -973,6 +1076,7 @@ describe("AbstractDirectedGraph", () => {
       expect(willThrow).toThrow(new DirectedGraphError("Can not replace root with subtree."));
     });
   });
+
   describe("Visitors", () => {
     it(".visitAllAt(...) - Should visit all nodes by default.", () => {
       const treeVisitor = new TestTreeVisitor();
@@ -1265,105 +1369,9 @@ describe("AbstractDirectedGraph", () => {
       );
     });
   }); // describe("Visitors"
+
   describe(".fromPojo() / .toPojoAt()", () => {
-    it("Should pass simple smoke test.", () => {
-      const parentVisitor = new TestTreeVisitor();
-      const wholeTreeVisitor = new TestTreeVisitor();
-      const subTreeVisitor = new TestTreeVisitor();
-      parentVisitor.includeSubtrees = false;
-      wholeTreeVisitor.includeSubtrees = true;
-
-      const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
-      );
-      dTree.visitAllAt(parentVisitor);
-      dTree.visitAllAt(wholeTreeVisitor);
-      subtree.visitAllAt(subTreeVisitor);
-
-      expect(parentVisitor.contentItems.sort(WidgetSort)).toStrictEqual(
-        [
-          { label: "root" },
-          { label: "child_0" },
-          { label: "child_1" },
-          { label: "child_2" },
-        ].sort(WidgetSort)
-      );
-      expect(wholeTreeVisitor.contentItems.sort(WidgetSort)).toStrictEqual(
-        [
-          { label: "root" },
-          { label: "child_0" },
-          { label: "child_1" }, // test data changes this to '{ label: "subtree:root" }'
-          { label: "child_2" },
-          { label: "subtree:root" },
-          { label: "child_1:subtree_0" },
-          { label: "child_1:subtree_1" },
-        ].sort(WidgetSort)
-      );
-      expect(subTreeVisitor.contentItems).toStrictEqual([
-        { label: "subtree:root" },
-        { label: "child_1:subtree_0" },
-        { label: "child_1:subtree_1" },
-      ]);
-    });
-    it("Should be able to convert tree to Pojo, and instantiate new identical tree with given Pojo.", () => {
-      const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
-      );
-
-      const treePojo = dTree.toPojoAt() as TTreePojo<WidgetType>;
-
-      const subtreePojo = subtree.toPojoAt() as TTreePojo<WidgetType>;
-
-      const reTree = TestAbstractDirectedGraph.fromPojo<
-        WidgetType,
-        AbstractDirectedGraph<WidgetType>
-      >(
-        treePojo,
-        undefined
-        // TestAbstractDirectedGraph
-      );
-      const reSubtreeFromPojo = TestAbstractDirectedGraph.fromPojo<
-        WidgetType,
-        AbstractDirectedGraph<WidgetType>
-      >(
-        subtreePojo,
-        undefined
-        // TestAbstractDirectedGraph
-      );
-
-      const reTreeContents = filterPojoContent(reTree.toPojoAt());
-      const reSubtreeContents = filterPojoContent(reSubtreeFromPojo.toPojoAt());
-      const dTreeContents = filterPojoContent(dTree.toPojoAt());
-      const originalSubtreeContents = subtree.getDescendantContentOf(subtree.rootNodeId);
-      originalSubtreeContents.push(subtree.getChildContentAt(subtree.rootNodeId));
-
-      expect(originalSubtreeContents.sort(WidgetSort)).toStrictEqual(
-        reSubtreeContents.sort(WidgetSort)
-      );
-      expect(reTreeContents.sort(WidgetSort)).toStrictEqual(dTreeContents.sort(WidgetSort));
-    });
-
-    it("Should throw error for orphan nodes.", () => {
-      const orphanNodePojo = {
-        _root_: { parentId: "_root_", nodeContent: { label: "root" } },
-        child0: { parentId: "_root_", nodeContent: { label: "child0" } },
-        child1: { parentId: "_root_", nodeContent: { label: "child1" } },
-        orphan: { parentId: "_DOES_NOT_EXIST_", nodeContent: { label: "orphan" } },
-      };
-      const willThrow = () => {
-        const dTree = TestAbstractDirectedGraph.fromPojo(
-          orphanNodePojo,
-          undefined
-          // TestAbstractDirectedGraph
-        );
-      };
-      expect(willThrow).toThrow(
-        new DirectedGraphError("Orphan nodes detected while parson pojo object.")
-      );
-    });
-
     it("Should be able to create subTree export/import.", () => {
-      // const { dTreeIds, dTree } = make3Children9GrandchildrenTree();
       const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
         new TestAbstractDirectedGraph() as ITree<WidgetType>
       );
@@ -1395,6 +1403,110 @@ describe("AbstractDirectedGraph", () => {
         { label: "child_0_2" },
       ]);
     });
+
+    it("Should be able to convert tree to pojo (toPojo), and instantiate new identical tree with given Pojo (.fromPojo).", () => {
+      const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
+        new TestAbstractDirectedGraph() as ITree<WidgetType>
+      );
+
+      const treePojo = dTree.toPojoAt() as TTreePojo<WidgetType>;
+
+      const subtreePojo = subtree.toPojoAt() as TTreePojo<WidgetType>;
+
+      const reTree = TestAbstractDirectedGraph.fromPojo<
+        WidgetType,
+        AbstractDirectedGraph<WidgetType>
+      >(
+        treePojo,
+        undefined
+        // TestAbstractDirectedGraph
+      );
+      const reSubtreeFromPojo = TestAbstractDirectedGraph.fromPojo<
+        WidgetType,
+        AbstractDirectedGraph<WidgetType>
+      >(subtreePojo);
+
+      const reTreeContents = filterPojoContent(reTree.toPojoAt());
+      const reSubtreeContents = filterPojoContent(reSubtreeFromPojo.toPojoAt());
+      const dTreeContents = filterPojoContent(dTree.toPojoAt());
+      const originalSubtreeContents = subtree.getDescendantContentOf(subtree.rootNodeId);
+      originalSubtreeContents.push(subtree.getChildContentAt(subtree.rootNodeId));
+
+      expect(originalSubtreeContents.sort(WidgetSort)).toStrictEqual(
+        reSubtreeContents.sort(WidgetSort)
+      );
+      expect(reTreeContents.sort(WidgetSort)).toStrictEqual(dTreeContents.sort(WidgetSort));
+    });
+
+    it("(fromPojo) Should accept/use alternative pojo-to-object translator.", () => {
+      const alternativeFromPojoTransform = (
+        nodeContent: TNodePojo<WidgetType>
+      ): TGenericNodeContent<WidgetType> => {
+        return {
+          label: nodeContent.nodeContent.label + " (alternative)",
+        } as unknown as TGenericNodeContent<WidgetType>;
+      };
+
+      const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
+        new TestAbstractDirectedGraph() as ITree<WidgetType>
+      );
+
+      const treePojo = dTree.toPojoAt() as TTreePojo<WidgetType>;
+
+      // pre condition
+      const dTreeContents = filterPojoContent(dTree.toPojoAt());
+      expect(dTreeContents.sort(WidgetSort)).toStrictEqual(
+        [
+          { label: "root" },
+          { label: "child_0" },
+          { label: "child_1" },
+          { label: "child_2" },
+          { label: "subtree:root" },
+          { label: "child_1:subtree_0" },
+          { label: "child_1:subtree_1" },
+        ].sort(WidgetSort)
+      );
+
+      // exercise
+      const reTree = TestAbstractDirectedGraph.fromPojo<
+        WidgetType,
+        AbstractDirectedGraph<WidgetType>
+      >(treePojo, alternativeFromPojoTransform);
+
+      // post conditions
+      const reTreeContents = filterPojoContent(reTree.toPojoAt());
+      expect(reTreeContents.sort(WidgetSort)).toStrictEqual(
+        [
+          { label: "root (alternative)" },
+          { label: "child_0 (alternative)" },
+          { label: "child_1 (alternative)" },
+          { label: "child_2 (alternative)" },
+          { label: "subtree:root (alternative)" },
+          { label: "child_1:subtree_0 (alternative)" },
+          { label: "child_1:subtree_1 (alternative)" },
+        ].sort(WidgetSort)
+      );
+    });
+
+    it("Should throw error for orphan nodes.", () => {
+      const orphanNodePojo = {
+        _root_: { parentId: "_root_", nodeContent: { label: "root" } },
+        child0: { parentId: "_root_", nodeContent: { label: "child0" } },
+        child1: { parentId: "_root_", nodeContent: { label: "child1" } },
+        orphan: { parentId: "_DOES_NOT_EXIST_", nodeContent: { label: "orphan" } },
+      };
+      const willThrow = () => {
+        const dTree = TestAbstractDirectedGraph.fromPojo(
+          orphanNodePojo,
+          undefined
+          // TestAbstractDirectedGraph
+        );
+      };
+      expect(willThrow).toThrow(
+        new DirectedGraphError("Orphan nodes detected while parson pojo object.")
+      );
+    });
+
     it("Should export (toPojo) subtree like normal tree.", () => {
       const {
         dTreeIds,

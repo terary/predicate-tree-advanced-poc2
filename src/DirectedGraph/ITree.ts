@@ -65,7 +65,7 @@ interface ITree<T> {
   // does 'move*' make sense as public?
   move(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
   moveChildren(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
-  // moveTree(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
+
   replaceNodeContent(nodeId: string, nodeContent: TGenericNodeContent<T>): void;
   removeNodeAt(nodeId: string): void;
   // toPojo(): TTreePojo<T>;

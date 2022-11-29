@@ -558,7 +558,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     srcPojoTree: TTreePojo<P>,
     transform: (
       nodeContent: TNodePojo<P>
-    ) => TGenericNodeContent<P> = defaultFromPojoTransform,
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform, // branch coverage complains
     TreeClass: () => Q
   ): Q {
     const pojoObject = { ...srcPojoTree };
