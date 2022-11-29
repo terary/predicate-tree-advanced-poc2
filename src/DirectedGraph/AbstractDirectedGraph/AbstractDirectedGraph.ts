@@ -50,7 +50,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return this.#appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  public fromPojoAppendChildNodeWithContent(
+  protected fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>
   ): string {
@@ -528,7 +528,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
           transformer
         );
       } else {
-        const childId = dTree.fromPojoAppendChildNodeWithContent(
+        const childId = (dTree as AbstractDirectedGraph<T>).fromPojoAppendChildNodeWithContent(
           treeParentId,
           transformer(nodePojo)
         );

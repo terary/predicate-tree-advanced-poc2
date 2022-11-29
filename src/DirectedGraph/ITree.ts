@@ -32,11 +32,13 @@ interface ITree<T> {
   countTotalNodes(nodeId?: string, shouldIncludeSubtrees?: boolean): number;
 
   createSubtreeAt(nodeId: string): ITree<T>;
-  fromPojoAppendChildNodeWithContent(
-    treeParentId: string,
-    nodeContent: TGenericNodeContent<T>
-  ): string;
+
+  // fromPojoAppendChildNodeWithContent(
+  //   treeParentId: string,
+  //   nodeContent: TGenericNodeContent<T>
+  // ): string;
   // maybe null
+
   getChildContentAt(nodeId: string): TGenericNodeContent<T>;
   // getNodeAt(nodeId: string): TGenericNodeType<T> | undefined;
   getChildrenContentOf(

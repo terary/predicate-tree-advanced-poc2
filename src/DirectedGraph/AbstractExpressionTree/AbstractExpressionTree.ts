@@ -1,3 +1,15 @@
+const todo = `
+  This class is misnamed.  It has methods like appendContentWith[And | Or]
+  which is a logic operation.
+
+  This class in theory should have appendContentWithJunction - only
+  And then a subclass which specifies And|Or.
+
+  This will allow this class to be used for arithmetic trees, or other
+  forms of trees.
+
+`;
+
 import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { ITree } from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
@@ -33,7 +45,6 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     );
   }
 
-  // made public to implement interface is Obfuscated Derived Classes
   public appendContentWithJunction(
     parentNodeId: string,
     junctionContent: TGenericNodeContent<P>,
@@ -41,7 +52,7 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
   ): IAppendChildNodeIds {
     if (this.isBranch(parentNodeId)) {
       super.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
-      const nullValueChildren = this.getChildrenWithNullValues(parentNodeId);
+      const nullValueChildren = this.#getChildrenWithNullValues(parentNodeId);
       let newNodeId;
       if (nullValueChildren.length > 0) {
         newNodeId = nullValueChildren[0];
@@ -73,14 +84,10 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
-    // at this time, only *fromPojo is calling this function.
-    // need to move traverse tree logic from utilities to
-    // to static methods?
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
-    // return this.fromPojoAppendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  private getChildrenWithNullValues(parentNodeId: string): string[] {
+  #getChildrenWithNullValues(parentNodeId: string): string[] {
     const childrenIds = this.getChildrenNodeIdsOf(parentNodeId);
     return childrenIds.filter((childId) => {
       return this.getChildContentAt(childId) === null;
@@ -96,21 +103,18 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     return tree as Q;
   }
 
-  // should this be public?
-  public fromPojoAppendChildNodeWithContent(
+  protected fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
-    // I think this isBranch check is unnecessary
-    // if (this.isBranch(parentNodeId)) {
-    //   return super.appendChildNodeWithContent(parentNodeId, nodeContent);
-    // }
+    /* istanbul ignore next - if this fails the larger fromPojo operation fails and that is thoroughly tested */
     return this.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
   private _getSiblingIds(nodeId: string) {
     return super.getSiblingIds(nodeId);
   }
+
   public removeNodeAt(nodeId: string): void {
     const siblingIds = this._getSiblingIds(nodeId);
     if (siblingIds.length > 1) {

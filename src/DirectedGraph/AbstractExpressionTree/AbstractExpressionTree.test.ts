@@ -1,5 +1,6 @@
 import { AbstractExpressionTree } from "./AbstractExpressionTree";
-import { DirectedGraphError } from "../DirectedGraphError";
+import type { TNodePojo, TTreePojo, TGenericNodeContent, TGenericNodeType } from "../types";
+
 import {
   make3Children2Subtree3Children,
   makePojo3Children9Grandchildren,
@@ -322,13 +323,11 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
   });
   describe(".fromPojo", () => {
     it("Should create a tree from Plain Ole Javascript Object.", () => {
-      const pojo = makePojo3Children9Grandchildren();
-      // const pojo = makePojo3Children();
+      const pojo = makePojo3Children9Grandchildren() as TTreePojo<TPredicateTypes>;
 
       const dTree = ClassTestAbstractExpressionTree.fromPojo<
         TPredicateTypes,
         AbstractExpressionTree<TPredicateTypes>
-        // @ts-ignore - pojo  type definition
       >(pojo);
       expect(dTree.countTotalNodes()).toEqual(13);
     });
