@@ -13,6 +13,7 @@ describe("KeyStore", () => {
       expect(keyStore.allKeys()).toEqual([key0, key1]);
     });
   });
+
   describe(".putValue()", () => {
     it("Should set value, returning retrieve key", () => {
       const keyStore = new KeyStore<string>();
@@ -82,7 +83,6 @@ describe("KeyStore", () => {
   describe(".reverseLookUpExactlyOneOrThrow", () => {
     it("Should throw error if key does not exist", () => {
       const keyStore = new KeyStore<string>();
-
       // post condition
       const willThrow = () => {
         keyStore.reverseLookUpExactlyOneOrThrow("_DOES_NOT_EXIST_");
@@ -114,6 +114,7 @@ describe("KeyStore", () => {
       expect(willThrow).toThrow(KeyStoreError);
     });
   });
+
   describe(".keyExistsOrThrow()", () => {
     it("Should throw error if key does not exist", () => {
       const keyStore = new KeyStore<string>();

@@ -8,14 +8,5 @@ interface IObfuscatedExpressionTree<P> extends ITree<P> {
     junctionContent: TGenericNodeContent<P>,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds;
-  //   getChildrenWithNullValues?; this is private
-  fromPojoAppendChildNodeWithContent(
-    parentNodeId: string,
-    nodeContent: TGenericNodeContent<P>
-  ): string;
-  // fromPojoAppendChildNodeWithContent;
-  // fromPojo; // this is static?
-  // validateTree; // static protected
-  // removeNodeAt;
 }
 export { IObfuscatedExpressionTree };

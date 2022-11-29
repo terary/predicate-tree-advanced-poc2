@@ -55,13 +55,21 @@ class TestClearTextTree<P> extends AbstractExpressionTree<P> {}
 
 describe("AbstractObfuscatedExpressionTree", () => {
   describe("constructor", () => {
-    it("Should obfuscate root nodeId", () => {
+    it("Should obfuscate root nodeId.", () => {
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
       expect(oTree.getChildContentAt(oTree.rootNodeId)).toBeNull();
 
       expect(isUUIDv4(oTree.rootNodeId)).toBe(true);
     });
+
+    it("Should internal tree should be optional", () => {
+      const oTree = new TestObfuscatedTree<TestWidget>();
+      expect(oTree.getChildContentAt(oTree.rootNodeId)).toBeNull();
+
+      expect(isUUIDv4(oTree.rootNodeId)).toBe(true);
+    });
   });
+
   describe(".appendContentWithJunction", () => {
     it("Should obfuscate junction ids", () => {
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
@@ -80,6 +88,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(oTree.getChildContentAt(junctionNodeIds.newNodeId)).toBe(widgetChild_0);
     });
   });
+
   describe("getChildrenNodeIdsOf", () => {
     it("Should return obfuscated nodeIds (keys).", () => {
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
@@ -97,6 +106,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(isUUIDv4(childrenKeys[1])).toBe(true);
     });
   });
+
   describe(".get[child|children|descendant|tree][content|nodeIds]()", () => {
     it("Should return obfuscated nodeIds (keys).", () => {
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
@@ -128,12 +138,12 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
       // getTreeNodeIdsAt
       const treeKeys = oTree.getTreeNodeIdsAt(oTree.rootNodeId);
-      expect(treeKeys.length).toBe(3);
       expect(isUUIDv4(treeKeys[0])).toBe(true);
       expect(isUUIDv4(treeKeys[1])).toBe(true);
       expect(isUUIDv4(treeKeys[2])).toBe(true);
     });
   });
+
   describe(".is[Branch|Tree|Leaf]", () => {
     it("Should return accurate values.", () => {
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
@@ -154,6 +164,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(oTree.isLeaf(junctionNodeIds.newNodeId)).toBe(true);
     });
   });
+
   describe(".fromPojo", () => {
     it("Should create a tree from Plain Ole Javascript Object.", () => {
       const pojo = makePojo3Children9Grandchildren();
@@ -163,14 +174,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
         TestObfuscatedTree<TestWidget>
         // @ts-ignore - pojo  type definition
       >(pojo);
-      const x = oTree.countTotalNodes();
-      const tc = oTree.getTreeContentAt(oTree.rootNodeId);
-      const tk = oTree.getTreeNodeIdsAt(oTree.rootNodeId);
       expect(oTree.countTotalNodes()).toEqual(13);
-
-      // I think the tree is correct.  However, this._nodeDictionary has one entry
-      // which means it's getting stored twice or its getting stored wrong.
-      // next subtree
     });
   });
 
@@ -239,9 +243,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(Object.keys(subtree0Pojo).length).toEqual(4);
       expect(Object.keys(subtree1Pojo).length).toEqual(4);
     });
-    it.skip("Should produce pojo at a specified node.", () => {});
-    it.skip("Should produce pojo of tree.", () => {});
-    it.skip("Should always include subtree.", () => {});
   });
 
   describe(".removeNode", () => {
@@ -296,6 +297,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));
     });
   });
+
   describe(".getSiblingIds", () => {
     it("Should return siblings of a given node.", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
@@ -323,7 +325,60 @@ describe("AbstractObfuscatedExpressionTree", () => {
       ]);
     });
   });
+
   describe("private/protected methods", () => {
+    it(".fromPojoAppendChildNodeWithContent - will throw if key is not found.", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      class ObfuscatedTree extends TestObfuscatedTree<TPredicateNodeTypes> {
+        public appendChildNodeWithContentPojo(
+          parentNodeKey: string,
+          nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+        ): string {
+          return this.fromPojoAppendChildNodeWithContent(parentNodeKey, nodeContent);
+        }
+      }
+      const exposedTree = new ExposedTree();
+      const privateTree = new ObfuscatedTree(exposedTree);
+
+      const willThrow = () => {
+        privateTree.appendChildNodeWithContentPojo("_DOES_NOT_EXIST_", { operator: "$or" });
+      };
+
+      expect(willThrow).toThrow(
+        new ObfuscatedError(
+          "Key: '_DOES_NOT_EXIST_' has 0 matches. Can not determine 1:1 mapping."
+        )
+      );
+    });
+
+    it(".fromPojoAppendChildNodeWithContent - will append child node.", () => {
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      class ObfuscatedTree extends TestObfuscatedTree<TPredicateNodeTypes> {
+        public appendChildNodeWithContentPojo(
+          parentNodeKey: string,
+          nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+        ): string {
+          return this.fromPojoAppendChildNodeWithContent(parentNodeKey, nodeContent);
+        }
+
+        nodeKeyToNodeId(key: string) {
+          return this._getNodeIdOrThrow(key);
+        }
+        nodeIdToNodeKey(key: string) {
+          return super.reverseMapKeys([key]).pop();
+        }
+      }
+      const exposedTree = new ExposedTree();
+      const obfusTree = new ObfuscatedTree(exposedTree);
+      const nodeContent = { operator: "$or" } as TPredicateNodeTypes;
+
+      const rootNodeId = obfusTree.nodeKeyToNodeId(obfusTree.rootNodeId) as string;
+
+      const nodeId = obfusTree.appendChildNodeWithContentPojo(rootNodeId, nodeContent);
+      const nodeKey = obfusTree.nodeIdToNodeKey(nodeId) as string;
+      expect(obfusTree.getChildContentAt(nodeKey)).toBe(nodeContent);
+    });
+
     it(".getNodeIdOrThrow - will throw if key is not found.", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
       const exposedTree = new ExposedTree();
@@ -338,6 +393,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       );
     });
   });
+
   describe("visitors", () => {
     it(".visitAllAt - Blue skies", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
@@ -512,6 +568,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // const subtreePojo = dTree.toPojo(); dTree should have toPojo,?
     });
   });
+
   describe("Integrity Check", () => {
     it("It should retrieve  the same object inserted.", () => {
       class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}

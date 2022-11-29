@@ -335,7 +335,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return tree as Q;
   }
 
-  public fromPojoAppendChildNodeWithContent(
+  protected fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
