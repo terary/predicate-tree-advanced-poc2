@@ -429,7 +429,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
 
   public removeNodeAt(nodeId: string): void {
     if (this.isRoot(nodeId)) {
-      throw new Error("CUSTOM ERROR - can not remove root node");
+      throw new DirectedGraphError("Can not remove root node.");
     }
     const treeIds = this.#getTreeNodeIdsAt(nodeId);
     treeIds.forEach((childId) => {

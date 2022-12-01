@@ -13,6 +13,7 @@ const todo = `
 import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { ITree } from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import { ExpressionTreeError } from "./ExpressionTreeError";
 import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
@@ -136,7 +137,9 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
       if (tree.isBranch(nodeId)) {
         const childrenIds = tree.getChildrenNodeIdsOf(nodeId);
         if (childrenIds.length < 2) {
-          throw new Error("REPLACE - tree fails no-single-child rule.");
+          throw new ExpressionTreeError(
+            `Tree fails no-single-child rule. childIds: '${childrenIds.join("', '")}'.`
+          );
         }
       }
     });
