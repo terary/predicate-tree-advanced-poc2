@@ -5,8 +5,10 @@ import type {
   TPredicateNodeTypes,
   TPredicateTypes,
 } from "./types";
+import fs from "fs";
 import { IExpressionTree, ITree } from "../ITree";
 import type { TGenericNodeContent } from "../types"; //<TPredicateNodeTypes>
+import { fstat } from "fs";
 // type PredicateTypes = TOperand | TJunction;
 // type PredicateNodeTypes = TOperand | TJunction;
 

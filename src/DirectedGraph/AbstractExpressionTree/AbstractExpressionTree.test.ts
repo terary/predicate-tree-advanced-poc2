@@ -399,7 +399,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
     });
   });
   describe(".removeNodeAt", () => {
-    it("Should remove single node if not single child, elevate single child.", () => {
+    it.only("Should remove single node if not single child, elevate single child.", () => {
       const dTree = new ClassTestAbstractExpressionTree();
 
       const {
@@ -411,6 +411,8 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       } = make3Children2Subtree3Children(dTree as AbstractExpressionTree<TPredicateTypes>);
 
       // pre conditions
+      const x = dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest);
+      console.log({ x });
       expect(
         dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual(
