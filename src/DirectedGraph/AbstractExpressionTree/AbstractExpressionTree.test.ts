@@ -408,7 +408,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(dTree as ITree<TPredicateTypes>);
+      } = make3Children2Subtree3Children(dTree as AbstractExpressionTree<TPredicateTypes>);
 
       // pre conditions
       expect(

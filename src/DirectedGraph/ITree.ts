@@ -1,4 +1,5 @@
 import { TGenericNodeContent, TTreePojo, TGenericNodeType } from "./types";
+import { IAppendChildNodeIds } from "../DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
 interface ITreeVisitor<T> {
   visit: (nodeId: string, nodeContent: TGenericNodeContent<T>, parentId: string) => void;
   includeSubtrees: boolean;
@@ -19,10 +20,11 @@ getChildren[Of] takes the 2 bottom dots
 interface ITree<T> {
   rootNodeId: string;
 
-  appendChildNodeWithContent: (
-    treeParentId: string,
-    nodeContent: TGenericNodeContent<T>
-  ) => string; // why use arrow notation?
+  // appendChildNodeWithContent: (
+  //   treeParentId: string,
+  //   nodeContent: TGenericNodeContent<T>
+  // ) => string; // why use arrow notation?
+
   cloneAt(nodeId: string): ITree<T>;
 
   // should these all be ...At(...)
@@ -31,7 +33,7 @@ interface ITree<T> {
   countDescendantsOf(nodeId?: string): number;
   countTotalNodes(nodeId?: string, shouldIncludeSubtrees?: boolean): number;
 
-  createSubtreeAt(nodeId: string): ITree<T>;
+  // createSubtreeAt(nodeId: string): ITree<T>;
 
   // fromPojoAppendChildNodeWithContent(
   //   treeParentId: string,
@@ -76,4 +78,21 @@ interface ITree<T> {
   visitLeavesOf(visitor: ITreeVisitor<T>, nodeId?: string, parentNodeId?: string): void;
 }
 
-export { ITree, ITreeVisitor };
+interface IExpressionTree<P> extends ITree<P> {
+  appendContentWithJunction: (
+    parentNodeId: string,
+    junctionContent: TGenericNodeContent<P>,
+    nodeContent: TGenericNodeContent<P>
+  ) => IAppendChildNodeIds;
+  createSubtreeAt(nodeId: string): IExpressionTree<P>;
+}
+interface IDirectedGraph<T> extends ITree<T> {
+  appendChildNodeWithContent: (
+    treeParentId: string,
+    nodeContent: TGenericNodeContent<T>
+  ) => string; // why use arrow notation?
+
+  createSubtreeAt(nodeId: string): IDirectedGraph<T>;
+}
+
+export { IDirectedGraph, IExpressionTree, ITree, ITreeVisitor };

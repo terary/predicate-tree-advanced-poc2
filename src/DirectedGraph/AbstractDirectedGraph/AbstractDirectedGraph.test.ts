@@ -19,7 +19,7 @@ Compare 3 trees, predicate,  arithmetic, (1 other)
 `;
 
 import { AbstractDirectedGraph } from "./AbstractDirectedGraph";
-import { ITree, ITreeVisitor } from "../ITree";
+import { IDirectedGraph, ITreeVisitor } from "../ITree";
 import { TTreePojo, TNodePojo, TGenericNodeContent } from "../types";
 import { TestTreeVisitor } from "../test-helpers/TestTreeVisitor";
 import { DirectedGraphError } from "../DirectedGraphError";
@@ -30,7 +30,7 @@ import {
   make3Children2Subtree3Children,
   filterPojoContent,
   WidgetType,
-} from "../test-helpers/test.utilities";
+} from "./test.utilities";
 import treeUtilities from "./treeUtilities";
 class TestAbstractDirectedGraph extends AbstractDirectedGraph<WidgetType> {
   public getParentNodeId(nodeId: string): string {
@@ -47,7 +47,7 @@ describe("AbstractDirectedGraph", () => {
     wholeTreeVisitor.includeSubtrees = true;
 
     const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-      new TestAbstractDirectedGraph() as ITree<WidgetType>
+      new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
     );
     dTree.visitAllAt(parentVisitor);
     dTree.visitAllAt(wholeTreeVisitor);
@@ -100,7 +100,7 @@ describe("AbstractDirectedGraph", () => {
   describe(".cloneAt()", () => {
     it("Should create clone at specific node", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
 
       const preTreeContent = dTree.getTreeContentAt(dTreeIds["root"]);
@@ -140,7 +140,7 @@ describe("AbstractDirectedGraph", () => {
     });
     it("Should create clone at specific node - default root", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
 
       const preTreeContent = dTree.getTreeContentAt();
@@ -202,7 +202,7 @@ describe("AbstractDirectedGraph", () => {
     });
     it("Should create clone at specific node - will also clone whole tree.", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
 
       const preTreeContent = dTree.getTreeContentAt(dTree.rootNodeId);
@@ -268,7 +268,7 @@ describe("AbstractDirectedGraph", () => {
     describe(".countDescendantsOf([nodeId])", () => {
       it("Should return number of descendant.", () => {
         const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
-          new TestAbstractDirectedGraph() as ITree<WidgetType>
+          new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
         );
         expect(dTree.countDescendantsOf()).toEqual(dTree.countDescendantsOf(dTree.rootNodeId));
         expect(dTree.countDescendantsOf(undefined)).toEqual(
@@ -282,7 +282,7 @@ describe("AbstractDirectedGraph", () => {
 
       it("Should throw error if nodeId does not exist or otherwise not valid.", () => {
         const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
-          new TestAbstractDirectedGraph() as ITree<WidgetType>
+          new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
         );
         const willThrowDoesNotExist = () => {
           dTree.countDescendantsOf("_DOES_NOT_EXIST_");
@@ -306,7 +306,7 @@ describe("AbstractDirectedGraph", () => {
       it("Should count max depth", () => {
         // setup
         const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
-          new TestAbstractDirectedGraph() as ITree<WidgetType>
+          new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
         );
         const sourceNodeId = dTreeIds["child_0"];
         const targetNodeId = dTreeIds["child_1"];
@@ -329,7 +329,7 @@ describe("AbstractDirectedGraph", () => {
 
       it("Should throw error if supplied nodeId doesn't exist.", () => {
         const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
-          new TestAbstractDirectedGraph() as ITree<WidgetType>
+          new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
         );
         const willThrow = () => {
           dTree.countGreatestDepthOf("_DOES_NOT_EXIST_");
@@ -371,7 +371,7 @@ describe("AbstractDirectedGraph", () => {
     describe(".countLeavesOf", () => {
       it("Should return count number of leaves", () => {
         const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
-          new TestAbstractDirectedGraph() as ITree<WidgetType>
+          new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
         );
 
         // 9 grandchildren
@@ -411,7 +411,9 @@ describe("AbstractDirectedGraph", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+      } = make3Children2Subtree3Children(
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
+      );
 
       expect(dTree.getTreeContentAt(dTreeIds["child_0"]).sort(WidgetSort)).toStrictEqual(
         [OO["child_0"], OO["child_0_0"], OO["child_0_1"], OO["child_0_2"]].sort(WidgetSort)
@@ -461,7 +463,9 @@ describe("AbstractDirectedGraph", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+      } = make3Children2Subtree3Children(
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
+      );
 
       // pre conditions
       expect(dTree.getTreeContentAt(dTreeIds["child_0"]).sort(WidgetSort)).toStrictEqual(
@@ -507,10 +511,14 @@ describe("AbstractDirectedGraph", () => {
   describe(".getTreeNodeIdsAt()", () => {
     it("Should get nodeIds for all descendants and the given nodeId", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
-      dTree.appendChildNodeWithContent(dTreeIds["child_0"], { label: "test_child0" });
-      dTree.appendChildNodeWithContent(dTreeIds["child_0"], { label: "test_child1" });
+      (dTree as IDirectedGraph<WidgetType>).appendChildNodeWithContent(dTreeIds["child_0"], {
+        label: "test_child0",
+      });
+      (dTree as IDirectedGraph<WidgetType>).appendChildNodeWithContent(dTreeIds["child_0"], {
+        label: "test_child1",
+      });
 
       const treeIds = dTree.getTreeNodeIdsAt(dTreeIds["child_0"]);
       const subtreeTreeIds = subtree.getTreeNodeIdsAt(subtree.rootNodeId);
@@ -523,10 +531,14 @@ describe("AbstractDirectedGraph", () => {
     });
     it("(getTreeContent) Should get nodeContent for all descendants and given root nodeId.", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
-      dTree.appendChildNodeWithContent(dTreeIds["child_0"], { label: "test_child0" });
-      dTree.appendChildNodeWithContent(dTreeIds["child_0"], { label: "test_child1" });
+      (dTree as IDirectedGraph<WidgetType>).appendChildNodeWithContent(dTreeIds["child_0"], {
+        label: "test_child0",
+      });
+      (dTree as IDirectedGraph<WidgetType>).appendChildNodeWithContent(dTreeIds["child_0"], {
+        label: "test_child1",
+      });
 
       const treeContents = dTree.getTreeContentAt(dTreeIds["child_0"]);
       const subtreeTreeContents = subtree.getTreeContentAt(subtree.rootNodeId);
@@ -811,7 +823,7 @@ describe("AbstractDirectedGraph", () => {
   describe(".getParentNodeId()", () => {
     it("Should determine parent node id from child id.", () => {
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
       expect(dTree.getParentNodeId(dTreeIds["child_0_0"])).toBe(dTreeIds["child_0"]);
@@ -820,7 +832,7 @@ describe("AbstractDirectedGraph", () => {
     });
     it("Should throw error if childId doesn't exist.", () => {
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
       const willThrow = () => {
@@ -834,7 +846,7 @@ describe("AbstractDirectedGraph", () => {
     });
     it("Should throw error if childId is undefined.", () => {
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
       const willThrow = () => {
@@ -852,7 +864,7 @@ describe("AbstractDirectedGraph", () => {
   describe(".getSiblingIds(nodeId)", () => {
     it("Should return the Ids of siblings of a given node.", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const s = dTree.getSiblingIds(dTree.rootNodeId);
       expect(dTree.getSiblingIds(dTree.rootNodeId)).toStrictEqual([]);
@@ -875,7 +887,7 @@ describe("AbstractDirectedGraph", () => {
     });
     it("Should throw error if nodeId is not found.", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
 
       const willThrowForUndefined = () => {
@@ -902,7 +914,9 @@ describe("AbstractDirectedGraph", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+      } = make3Children2Subtree3Children(
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
+      );
 
       expect(dTree.getSubtreeIdsAt()).toStrictEqual([
         dTreeIds["subtree0:root"],
@@ -915,7 +929,7 @@ describe("AbstractDirectedGraph", () => {
       ]);
       expect(dTree.getSubtreeIdsAt(dTreeIds["child_1"])).toStrictEqual([]);
       // const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-      //   new TestAbstractDirectedGraph() as ITree<WidgetType>
+      //   new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       // );
       // const subtreeIds = dTree.getSubtreeIdsAt(dTree.rootNodeId);
       // expect(subtreeIds.length).toBe(1);
@@ -926,7 +940,7 @@ describe("AbstractDirectedGraph", () => {
   describe("isFunctions", () => {
     it(".isLeaf(nodeId) / .isBranch(nodeId) / .isRoot(nodeId) / .isSubtree", () => {
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1081,7 +1095,7 @@ describe("AbstractDirectedGraph", () => {
     it(".visitAllAt(...) - Should visit all nodes by default.", () => {
       const treeVisitor = new TestTreeVisitor();
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1110,7 +1124,7 @@ describe("AbstractDirectedGraph", () => {
     it(".visitAllAt(...) - Should visit only nodes within the 'at' nodeId branch.", () => {
       const TreeVisitor = new TestTreeVisitor();
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1130,7 +1144,7 @@ describe("AbstractDirectedGraph", () => {
     it(".visitAllAt(...) - Should visit all nodes by default. (with subtree)", () => {
       const TreeVisitor = new TestTreeVisitor();
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1168,7 +1182,7 @@ describe("AbstractDirectedGraph", () => {
       const TreeVisitor = new TestTreeVisitor();
       TreeVisitor.includeSubtrees = false;
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1209,7 +1223,7 @@ describe("AbstractDirectedGraph", () => {
       // const doNotIncludeSubtree = false;
       const treeVisitor = new TestTreeVisitor();
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1247,7 +1261,7 @@ describe("AbstractDirectedGraph", () => {
       // *tmc* is this the same as above?
       const TreeVisitor = new TestTreeVisitor();
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1289,7 +1303,7 @@ describe("AbstractDirectedGraph", () => {
       TreeVisitor.includeSubtrees = false;
 
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1337,7 +1351,7 @@ describe("AbstractDirectedGraph", () => {
     it(".visitLeavesOf(...) - Should visit all nodes by default.", () => {
       const treeVisitor = new TestTreeVisitor();
       const { dTreeIds, dTree: dTreeAsITree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
       const dTree = dTreeAsITree as unknown as TestAbstractDirectedGraph;
 
@@ -1373,7 +1387,7 @@ describe("AbstractDirectedGraph", () => {
   describe(".fromPojo() / .toPojoAt()", () => {
     it("Should be able to create subTree export/import.", () => {
       const { dTreeIds, dTree } = make3Children9GrandchildrenTreeAbstract(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
 
       const subtreePojo = dTree.toPojoAt(dTreeIds["child_0"]);
@@ -1406,7 +1420,7 @@ describe("AbstractDirectedGraph", () => {
 
     it("Should be able to convert tree to pojo (toPojo), and instantiate new identical tree with given Pojo (.fromPojo).", () => {
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
 
       const treePojo = dTree.toPojoAt() as TTreePojo<WidgetType>;
@@ -1448,7 +1462,7 @@ describe("AbstractDirectedGraph", () => {
       };
 
       const { dTreeIds, dTree, subtree } = make3ChildrenSubtree2Children(
-        new TestAbstractDirectedGraph() as ITree<WidgetType>
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
       );
 
       const treePojo = dTree.toPojoAt() as TTreePojo<WidgetType>;
@@ -1514,7 +1528,9 @@ describe("AbstractDirectedGraph", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+      } = make3Children2Subtree3Children(
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
+      );
 
       const treePojo = dTree.toPojoAt();
       const subtree0Pojo = dTree.toPojoAt(subtree0.rootNodeId);
@@ -1550,7 +1566,9 @@ describe("AbstractDirectedGraph", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+      } = make3Children2Subtree3Children(
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
+      );
 
       const littlePojo = dTree.toPojoAt(dTreeIds["child_0"]);
 
@@ -1571,7 +1589,9 @@ describe("AbstractDirectedGraph", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+      } = make3Children2Subtree3Children(
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
+      );
 
       const childPojo_0 = dTree.toPojoAt(dTreeIds["child_0"]);
       const childPojoContent_0 = filterPojoContent(childPojo_0);
@@ -1596,7 +1616,9 @@ describe("AbstractDirectedGraph", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+      } = make3Children2Subtree3Children(
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
+      );
 
       const treePojo = dTree.toPojoAt();
       const treePojoObfuscated = AbstractDirectedGraph.obfuscatePojo(treePojo);
@@ -1640,7 +1662,9 @@ describe("AbstractDirectedGraph", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(new TestAbstractDirectedGraph() as ITree<WidgetType>);
+      } = make3Children2Subtree3Children(
+        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
+      );
 
       expect(dTree.getChildContentAt(dTree.rootNodeId)).toStrictEqual({ label: "root" });
 

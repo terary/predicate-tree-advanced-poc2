@@ -10,16 +10,21 @@ const todo = `
 
 `;
 
+import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
 import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
-import { ITree } from "../ITree";
+import { AbstractTree } from "../AbstractTree/AbstractTree";
+import {
+  // ITree,
+  IExpressionTree,
+} from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
-import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
+// import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
 
-export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
+export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpressionTree<P> {
   constructor(rootNodeId = "_root_", nodeContent?: P) {
     super(rootNodeId, nodeContent);
   }
@@ -88,6 +93,35 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
+  public cloneAt(nodeId: string): AbstractExpressionTree<P> {
+    const pojo = this.toPojoAt(nodeId);
+    return AbstractDirectedGraph.fromPojo(pojo, defaultFromPojoTransform);
+  }
+
+  /**
+   * The tricky bit here is that the  subtree._rootNodeId
+   * must be the same as parent's node.nodeId
+   * @param targetParentNodeId
+   * @returns
+   */
+  public createSubtreeAt(parentNodeId: string): IExpressionTree<P> {
+    // can we rethink this.  Is there a better way?
+    // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
+    const subtree = new this.constructor(parentNodeId) as typeof this;
+
+    const subtreeParentNodeId = super.appendChildNodeWithContent(
+      parentNodeId,
+      subtree as unknown as IExpressionTree<P>
+    );
+
+    subtree._rootNodeId = subtreeParentNodeId;
+    subtree._nodeDictionary = {};
+    subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
+    subtree._incrementor = this._incrementor;
+
+    return subtree;
+  }
+
   #getChildrenWithNullValues(parentNodeId: string): string[] {
     const childrenIds = this.getChildrenNodeIdsOf(parentNodeId);
     return childrenIds.filter((childId) => {
@@ -131,7 +165,7 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
   }
 
   // *tmc* I don't think generics are necessary or even useful?
-  protected static validateTree<T>(tree: ITree<T>) {
+  protected static validateTree<T>(tree: AbstractExpressionTree<T>) {
     const allNodeIds = tree.getTreeNodeIdsAt(tree.rootNodeId);
     allNodeIds.forEach((nodeId) => {
       if (tree.isBranch(nodeId)) {
