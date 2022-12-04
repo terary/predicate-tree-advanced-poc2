@@ -8,9 +8,13 @@ import type {
 import fs from "fs";
 import { IExpressionTree, ITree } from "../ITree";
 import type { TGenericNodeContent } from "../types"; //<TPredicateNodeTypes>
-import { fstat } from "fs";
-// type PredicateTypes = TOperand | TJunction;
-// type PredicateNodeTypes = TOperand | TJunction;
+import { AbstractTree } from "../AbstractTree/AbstractTree";
+
+import { ClassTestAbstractExpressionTree } from "./AbstractExpressionTree.test";
+
+// const exportForTestOnly = {
+//   ClassTestAbstractExpressionTree,
+// };
 
 const makePojo3Children9Grandchildren = () => {
   return {
@@ -162,134 +166,117 @@ pojo2Children1subtree9leaves_content["child_2_2"] = {
   value: "child_2_2",
 };
 // --------
-const make3Children2Subtree3Children = (dTree: IExpressionTree<TPredicateTypes>) => {
+
+// const make3Children2Subtree3Children = (dTree: IExpressionTree<TPredicateTypes>) => {
+const make3Children2Subtree3Children = (dTree: ClassTestAbstractExpressionTree) => {
   const dTreeIds: { [id: string]: string } = {};
 
   dTree.replaceNodeContent(dTree.rootNodeId, originalWidgetsSubtree["root"]);
 
   dTreeIds["root"] = dTree.rootNodeId;
-
   //child0, subtree0, child1, subtree1, child2
-  dTreeIds["child_0"] = dTree.appendContentWithJunction(
+  dTreeIds["child_0"] = dTree._appendChildNodeWithContent(
     dTree.rootNodeId,
-    { operator: "$and" },
     originalWidgetsSubtree["child_0"]
-  ).newNodeId;
+  );
   // const subtree0 = dTree.createSubtreeAt(dTreeIds["child_0"]);
-  const subtree0 = dTree.createSubtreeAt(dTree.rootNodeId);
+  const subtree0 = dTree.createSubtreeAt(dTree.rootNodeId) as ClassTestAbstractExpressionTree;
   dTreeIds["subtree0:root"] = subtree0.rootNodeId;
   subtree0.replaceNodeContent(subtree0.rootNodeId, originalWidgetsSubtree["subtree0:root"]);
 
-  dTreeIds["child_1"] = dTree.appendContentWithJunction(
+  dTreeIds["child_1"] = dTree._appendChildNodeWithContent(
     dTree.rootNodeId,
-    { operator: "$and" },
     originalWidgetsSubtree["child_1"]
-  ).newNodeId;
+  );
 
-  const subtree1 = dTree.createSubtreeAt(dTree.rootNodeId);
+  const subtree1 = dTree.createSubtreeAt(dTree.rootNodeId) as ClassTestAbstractExpressionTree;
   dTreeIds["subtree1:root"] = subtree1.rootNodeId;
   subtree1.replaceNodeContent(subtree1.rootNodeId, originalWidgetsSubtree["subtree1:root"]);
 
-  dTreeIds["child_2"] = dTree.appendContentWithJunction(
+  dTreeIds["child_2"] = dTree._appendChildNodeWithContent(
     dTree.rootNodeId,
-    { operator: "$and" },
     originalWidgetsSubtree["child_2"]
-  ).newNodeId;
+  );
 
   /// --- children of child0
-  dTreeIds["child_0_0"] = dTree.appendContentWithJunction(
+  dTreeIds["child_0_0"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_0"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_0_0"]
-  ).newNodeId;
+  );
 
-  dTreeIds["child_0_1"] = dTree.appendContentWithJunction(
+  dTreeIds["child_0_1"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_0"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_0_1"]
-  ).newNodeId;
+  );
 
-  dTreeIds["child_0_2"] = dTree.appendContentWithJunction(
+  dTreeIds["child_0_2"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_0"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_0_2"]
-  ).newNodeId;
+  );
 
   /// --- children of subtree0
-  dTreeIds["subtree0:child_0"] = subtree0.appendContentWithJunction(
+  dTreeIds["subtree0:child_0"] = subtree0._appendChildNodeWithContent(
     dTreeIds["subtree0:root"],
-    { operator: "$and" },
     originalWidgetsSubtree["subtree0:child_0"]
-  ).newNodeId;
+  );
 
-  dTreeIds["subtree0:child_1"] = subtree0.appendContentWithJunction(
+  dTreeIds["subtree0:child_1"] = subtree0._appendChildNodeWithContent(
     dTreeIds["subtree0:root"],
-    { operator: "$and" },
     originalWidgetsSubtree["subtree0:child_1"]
-  ).newNodeId;
+  );
 
-  dTreeIds["subtree0:child_2"] = subtree0.appendContentWithJunction(
+  dTreeIds["subtree0:child_2"] = subtree0._appendChildNodeWithContent(
     dTreeIds["subtree0:root"],
-    { operator: "$and" },
     originalWidgetsSubtree["subtree0:child_2"]
-  ).newNodeId;
+  );
 
   /// --- children of child_1
-  dTreeIds["child_1_0"] = dTree.appendContentWithJunction(
+  dTreeIds["child_1_0"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_1"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_1_0"]
-  ).newNodeId;
+  );
 
-  dTreeIds["child_1_1"] = dTree.appendContentWithJunction(
+  dTreeIds["child_1_1"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_1"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_1_1"]
-  ).newNodeId;
+  );
 
-  dTreeIds["child_1_2"] = dTree.appendContentWithJunction(
+  dTreeIds["child_1_2"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_1"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_1_2"]
-  ).newNodeId;
+  );
 
   /// --- children of subtree1
-  dTreeIds["subtree1:child_0"] = subtree1.appendContentWithJunction(
+  dTreeIds["subtree1:child_0"] = subtree1._appendChildNodeWithContent(
     dTreeIds["subtree1:root"],
-    { operator: "$and" },
     originalWidgetsSubtree["subtree1:child_0"]
-  ).newNodeId;
+  );
 
-  dTreeIds["subtree1:child_1"] = subtree1.appendContentWithJunction(
+  dTreeIds["subtree1:child_1"] = subtree1._appendChildNodeWithContent(
     dTreeIds["subtree1:root"],
-    { operator: "$and" },
     originalWidgetsSubtree["subtree1:child_1"]
-  ).newNodeId;
+  );
 
-  dTreeIds["subtree1:child_2"] = subtree1.appendContentWithJunction(
+  dTreeIds["subtree1:child_2"] = subtree1._appendChildNodeWithContent(
     dTreeIds["subtree1:root"],
-    { operator: "$and" },
     originalWidgetsSubtree["subtree1:child_2"]
-  ).newNodeId;
+  );
 
   // --- children of child_2
-  dTreeIds["child_2_0"] = dTree.appendContentWithJunction(
+  dTreeIds["child_2_0"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_2"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_2_0"]
-  ).newNodeId;
+  );
 
-  dTreeIds["child_2_1"] = dTree.appendContentWithJunction(
+  dTreeIds["child_2_1"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_2"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_2_1"]
-  ).newNodeId;
+  );
 
-  dTreeIds["child_2_2"] = dTree.appendContentWithJunction(
+  dTreeIds["child_2_2"] = dTree._appendChildNodeWithContent(
     dTreeIds["child_2"],
-    { operator: "$and" },
     originalWidgetsSubtree["child_2_2"]
-  ).newNodeId;
+  );
 
   // *tmc* good check to have, but gums up debugging
   // expect(dTree.countTotalNodes()).toEqual(5);

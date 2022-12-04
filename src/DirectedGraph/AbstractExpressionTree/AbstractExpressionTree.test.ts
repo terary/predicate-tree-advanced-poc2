@@ -28,7 +28,16 @@ which makes getChildren a little odd but it's easier understood and implement
 
 import { ITree } from "../ITree";
 import { PredicateTreeJs } from "../../../dev-debug/PredicateTreeJs/PredicateTreeJs";
-class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+
+export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPredicateNodeTypes> {
+  public _appendChildNodeWithContent(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  ): string {
+    return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+  }
+}
+
 describe("AbstractExpressionTree", () => {
   describe(".appendChildNode(nodeId, content)", () => {
     // .appendChildNode(nodeId, content)
@@ -399,7 +408,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
     });
   });
   describe(".removeNodeAt", () => {
-    it.only("Should remove single node if not single child, elevate single child.", () => {
+    it("Should remove single node if not single child, elevate single child.", () => {
       const dTree = new ClassTestAbstractExpressionTree();
 
       const {
@@ -408,11 +417,9 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         subtree0,
         subtree1,
         originalWidgets: OO,
-      } = make3Children2Subtree3Children(dTree as AbstractExpressionTree<TPredicateTypes>);
+      } = make3Children2Subtree3Children(dTree);
 
       // pre conditions
-      const x = dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest);
-      console.log({ x });
       expect(
         dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual(

@@ -56,6 +56,7 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     junctionContent: TGenericNodeContent<P>,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
+    //
     if (this.isBranch(parentNodeId)) {
       super.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
       const nullValueChildren = this.#getChildrenWithNullValues(parentNodeId);

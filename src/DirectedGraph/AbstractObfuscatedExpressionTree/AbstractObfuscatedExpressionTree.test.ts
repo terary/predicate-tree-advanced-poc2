@@ -7,20 +7,18 @@ import { TGenericNodeContent } from "../types";
 import {
   filterPojoContent,
   filterPojoContentPredicateValues,
-} from "../test-helpers/test.utilities";
-// import {
-//   WidgetSort,
-//   make3Children9GrandchildrenTreeAbstract,
-//   make3ChildrenSubtree2Children,
-//   make3Children2Subtree3Children,
-//   filterPojoContent,
-//   WidgetType,
-// } from "../test-helpers/test.utilities";
+  // make3Children2Subtree3Children,
+} from "./test-helpers/test.utilities";
 import {
   makePojo3Children9Grandchildren,
   make3Children2Subtree3Children,
   SortPredicateTest,
 } from "../AbstractExpressionTree/test-utilities";
+import { ClassTestAbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree.test";
+
+//const exposedTree = new
+//
+
 import type {
   TJunction,
   TOperand,
@@ -42,13 +40,27 @@ class TestWidget {
   }
 }
 
-class TestObfuscatedTree<P> extends AbstractObfuscatedExpressionTree<P> {
+export class TestObfuscatedTree<P> extends AbstractObfuscatedExpressionTree<P> {
   public getIdKeyReverseMap() {
     return this.buildReverseMap();
   }
 
   public getNodeIdOrThrow(nodeKey: string) {
     return this._getNodeIdOrThrow(nodeKey);
+  }
+
+  public appendChildNodeWithContent(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<P>
+  ): string {
+    return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+  }
+
+  public _appendChildNodeWithContent(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<P>
+  ): string {
+    return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 }
 class TestClearTextTree<P> extends AbstractExpressionTree<P> {}
@@ -180,8 +192,10 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe(".toPojo", () => {
     it("Should produce pojo for whole tree.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
-      const exposedTree = new ExposedTree();
+      // class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      // const exposedTree = new ExposedTree();
+
+      const exposedTree = new ClassTestAbstractExpressionTree();
       const {
         dTreeIds,
         // dTree: dTree as ITree<TPredicateTypes>,
@@ -247,8 +261,10 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe(".removeNode", () => {
     it("Should remove single node if not single child, elevate single child.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
-      const exposedTree = new ExposedTree();
+      // class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      // const exposedTree = new ExposedTree();
+      const exposedTree = new ClassTestAbstractExpressionTree();
+
       const {
         dTreeIds,
         // dTree: dTree as ITree<TPredicateTypes>,
@@ -300,8 +316,10 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe(".getSiblingIds", () => {
     it("Should return siblings of a given node.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
-      const exposedTree = new ExposedTree();
+      // class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      // const exposedTree = new ExposedTree();
+      const exposedTree = new ClassTestAbstractExpressionTree();
+
       const {
         dTreeIds,
         // dTree: dTree as ITree<TPredicateTypes>,
@@ -396,8 +414,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe("visitors", () => {
     it(".visitAllAt - Blue skies", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
-      const exposedTree = new ExposedTree();
+      // class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      // const exposedTree = new ExposedTree();
+      const exposedTree = new ClassTestAbstractExpressionTree();
       const {
         dTreeIds,
         // dTree: dTree as ITree<TPredicateTypes>,
@@ -466,8 +485,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // const subtreePojo = dTree.toPojo(); dTree should have toPojo,?
     });
     it(".visitLeavesOf - Blue skies", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
-      const exposedTree = new ExposedTree();
+      // class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      // const exposedTree = new ExposedTree();
+      const exposedTree = new ClassTestAbstractExpressionTree();
       const {
         dTreeIds,
         // dTree: dTree as ITree<TPredicateTypes>,
@@ -571,8 +591,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe("Integrity Check", () => {
     it("It should retrieve  the same object inserted.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
-      const exposedTree = new ExposedTree();
+      // class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      // const exposedTree = new ExposedTree();
+      const exposedTree = new ClassTestAbstractExpressionTree();
       const privateTree = new TestObfuscatedTree(exposedTree);
 
       const {

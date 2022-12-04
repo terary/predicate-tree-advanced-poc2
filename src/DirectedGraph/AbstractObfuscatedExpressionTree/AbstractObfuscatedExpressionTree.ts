@@ -1,5 +1,5 @@
 // import { ITree } from "../DirectedGraph";
-import { ITree, ITreeVisitor } from "../ITree";
+import { IExpressionTree, ITree, ITreeVisitor } from "../ITree";
 
 import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
 import { KeyStore } from "../keystore/KeyStore";
@@ -153,7 +153,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
    * @param targetParentNodeId
    * @returns
    */
-  public createSubtreeAt(targetParentNodeId: string): ITree<P> {
+  public createSubtreeAt(targetParentNodeId: string): IExpressionTree<P> {
     // used by createSubTree to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?
