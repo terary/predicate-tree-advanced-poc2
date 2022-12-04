@@ -12,10 +12,12 @@
     "firstname",
     "lastname",
     "nany",
+    "obfus",
     "Projectable",
     "projectables",
     "subtreeroot",
-    "testables"
+    "testables",
+    "uuidv4"
   ],
   "files.watcherExclude": {
     "**/.git/objects/**": true,

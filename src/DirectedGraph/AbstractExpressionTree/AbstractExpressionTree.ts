@@ -1,71 +1,78 @@
+const todo = `
+  This class is misnamed.  It has methods like appendContentWith[And | Or]
+  which is a logic operation.
+
+  This class in theory should have appendContentWithJunction - only
+  And then a subclass which specifies And|Or.
+
+  This will allow this class to be used for arithmetic trees, or other
+  forms of trees.
+
+`;
+
 import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { ITree } from "../ITree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import { ExpressionTreeError } from "./ExpressionTreeError";
+import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
+const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
+  return nodeContent.nodeContent;
+};
 
-interface IAppendChildNodeIds {
-  newNodeId: string;
-  originalContentNodeId?: string; // ONLY set if isNewBranch is true, represents where the content went
-  junctionNodeId: string; // this will ALWAYS be the nodeId provided to append*(nodeId)
-  isNewBranch: boolean;
-}
-
-export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedGraph<
-  OPERAND | JUNCTION
-> {
-  constructor(rootNodeId = "_root_", nodeContent?: OPERAND | JUNCTION) {
+export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
+  constructor(rootNodeId = "_root_", nodeContent?: P) {
     super(rootNodeId, nodeContent);
   }
 
   public appendContentWithAnd(
     parentNodeId: string,
-    nodeContent: TGenericNodeContent<JUNCTION | OPERAND>
+    nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
     return this.appendContentWithJunction(
       parentNodeId,
-      "&&" as unknown as JUNCTION,
+      { operator: "$and" } as unknown as P,
       nodeContent
     );
   }
 
   public appendContentWithOr(
     parentNodeId: string,
-    nodeContent: TGenericNodeContent<JUNCTION | OPERAND>
+    nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
     return this.appendContentWithJunction(
       parentNodeId,
-      "||" as unknown as JUNCTION,
+      { operator: "$or" } as unknown as P,
       nodeContent
     );
   }
 
-  private appendContentWithJunction(
+  public appendContentWithJunction(
     parentNodeId: string,
-    junctionContent: TGenericNodeContent<JUNCTION>,
-    nodeContent: TGenericNodeContent<OPERAND | JUNCTION>
+    junctionContent: TGenericNodeContent<P>,
+    nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
     if (this.isBranch(parentNodeId)) {
-      super.replaceNodeContent(
-        parentNodeId,
-        junctionContent as TGenericNodeContent<OPERAND | JUNCTION>
-      );
+      super.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
+      const nullValueChildren = this.#getChildrenWithNullValues(parentNodeId);
+      let newNodeId;
+      if (nullValueChildren.length > 0) {
+        newNodeId = nullValueChildren[0];
+        super.replaceNodeContent(newNodeId, nodeContent);
+      } else {
+        newNodeId = super.appendChildNodeWithContent(parentNodeId, nodeContent);
+      }
       return {
-        newNodeId: super.appendChildNodeWithContent(parentNodeId, nodeContent),
+        newNodeId,
         originalContentNodeId: undefined,
         junctionNodeId: parentNodeId,
         isNewBranch: false,
       };
-      // return super.appendChildNodeWithContent(parentNodeId, nodeContent);
     }
 
     const originalContent = this.getChildContentAt(parentNodeId);
     const originalContentId = super.appendChildNodeWithContent(parentNodeId, originalContent);
-    this.replaceNodeContent(
-      parentNodeId,
-      junctionContent as TGenericNodeContent<OPERAND | JUNCTION>
-    );
+    this.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
 
-    // const newNodeId = super.appendChildNodeWithContent(parentNodeId, nodeContent);
-    // return newNodeId;
     return {
       newNodeId: super.appendChildNodeWithContent(parentNodeId, nodeContent),
       originalContentNodeId: originalContentId,
@@ -76,43 +83,63 @@ export class AbstractExpressionTree<OPERAND, JUNCTION> extends AbstractDirectedG
 
   public appendChildNodeWithContent(
     parentNodeId: string,
-    nodeContent: TGenericNodeContent<OPERAND | JUNCTION>
+    nodeContent: TGenericNodeContent<P>
   ): string {
-    // at this time, only *fromPojo is calling this function.
-    // need to move traverse tree logic from utilities to
-    // to static methods?
-    // return this.appendContentWithAnd(parentNodeId, nodeContent);
-    return this.fromPojoAppendChildNodeWithContent(parentNodeId, nodeContent);
-  }
-
-  public fromPojoAppendChildNodeWithContent(
-    parentNodeId: string,
-    nodeContent: TGenericNodeContent<OPERAND | JUNCTION>
-  ): string {
-    if (this.isBranch(parentNodeId)) {
-      return super.appendChildNodeWithContent(parentNodeId, nodeContent);
-    }
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  static fromPojo<T>(srcPojoTree: TTreePojo<T>): ITree<T> {
-    const tree = AbstractDirectedGraph.fromPojo(
-      srcPojoTree,
-      undefined,
-      AbstractExpressionTree
-    );
-    AbstractExpressionTree.validateTree(tree);
-    return tree;
+  #getChildrenWithNullValues(parentNodeId: string): string[] {
+    const childrenIds = this.getChildrenNodeIdsOf(parentNodeId);
+    return childrenIds.filter((childId) => {
+      return this.getChildContentAt(childId) === null;
+    });
+  }
+
+  static fromPojo<P, Q>(
+    srcPojoTree: TTreePojo<P>,
+    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+  ): Q {
+    const tree = AbstractDirectedGraph.fromPojo<P, Q>(srcPojoTree, transform);
+    AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
+    return tree as Q;
+  }
+
+  protected fromPojoAppendChildNodeWithContent(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<P>
+  ): string {
+    /* istanbul ignore next - if this fails the larger fromPojo operation fails and that is thoroughly tested */
+    return this.appendChildNodeWithContent(parentNodeId, nodeContent);
+  }
+
+  private _getSiblingIds(nodeId: string) {
+    return super.getSiblingIds(nodeId);
+  }
+
+  public removeNodeAt(nodeId: string): void {
+    const siblingIds = this._getSiblingIds(nodeId);
+    if (siblingIds.length > 1) {
+      return super.removeNodeAt(nodeId);
+    }
+    const parentId = this.getParentNodeId(nodeId);
+    const siblingContent = this.getChildContentAt(siblingIds[0]);
+
+    this.replaceNodeContent(parentId, siblingContent);
+
+    super.removeNodeAt(siblingIds[0]);
+    super.removeNodeAt(nodeId);
   }
 
   // *tmc* I don't think generics are necessary or even useful?
-  private static validateTree<T>(tree: ITree<T>) {
+  protected static validateTree<T>(tree: ITree<T>) {
     const allNodeIds = tree.getTreeNodeIdsAt(tree.rootNodeId);
     allNodeIds.forEach((nodeId) => {
       if (tree.isBranch(nodeId)) {
         const childrenIds = tree.getChildrenNodeIdsOf(nodeId);
         if (childrenIds.length < 2) {
-          throw new Error("REPLACE - tree fails no-single-child rule.");
+          throw new ExpressionTreeError(
+            `Tree fails no-single-child rule. childIds: '${childrenIds.join("', '")}'.`
+          );
         }
       }
     });

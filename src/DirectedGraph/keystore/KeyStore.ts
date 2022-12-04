@@ -3,6 +3,7 @@ import { KeyStoreError } from "./KeyStoreError";
 
 let _counter = 0;
 
+/* istanbul ignore next -- this is used only for dev.  */
 const getNextChildNodeId = () => {
   return "k:" + _counter++;
 };
@@ -77,6 +78,17 @@ class KeyStore<T> {
       .map(([k, v]) => {
         return k;
       });
+  }
+
+  reverseLookUpExactlyOneOrThrow(value: T): string {
+    const candidates = this.reverseLookUp(value);
+    if (candidates.length !== 1) {
+      throw new KeyStoreError(
+        `Key: '${value}' has ${candidates.length} matches. Can not determine 1:1 mapping.`
+      );
+    }
+
+    return candidates[0];
   }
 
   /**

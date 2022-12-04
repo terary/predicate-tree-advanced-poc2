@@ -3,6 +3,7 @@ import { DirectedGraphError } from "../DirectedGraphError";
 import { Incrementor } from "../Incrementor";
 import { ITree, ITreeVisitor } from "../ITree";
 import type { TNodePojo, TTreePojo, TGenericNodeContent, TGenericNodeType } from "../types";
+import { KeyStore } from "../keystore/KeyStore";
 
 const defaultToPojoTransformer = <T>(nodeContent: T) => {
   return nodeContent as unknown as TNodePojo<T>;
@@ -23,8 +24,8 @@ const makeDescendantRegExp = (nodeId: string, delim: string, options = "") => {
 type transformToPojoType = typeof defaultToPojoTransformer;
 abstract class AbstractDirectedGraph<T> implements ITree<T> {
   static EmptyNode = null;
-  static SubGraphNodeTypeName = "subtree";
-
+  static SubtreeNodeTypeName = "subtree";
+  static SHOULD_INCLUDE_SUBTREES = true;
   protected _nodeDictionary: {
     [nodeId: string]: TGenericNodeType<T>;
   } = {};
@@ -36,7 +37,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
   constructor(rootNodeId = "_root_", nodeContent?: T) {
     this._rootNodeId = rootNodeId;
     if (nodeContent === undefined) {
-      this.setNodeContentByNodeId(this._rootNodeId, AbstractDirectedGraph.EmptyNode);
+      this.#setNodeContentByNodeId(this._rootNodeId, AbstractDirectedGraph.EmptyNode);
     } else {
       this._nodeDictionary[this._rootNodeId] = { nodeContent };
     }
@@ -46,37 +47,32 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>
   ): string {
-    const nodeId = this._appendChildNodeWithContent(parentNodeId, nodeContent);
-    return nodeId;
+    return this.#appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  public fromPojoAppendChildNodeWithContent(
+  protected fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>
   ): string {
-    return this._appendChildNodeWithContent(parentNodeId, nodeContent);
+    return this.#appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  protected _appendChildNodeWithContent(
+  #appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>
   ): string {
-    const childNodeId = this.getNextChildNodeId(parentNodeId);
+    const childNodeId = this.#getNextChildNodeId(parentNodeId);
     this._nodeDictionary[childNodeId] = { nodeContent };
     return childNodeId;
   }
 
   public cloneAt(nodeId: string): ITree<T> {
     const pojo = this.toPojoAt(nodeId);
-    return AbstractDirectedGraph.fromPojo(
-      pojo,
-      defaultFromPojoTransform,
-      AbstractDirectedGraph
-    );
+    return AbstractDirectedGraph.fromPojo(pojo, defaultFromPojoTransform);
   }
 
   public countDescendantsOf(parentNodeId: string = this.rootNodeId) {
-    this.nodeIdExistsOrThrow(parentNodeId);
+    this.#nodeIdExistsOrThrow(parentNodeId);
     return this.getDescendantNodeIds(parentNodeId).length;
   }
 
@@ -91,7 +87,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
    * @returns {number} greatest depth of given node and its furthest leaf.
    */
   public countGreatestDepthOf(subTreeRootNodeId: string = this.rootNodeId) {
-    this.getChildContentOrThrow(subTreeRootNodeId);
+    this.#getChildContentOrThrow(subTreeRootNodeId);
     let greatestDepth = 1;
 
     const descendantKeys = this.getDescendantNodeIds(subTreeRootNodeId);
@@ -117,12 +113,19 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     }).length;
   }
 
-  public countTotalNodes(nodeId: string = this.rootNodeId) {
-    return this._getTreeNodeIdsAt(nodeId).length;
-  }
+  public countTotalNodes(nodeId: string = this.rootNodeId, shouldIncludeSubtrees = true) {
+    let totalNodes = this.#getTreeNodeIdsAt(nodeId).length;
 
-  public createSubGraphAt(rootNodeId: string): ITree<T> {
-    return AbstractDirectedGraph.createSubgraphAt(rootNodeId, this);
+    if (!shouldIncludeSubtrees) {
+      return totalNodes;
+    }
+
+    this.getSubtreeIdsAt(nodeId).forEach((subtreeId) => {
+      const subtree = this.getChildContentAt(subtreeId) as ITree<T>;
+      totalNodes += subtree.countTotalNodes();
+    });
+
+    return totalNodes;
   }
 
   private filterIds(filterFn: (key: string) => boolean) {
@@ -147,7 +150,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return this._nodeDictionary[nodeId] !== undefined;
   }
 
-  private nodeIdExistsOrThrow(nodeId: string): boolean {
+  #nodeIdExistsOrThrow(nodeId: string): boolean {
     if (this.nodeIdExists(nodeId)) {
       return true;
     }
@@ -156,20 +159,20 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     );
   }
 
-  private getChildContentOrThrow(nodeId: string) {
+  #getChildContentOrThrow(nodeId: string) {
     if (this._nodeDictionary[nodeId] === undefined) {
       throw new DirectedGraphError(
         `Tried to retrieve node that does not exist. nodeId: "${nodeId}".`
       );
     }
-    return this._getChildContent(nodeId);
+    return this.#getChildContent(nodeId);
   }
 
   public getChildContentAt(nodeId: string): ITree<T> | T | null {
-    return this._getChildContent(nodeId);
+    return this.#getChildContent(nodeId);
   }
 
-  private _getChildContent(nodeId: string): ITree<T> | T | null {
+  #getChildContent(nodeId: string): ITree<T> | T | null {
     // node should ALWAYS have nodeContent
     // should NEVER be null
     // nodeContent can be set to null
@@ -182,10 +185,10 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
   }
 
   public getChildrenNodeIdsOf(parentNodeId: string, shouldIncludeSubtrees = false): string[] {
-    return this._getChildrenNodeIds(parentNodeId, shouldIncludeSubtrees);
+    return this.#getChildrenNodeIds(parentNodeId, shouldIncludeSubtrees);
   }
 
-  private _getChildrenNodeIds(parentNodeId: string, shouldIncludeSubtrees = false): string[] {
+  #getChildrenNodeIds(parentNodeId: string, shouldIncludeSubtrees = false): string[] {
     const childRegExp = makeChildrenRegExp(parentNodeId, this._nodeKeyDelimiter);
     if (shouldIncludeSubtrees) {
       return this.filterIds((nodeId) => childRegExp.test(nodeId));
@@ -198,14 +201,13 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return Object.keys(this._nodeDictionary).length;
   }
 
-  private _getContentItems(nodeIds: string[]): (ITree<T> | T | null)[] {
+  #getContentItems(nodeIds: string[]): (ITree<T> | T | null)[] {
     return nodeIds.map((childNodeId) => {
-      const content = this._getChildContent(childNodeId);
+      const content = this.#getChildContent(childNodeId);
       if (content instanceof AbstractDirectedGraph) {
         const subtreeRootNodeId = (content as AbstractDirectedGraph<any>).rootNodeId;
-        return (content as AbstractDirectedGraph<any>)._getChildContent(subtreeRootNodeId);
+        return (content as AbstractDirectedGraph<any>).#getChildContent(subtreeRootNodeId);
       }
-
       return content;
     });
   }
@@ -214,20 +216,20 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     parentNodeId: string,
     shouldIncludeSubtrees = false
   ): (ITree<T> | T | null)[] {
-    let childrenNodeIds = this._getChildrenNodeIds(parentNodeId, shouldIncludeSubtrees);
-    return this._getContentItems(childrenNodeIds);
+    const childrenNodeIds = this.#getChildrenNodeIds(parentNodeId, shouldIncludeSubtrees);
+    return this.#getContentItems(childrenNodeIds);
   }
 
   public getDescendantContentOf(
     parentNodeId: string,
     shouldIncludeSubtrees = false
   ): TGenericNodeContent<T>[] {
-    this.nodeIdExistsOrThrow(parentNodeId);
+    this.#nodeIdExistsOrThrow(parentNodeId);
     const descendantIds = this.getDescendantNodeIds(parentNodeId, shouldIncludeSubtrees);
     const descendantContent: TGenericNodeContent<T>[] = [];
 
     descendantIds.forEach((key) => {
-      const nodeContent = this._getChildContent(key);
+      const nodeContent = this.#getChildContent(key);
       if (nodeContent instanceof AbstractDirectedGraph) {
         const nodeContentAsAbstract = nodeContent as AbstractDirectedGraph<T>;
         descendantContent.push(
@@ -253,24 +255,40 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     }
   }
 
-  protected getNextChildNodeId(parentNodeId: string) {
+  #getNextChildNodeId(parentNodeId: string) {
     const childNodeId = [parentNodeId, this._incrementor.next].join(this._nodeKeyDelimiter);
     return childNodeId;
   }
 
-  private getNewInstance(rootNodeId: string) {
-    // used by createSubGraph to be flexible with actual constructor type
-
+  /**
+   * The tricky bit here is that the  subtree._rootNodeId
+   * must be the same as parent's node.nodeId
+   * @param targetParentNodeId
+   * @returns
+   */
+  public createSubtreeAt(parentNodeId: string): ITree<T> {
     // can we rethink this.  Is there a better way?
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
-    return new this.constructor(rootNodeId) as typeof this;
+    const subtree = new this.constructor(parentNodeId) as typeof this;
+
+    const subtreeParentNodeId = this.#appendChildNodeWithContent(
+      parentNodeId,
+      subtree as unknown as ITree<T>
+    );
+
+    subtree._rootNodeId = subtreeParentNodeId;
+    subtree._nodeDictionary = {};
+    subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
+    subtree._incrementor = this._incrementor;
+
+    return subtree;
   }
 
   public getParentNodeId(nodeId: string): string {
-    return this._getParentNodeId(nodeId);
+    return this.#getParentNodeId(nodeId);
   }
 
-  private _getParentNodeId(nodeId: string): string {
+  #getParentNodeId(nodeId: string): string {
     if (nodeId === this._rootNodeId) {
       return this._rootNodeId;
     }
@@ -298,8 +316,8 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
       return [];
     }
 
-    const parentNodeId = this._getParentNodeId(nodeId);
-    const childrenIds = this._getChildrenNodeIds(parentNodeId);
+    const parentNodeId = this.#getParentNodeId(nodeId);
+    const childrenIds = this.#getChildrenNodeIds(parentNodeId);
 
     const index = childrenIds.indexOf(nodeId);
     /* istanbul ignore next - likely unnecessary check */
@@ -311,7 +329,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return childrenIds;
   }
 
-  public getSubgraphIdsAt(nodeId: string = this.rootNodeId) {
+  public getSubtreeIdsAt(nodeId: string = this.rootNodeId) {
     const allNodeIds = this.getDescendantNodeIds(nodeId, true);
     const self = this;
     return allNodeIds.filter((nodeId: string) => {
@@ -319,7 +337,7 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     });
   }
 
-  public getTreeContentAt(nodeId: string, shouldIncludeSubtrees = false) {
+  public getTreeContentAt(nodeId: string = this.rootNodeId, shouldIncludeSubtrees = false) {
     if (this.nodeIdExists(nodeId)) {
       const descendContent = this.getDescendantContentOf(nodeId, shouldIncludeSubtrees);
       descendContent.push(this.getChildContentAt(nodeId));
@@ -329,12 +347,10 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
   }
 
   public getTreeNodeIdsAt(nodeId: string) {
-    return this._getTreeNodeIdsAt(nodeId);
+    return this.#getTreeNodeIdsAt(nodeId);
   }
 
-  public _getTreeNodeIdsAt(nodeId: string, shouldIncludeSubtrees = false) {
-    // doesn't make sense to 'shouldIncludeSubtrees' subtree ids are not valid
-    // in parent tree
+  #getTreeNodeIdsAt(nodeId: string) {
     const childRegExp = makeDescendantRegExp(nodeId, "");
     return this.filterIds((nodeId) => childRegExp.test(nodeId) && !this.isSubtree(nodeId));
   }
@@ -344,10 +360,10 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
   }
 
   public isLeaf(nodeId: string): boolean {
-    return this._isLeaf(nodeId);
+    return this.#isLeaf(nodeId);
   }
 
-  private _isLeaf(nodeId: string): boolean {
+  #isLeaf(nodeId: string): boolean {
     return this.getDescendantNodeIds(nodeId).length === 0;
   }
 
@@ -366,16 +382,16 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
    * @param targetNodeId
    */
   public move(sourceNodeId: string, targetNodeId: string): { from: string; to: string }[] {
-    const newChildId = this.getNextChildNodeId(targetNodeId);
+    const newChildId = this.#getNextChildNodeId(targetNodeId);
 
-    const subtreeIds = this._getTreeNodeIdsAt(sourceNodeId);
+    const subtreeIds = this.#getTreeNodeIdsAt(sourceNodeId);
 
     const mapFromTo = subtreeIds.map((descKey) => {
       return { from: descKey, to: descKey.replace(sourceNodeId, newChildId) };
     });
 
     mapFromTo.forEach(({ from, to }) => {
-      this.moveNode(from, to);
+      this.#moveNode(from, to);
     });
 
     return mapFromTo;
@@ -391,6 +407,8 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     sourceNodeId: string,
     targetNodeId: string
   ): { from: string; to: string }[] {
+    // *tmc* - does this make sense to be public?  I think there is no use case for it
+    // also it doesn't seem to be used by this class
     const descendantKeys = this.getDescendantNodeIds(sourceNodeId);
 
     const mapFromTo = descendantKeys.map((descKey) => {
@@ -398,22 +416,22 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     });
 
     mapFromTo.forEach(({ from, to }) => {
-      this.moveNode(from, to);
+      this.#moveNode(from, to);
     });
     return mapFromTo;
   }
 
-  private moveNode(fromNodeId: string, toNodeId: string) {
-    // *tmc* think "moveNode" is not very good name
-    this.setNodeContentByNodeId(toNodeId, this._getChildContent(fromNodeId));
+  #moveNode(fromNodeId: string, toNodeId: string) {
+    // *tmc* think "#moveNode" is not very good name
+    this.#setNodeContentByNodeId(toNodeId, this.#getChildContent(fromNodeId));
     this.removeSingleNode(fromNodeId);
   }
 
   public removeNodeAt(nodeId: string): void {
     if (this.isRoot(nodeId)) {
-      throw new Error("CUSTOM ERROR - can not remove root node");
+      throw new DirectedGraphError("Can not remove root node.");
     }
-    const treeIds = this._getTreeNodeIdsAt(nodeId);
+    const treeIds = this.#getTreeNodeIdsAt(nodeId);
     treeIds.forEach((childId) => {
       this.removeSingleNode(childId); // using this?
     });
@@ -424,12 +442,12 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
   }
 
   public replaceNodeContent(nodeId: string, nodeContent: TGenericNodeContent<T>): void {
-    this._replaceNodeContent(nodeId, nodeContent);
+    this.#replaceNodeContent(nodeId, nodeContent);
   }
 
-  protected _replaceNodeContent(nodeId: string, nodeContent: TGenericNodeContent<T>): void {
+  #replaceNodeContent(nodeId: string, nodeContent: TGenericNodeContent<T>): void {
     if (this.isRoot(nodeId) && nodeContent instanceof AbstractDirectedGraph) {
-      throw new DirectedGraphError(`Can not replace root with subgraph.`);
+      throw new DirectedGraphError(`Can not replace root with subtree.`);
     }
 
     this._nodeDictionary[nodeId] = { nodeContent };
@@ -439,74 +457,57 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return this._rootNodeId;
   }
 
-  protected setNodeContentByNodeId(nodeId: string, nodeContent: TGenericNodeContent<T>) {
+  #setNodeContentByNodeId(nodeId: string, nodeContent: TGenericNodeContent<T>) {
     this._nodeDictionary[nodeId] = { nodeContent };
   }
 
   public visitAllAt(visitor: ITreeVisitor<T>, nodeId: string = this.rootNodeId): void {
     const parentNodeId = nodeId;
-    this._visitAllAt(visitor, nodeId, parentNodeId);
+    this.#visitAllAt(visitor, nodeId, parentNodeId);
   }
 
-  public _visitAllAt(
+  #visitAllAt(
     visitor: ITreeVisitor<T>,
     nodeId: string = this._rootNodeId,
     parentNodeId: string = this._rootNodeId
   ): void {
-    const childrenIds = this.getChildrenNodeIdsOf(nodeId, visitor.includeSubtrees);
-    const content = this._getChildContent(nodeId); // .getContentAt(nodeId);
+    const childrenIds = this.#getChildrenNodeIds(nodeId, visitor.includeSubtrees);
+    const content = this.#getChildContent(nodeId);
 
     if (visitor.includeSubtrees && content instanceof AbstractDirectedGraph) {
-      content._visitAllAt(visitor);
+      content.#visitAllAt(visitor);
     } else {
+      // this.visitNode(visitor, nodeId, content, parentNodeId);
       visitor.visit(nodeId, content, parentNodeId);
     }
 
     childrenIds.forEach((childId) => {
-      this._visitAllAt(visitor, childId, nodeId);
+      this.#visitAllAt(visitor, childId, nodeId);
     });
   }
 
   public visitLeavesOf(visitor: ITreeVisitor<T>, nodeId: string = this._rootNodeId): void {
-    this._visitLeavesOf(visitor, nodeId);
+    this.#visitLeavesOf(visitor, nodeId);
   }
 
-  public _visitLeavesOf(visitor: ITreeVisitor<T>, nodeId: string = this._rootNodeId): void {
+  #visitLeavesOf(visitor: ITreeVisitor<T>, nodeId: string = this._rootNodeId): void {
     const childrenIds = this.getDescendantNodeIds(nodeId, visitor.includeSubtrees);
 
     const leavesOf = childrenIds.filter((childId) => {
-      return this._isLeaf(childId);
+      return this.#isLeaf(childId);
     });
     leavesOf.forEach((nodeId) => {
       const parentId = this.getParentNodeId(nodeId);
-      const content = this._getChildContent(nodeId);
+      const content = this.#getChildContent(nodeId);
       if (content instanceof AbstractDirectedGraph) {
-        content._visitLeavesOf(visitor);
+        content.#visitLeavesOf(visitor);
       } else {
         visitor.visit(nodeId, content, parentId);
       }
     });
   }
 
-  protected static createSubgraphAt<T>(
-    nodeId: string,
-    parentGraph: AbstractDirectedGraph<T>
-  ): ITree<T> {
-    const subgraph = parentGraph.getNewInstance(nodeId);
-    const subgraphParentNodeId = parentGraph._appendChildNodeWithContent(
-      nodeId,
-      subgraph as unknown as ITree<T>
-    );
-
-    subgraph._rootNodeId = subgraphParentNodeId;
-    subgraph._nodeDictionary = {};
-    subgraph._nodeDictionary[subgraph._rootNodeId] = { nodeContent: null };
-    subgraph._incrementor = parentGraph._incrementor;
-
-    return subgraph as unknown as ITree<T>;
-  }
-
-  private static fromPojoTraverseAndExtractChildren = <T>(
+  static #fromPojoTraverseAndExtractChildren = <T>(
     treeParentId: string,
     jsonParentId: string,
     dTree: ITree<T>,
@@ -516,10 +517,10 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     const childrenNodes = treeUtils.extractChildrenNodes<T>(jsonParentId, treeObject);
 
     Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
-      if (nodePojo.nodeType === AbstractDirectedGraph.SubGraphNodeTypeName) {
-        const subtree = dTree.createSubGraphAt(treeParentId);
+      if (nodePojo.nodeType === AbstractDirectedGraph.SubtreeNodeTypeName) {
+        const subtree = dTree.createSubtreeAt(treeParentId);
         subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
-        AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
+        AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
           subtree.rootNodeId,
           nodeId,
           subtree as ITree<T>,
@@ -527,11 +528,11 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
           transformer
         );
       } else {
-        const childId = dTree.fromPojoAppendChildNodeWithContent(
+        const childId = (dTree as AbstractDirectedGraph<T>).fromPojoAppendChildNodeWithContent(
           treeParentId,
           transformer(nodePojo)
         );
-        AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
+        AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
           childId,
           nodeId,
           dTree,
@@ -542,11 +543,24 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     });
   };
 
-  static fromPojo<T>(
-    srcPojoTree: TTreePojo<T>,
-    transform = defaultFromPojoTransform,
-    TreeClass: Function // () => ITree<T>
-  ): ITree<T> {
+  public static fromPojo<P, Q>(
+    srcPojoTree: TTreePojo<P>,
+    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+  ): Q {
+    return AbstractDirectedGraph.#fromPojo<P, Q>(
+      srcPojoTree,
+      transform,
+      AbstractDirectedGraph as unknown as () => Q
+    ) as unknown as Q;
+  }
+
+  static #fromPojo<P, Q>(
+    srcPojoTree: TTreePojo<P>,
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform, // branch coverage complains
+    TreeClass: () => Q
+  ): Q {
     const pojoObject = { ...srcPojoTree };
 
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
@@ -554,13 +568,13 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     const rootNodePojo = pojoObject[rootNodeId];
 
     // @ts-ignore - expression is not newable, I think ok in js, not ts
-    const dTree = new TreeClass<T>(); // as AbstractDirectedGraph<T>;
+    const dTree = new TreeClass<P>(); // as AbstractDirectedGraph<T>;
 
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
-    AbstractDirectedGraph.fromPojoTraverseAndExtractChildren(
-      dTree.rootNodeId, // rootNodeId -
+    AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
+      dTree._rootNodeId,
       rootNodeId,
       dTree,
       pojoObject,
@@ -573,32 +587,49 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
     return dTree;
   }
 
-  public toPojo(): TTreePojo<T> {
-    return this._toPojo();
+  static obfuscatePojo<P>(pojo: TTreePojo<P>): TTreePojo<P> {
+    const obfusPojo = { ...pojo };
+    const keyStore = new KeyStore<string>();
+
+    // first pass - keys
+    Object.keys(obfusPojo).forEach((nodeId) => {
+      const nodeKey = keyStore.putValue(nodeId);
+      obfusPojo[nodeKey] = { ...obfusPojo[nodeId] };
+      delete obfusPojo[nodeId];
+    });
+
+    // second pass - update parentNodeId
+    Object.entries(obfusPojo).forEach(([nodeKey, node]) => {
+      obfusPojo[nodeKey].parentId = keyStore.reverseLookUpExactlyOneOrThrow(
+        obfusPojo[nodeKey].parentId
+      );
+    });
+    return obfusPojo;
   }
 
-  public toPojoAt(nodeId: string, transformer?: transformToPojoType): TTreePojo<T> {
-    return this._toPojo(nodeId, nodeId, transformer);
+  public toPojoAt(
+    nodeId: string = this.rootNodeId,
+    transformer?: transformToPojoType
+  ): TTreePojo<T> {
+    return this.#toPojo(nodeId, nodeId, transformer);
   }
 
-  protected _toPojo(
-    currentNodeId = this.rootNodeId,
-    parentNodeId = this.rootNodeId,
-
+  #toPojo(
+    currentNodeId: string,
+    parentNodeId: string,
     transformTtoPojo: transformToPojoType = defaultToPojoTransformer,
     workingPojoDocument: TTreePojo<T> = {}
   ): TTreePojo<T> {
-    const nodeContent = this._getChildContent(currentNodeId) as T;
+    const nodeContent = this.getChildContentAt(currentNodeId) as T;
 
     if (nodeContent instanceof AbstractDirectedGraph) {
-      // here insert the subtree record
-      const subtreePojo = nodeContent.toPojo();
+      const subtreePojo = nodeContent.toPojoAt(nodeContent.rootNodeId);
       Object.entries(subtreePojo).forEach(([nodeId, nodeContent]) => {
         workingPojoDocument[nodeId] = nodeContent;
       });
 
       workingPojoDocument[currentNodeId] = {
-        nodeType: AbstractDirectedGraph.SubGraphNodeTypeName,
+        nodeType: AbstractDirectedGraph.SubtreeNodeTypeName,
         nodeContent: nodeContent.getChildContentAt(nodeContent.rootNodeId),
         parentId: parentNodeId,
       };
@@ -608,9 +639,13 @@ abstract class AbstractDirectedGraph<T> implements ITree<T> {
         nodeContent: transformTtoPojo(nodeContent) as unknown as T,
       };
 
-      const children = this._getChildrenNodeIds(currentNodeId);
+      const children = this.#getChildrenNodeIds(
+        currentNodeId,
+        AbstractDirectedGraph.SHOULD_INCLUDE_SUBTREES
+      );
+
       children.forEach((childId) => {
-        this._toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument);
+        this.#toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument);
       });
     }
 
