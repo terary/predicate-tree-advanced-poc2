@@ -1,13 +1,13 @@
 // import { ITree } from "../DirectedGraph";
-import { ITree, ITreeVisitor } from "../DirectedGraph/ITree";
+import { ITree, ITreeVisitor } from "../ITree";
 
-import { AbstractExpressionTree } from "../DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
-import { KeyStore } from "../DirectedGraph/keystore/KeyStore";
+import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
+import { KeyStore } from "../keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
-import { TGenericNodeContent, TNodePojo, TTreePojo } from "../DirectedGraph/types";
-import { IAppendChildNodeIds } from "../DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
+import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
 import { ObfuscatedError } from "./ObfuscatedError";
-import { AbstractDirectedGraph } from "../DirectedGraph/AbstractDirectedGraph";
+import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 abstract class AbstractObfuscatedExpressionTree<P>
   extends AbstractExpressionTree<P>
   implements IObfuscatedExpressionTree<P>

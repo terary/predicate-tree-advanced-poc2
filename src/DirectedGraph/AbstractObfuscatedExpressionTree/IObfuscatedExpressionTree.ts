@@ -1,6 +1,6 @@
-import { TGenericNodeContent, TNodePojo, TTreePojo } from "../DirectedGraph/types";
-import { IAppendChildNodeIds } from "../DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
-import { ITree, ITreeVisitor } from "../DirectedGraph/ITree";
+import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
+import { ITree, ITreeVisitor } from "../ITree";
 
 interface IObfuscatedExpressionTree<P> extends ITree<P> {
   appendContentWithJunction(

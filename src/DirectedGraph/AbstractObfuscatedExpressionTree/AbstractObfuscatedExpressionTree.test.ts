@@ -1,13 +1,13 @@
-import { AbstractExpressionTree } from "../DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
+import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
 import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpressionTree";
-import { isUUIDv4 } from "../common/utilities/isFunctions";
+import { isUUIDv4 } from "../../common/utilities/isFunctions";
 import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
-import { ITreeVisitor } from "../DirectedGraph/ITree";
-import { TGenericNodeContent } from "../DirectedGraph/types";
+import { ITreeVisitor } from "../ITree";
+import { TGenericNodeContent } from "../types";
 import {
   filterPojoContent,
   filterPojoContentPredicateValues,
-} from "../DirectedGraph/test-helpers/test.utilities";
+} from "../test-helpers/test.utilities";
 // import {
 //   WidgetSort,
 //   make3Children9GrandchildrenTreeAbstract,
@@ -20,14 +20,14 @@ import {
   makePojo3Children9Grandchildren,
   make3Children2Subtree3Children,
   SortPredicateTest,
-} from "../DirectedGraph/AbstractExpressionTree/test-utilities";
+} from "../AbstractExpressionTree/test-utilities";
 import type {
   TJunction,
   TOperand,
   TOperandOperators,
   TPredicateNodeTypes,
   TPredicateTypes,
-} from "../DirectedGraph/AbstractExpressionTree/types";
+} from "../AbstractExpressionTree/types";
 import { ObfuscatedError } from "./ObfuscatedError";
 import { values } from "lodash";
 
