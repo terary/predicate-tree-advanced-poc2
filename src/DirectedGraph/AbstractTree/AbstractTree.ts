@@ -1,5 +1,3 @@
-// import treeUtils from "../AbstractTree/treeUtilities";
-import treeUtils from "../AbstractDirectedGraph/treeUtilities";
 import { DirectedGraphError } from "../DirectedGraphError";
 import { Incrementor } from "../Incrementor";
 import { ITree, ITreeVisitor } from "../ITree";
@@ -8,10 +6,6 @@ import { KeyStore } from "../keystore/KeyStore";
 
 const defaultToPojoTransformer = <T>(nodeContent: T) => {
   return nodeContent as unknown as TNodePojo<T>;
-};
-
-const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
-  return nodeContent.nodeContent;
 };
 
 const makeChildrenRegExp = (nodeId: string, delim: string) => {

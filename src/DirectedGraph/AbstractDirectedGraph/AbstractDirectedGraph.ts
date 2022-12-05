@@ -1,28 +1,13 @@
 import treeUtils from "./treeUtilities";
+
 import { DirectedGraphError } from "../DirectedGraphError";
-import { Incrementor } from "../Incrementor";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
 import { ITree, IDirectedGraph, ITreeVisitor } from "../ITree";
-import type { TNodePojo, TTreePojo, TGenericNodeContent, TGenericNodeType } from "../types";
-import { KeyStore } from "../keystore/KeyStore";
-
-const defaultToPojoTransformer = <T>(nodeContent: T) => {
-  return nodeContent as unknown as TNodePojo<T>;
-};
+import type { TNodePojo, TTreePojo, TGenericNodeContent } from "../types";
 
 const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
   return nodeContent.nodeContent;
 };
-
-const makeChildrenRegExp = (nodeId: string, delim: string) => {
-  return new RegExp("^" + nodeId + delim + "[\\d]+$");
-};
-
-const makeDescendantRegExp = (nodeId: string, delim: string, options = "") => {
-  return new RegExp("^" + nodeId + delim, options);
-};
-
-type transformToPojoType = typeof defaultToPojoTransformer;
 abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDirectedGraph<T> {
   public appendChildNodeWithContent(
     parentNodeId: string,

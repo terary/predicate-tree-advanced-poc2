@@ -1,25 +1,12 @@
-const todo = `
-  This class is misnamed.  It has methods like appendContentWith[And | Or]
-  which is a logic operation.
-
-  This class in theory should have appendContentWithJunction - only
-  And then a subclass which specifies And|Or.
-
-  This will allow this class to be used for arithmetic trees, or other
-  forms of trees.
-
-`;
-
-import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
-import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
-import {
-  // ITree,
-  IExpressionTree,
-} from "../ITree";
-import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
+
+import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
+
+import { IExpressionTree } from "../ITree";
+import type { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
-// import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
+
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
@@ -29,7 +16,7 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     super(rootNodeId, nodeContent);
   }
 
-  public appendContentWithAnd(
+  public x_appendContentWithAnd(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
@@ -87,7 +74,7 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     };
   }
 
-  public appendChildNodeWithContent(
+  protected appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): string {

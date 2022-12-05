@@ -1,6 +1,6 @@
-import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import { TGenericNodeContent } from "../types";
 import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
-import { ITree, ITreeVisitor } from "../ITree";
+import { ITree } from "../ITree";
 
 interface IObfuscatedExpressionTree<P> extends ITree<P> {
   appendContentWithJunction(

@@ -21,8 +21,9 @@ Compare 3 trees, predicate,  arithmetic, (1 other)
 import { AbstractDirectedGraph } from "./AbstractDirectedGraph";
 import { IDirectedGraph, ITreeVisitor } from "../ITree";
 import { TTreePojo, TNodePojo, TGenericNodeContent } from "../types";
-import { TestTreeVisitor } from "../test-helpers/TestTreeVisitor";
 import { DirectedGraphError } from "../DirectedGraphError";
+
+import { TestTreeVisitor } from "../test-helpers/TestTreeVisitor";
 import {
   WidgetSort,
   make3Children9GrandchildrenTreeAbstract,
@@ -31,7 +32,6 @@ import {
   filterPojoContent,
   WidgetType,
 } from "./test.utilities";
-import treeUtilities from "./treeUtilities";
 class TestAbstractDirectedGraph extends AbstractDirectedGraph<WidgetType> {
   public getParentNodeId(nodeId: string): string {
     return super.getParentNodeId(nodeId);

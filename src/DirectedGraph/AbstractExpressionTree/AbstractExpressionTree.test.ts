@@ -26,9 +26,6 @@ which makes getChildren a little odd but it's easier understood and implement
 
 `;
 
-import { ITree } from "../ITree";
-import { PredicateTreeJs } from "../../../dev-debug/PredicateTreeJs/PredicateTreeJs";
-
 export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPredicateNodeTypes> {
   public _appendChildNodeWithContent(
     parentNodeId: string,
@@ -36,6 +33,28 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
   ): string {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
+
+  public appendChildNodeWithContent(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  ): string {
+    return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+  }
+  public appendContentWithAnd(
+    parentNodeId: string,
+    nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  ): string {
+    return super.appendContentWithJunction(parentNodeId, { operator: "$and" }, nodeContent)
+      .newNodeId;
+  }
+
+  // public appendContentWithOr(
+  //   parentNodeId: string,
+  //   nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  // ): string {
+  //   return super.appendContentWithJunction(parentNodeId, { operator: "$or" }, nodeContent)
+  //     .newNodeId;
+  // }
 }
 
 describe("AbstractExpressionTree", () => {

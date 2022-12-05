@@ -1,13 +1,12 @@
-// import { ITree } from "../DirectedGraph";
 import { IExpressionTree, ITree, ITreeVisitor } from "../ITree";
 
 import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
 import { KeyStore } from "../keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
-import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
 import { ObfuscatedError } from "./ObfuscatedError";
-import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
+import type { TGenericNodeContent, TTreePojo } from "../types";
+import { AbstractTree } from "../AbstractTree/AbstractTree";
 abstract class AbstractObfuscatedExpressionTree<P>
   extends AbstractExpressionTree<P>
   implements IObfuscatedExpressionTree<P>
@@ -47,12 +46,18 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this._rootKey;
   }
 
-  public appendChildNodeWithContent(
+  protected appendChildNodeWithContent(
     parentNodeKey: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
     const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
-    const newNodeId = this._internalTree.appendChildNodeWithContent(parentNodeId, nodeContent);
+
+    // should do it like this
+    const newNodeId = this._internalTree["appendChildNodeWithContent"](
+      parentNodeId,
+      nodeContent
+    );
+
     return this._keyStore.putValue(newNodeId);
   }
 
@@ -157,7 +162,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
     // used by createSubTree to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?
-    const subtreeParentNodeId = this._internalTree.appendChildNodeWithContent(
+    const subtreeParentNodeId = this._internalTree["appendChildNodeWithContent"](
       targetParentNodeId,
       null
     );
@@ -259,8 +264,6 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return {
       includeSubtrees: visitor.includeSubtrees,
       visit: (nodeKey: string, nodeContent: TGenericNodeContent<P>, parentKey: string) => {
-        // const nodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
-        // const parentKey = this._keyStore.reverseLookUpExactlyOneOrThrow(parentId);
         visitor.visit(nodeKey, nodeContent, parentKey);
       },
     };
@@ -271,7 +274,28 @@ abstract class AbstractObfuscatedExpressionTree<P>
     //    transformer?: transformToPojoType
   ): TTreePojo<P> {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
-    return this._internalTree.toPojoAt(nodeId);
+    // return
+    const pojo = this._internalTree.toPojoAt(nodeId);
+
+    return this.obfuscatePojo(pojo);
+  }
+
+  private obfuscatePojo(treePojo: TTreePojo<P>): TTreePojo<P> {
+    const obfusPojo = {} as TTreePojo<P>;
+
+    Object.entries(treePojo).forEach(([nodeId, nodeContent]) => {
+      if (nodeContent instanceof AbstractTree) {
+      }
+      const parentNodeKey = this._keyStore.reverseLookUp(nodeId)[0] || "";
+      //this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
+      obfusPojo[parentNodeKey] = {
+        ...nodeContent,
+        parentId: this._keyStore.reverseLookUp(nodeId)[0] || nodeId,
+        // parentId: this.reverseMapKeys([nodeId])[0],
+      };
+    });
+
+    return obfusPojo;
   }
 
   public visitAllAt(
