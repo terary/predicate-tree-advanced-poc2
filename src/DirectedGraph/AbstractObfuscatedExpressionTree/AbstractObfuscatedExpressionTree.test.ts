@@ -202,9 +202,13 @@ describe("AbstractObfuscatedExpressionTree", () => {
         dTreeIds[debugLabel] = reverseMap[nodeId];
       });
 
-      const treePojo = privateTree.toPojoAt();
-      const subtree0Pojo = subtree0.toPojoAt(subtree0.rootNodeId);
-      const subtree1Pojo = subtree1.toPojoAt(subtree1.rootNodeId);
+      const treePojo = AbstractExpressionTree.obfuscatePojo(privateTree.toPojoAt());
+      const subtree0Pojo = AbstractExpressionTree.obfuscatePojo(
+        subtree0.toPojoAt(subtree0.rootNodeId)
+      );
+      const subtree1Pojo = AbstractExpressionTree.obfuscatePojo(
+        subtree1.toPojoAt(subtree1.rootNodeId)
+      );
 
       const pojoContent = filterPojoContent(treePojo);
       const pojoContentValues = filterPojoContentPredicateValues(treePojo);
