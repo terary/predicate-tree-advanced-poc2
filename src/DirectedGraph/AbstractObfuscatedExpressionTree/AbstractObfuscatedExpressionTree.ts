@@ -274,6 +274,33 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this._internalTree.toPojoAt(nodeId);
   }
 
+  static obfuscatePojo(pojo: TTreePojo<any>): TTreePojo<any> {
+    // I *think* because toPojo also calls toPojo of subtree
+    // the result is the subtree gets pojo'd independently
+    // which goofs everything.
+
+    // this hack takes a pojo and obfuscate.
+    // ideally toPojo would obfuscate
+    const obfusPojo = { ...pojo };
+    const keyStore = new KeyStore<string>();
+
+    // first pass - keys
+    Object.keys(obfusPojo).forEach((nodeId) => {
+      const nodeKey = keyStore.putValue(nodeId);
+      obfusPojo[nodeKey] = { ...obfusPojo[nodeId] };
+      delete obfusPojo[nodeId];
+    });
+
+    // second pass - update parentNodeId
+    Object.entries(obfusPojo).forEach(([nodeKey, node]) => {
+      obfusPojo[nodeKey].parentId = keyStore.reverseLookUpExactlyOneOrThrow(
+        obfusPojo[nodeKey].parentId
+      );
+    });
+
+    return obfusPojo;
+  }
+
   public visitAllAt(
     visitor: ITreeVisitor<P>,
     nodeId: string = this.rootNodeId,
