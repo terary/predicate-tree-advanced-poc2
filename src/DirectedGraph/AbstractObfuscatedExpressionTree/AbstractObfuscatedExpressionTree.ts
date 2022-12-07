@@ -61,15 +61,54 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this._keyStore.putValue(newNodeId);
   }
 
-  appendContentWithJunction(
-    parentNodeId: string,
+  x_appendparentNodeKeyContentWithJunction(
+    parentNodeKey: string,
     junctionContent: TGenericNodeContent<P>,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
-    const parentNodeKey = this._getNodeIdOrThrow(parentNodeId);
+    const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
 
     const junctionNodeIds = this._internalTree.appendContentWithJunction(
-      parentNodeKey,
+      parentNodeId,
+      junctionContent,
+      nodeContent
+    );
+
+    junctionNodeIds.junctionNodeId = this._keyStore.reverseLookUpExactlyOneOrThrow(
+      junctionNodeIds.junctionNodeId
+    );
+
+    junctionNodeIds.originalContentNodeId = this._keyStore.putValue(
+      junctionNodeIds.originalContentNodeId as string
+    );
+
+    junctionNodeIds.newNodeId = this._keyStore.putValue(junctionNodeIds.newNodeId);
+
+    return junctionNodeIds;
+  }
+
+  appendContentWithJunction(
+    parentNodeKey: string,
+    junctionContent: TGenericNodeContent<P>,
+    nodeContent: TGenericNodeContent<P>
+  ): IAppendChildNodeIds {
+    const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
+
+    if (this.isBranch(parentNodeKey)) {
+      const x = this._internalTree.appendContentWithJunction(
+        parentNodeId,
+        junctionContent,
+        nodeContent
+      );
+      return {
+        isNewBranch: false,
+        newNodeId: this._keyStore.reverseLookUpExactlyOneOrThrow(x.newNodeId),
+        junctionNodeId: parentNodeKey,
+      };
+    }
+
+    const junctionNodeIds = this._internalTree.appendContentWithJunction(
+      parentNodeId,
       junctionContent,
       nodeContent
     );
@@ -274,28 +313,12 @@ abstract class AbstractObfuscatedExpressionTree<P>
     //    transformer?: transformToPojoType
   ): TTreePojo<P> {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
-    // return
+
+    // this calls directedGraph ? should call AbstractTree?
+    // probably need to override the whole toPojo
+
     const pojo = this._internalTree.toPojoAt(nodeId);
-
-    return this.obfuscatePojo(pojo);
-  }
-
-  private obfuscatePojo(treePojo: TTreePojo<P>): TTreePojo<P> {
-    const obfusPojo = {} as TTreePojo<P>;
-
-    Object.entries(treePojo).forEach(([nodeId, nodeContent]) => {
-      if (nodeContent instanceof AbstractTree) {
-      }
-      const parentNodeKey = this._keyStore.reverseLookUp(nodeId)[0] || "";
-      //this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
-      obfusPojo[parentNodeKey] = {
-        ...nodeContent,
-        parentId: this._keyStore.reverseLookUp(nodeId)[0] || nodeId,
-        // parentId: this.reverseMapKeys([nodeId])[0],
-      };
-    });
-
-    return obfusPojo;
+    return AbstractObfuscatedExpressionTree.obfuscatePojo(pojo);
   }
 
   static obfuscatePojo(pojo: TTreePojo<any>): TTreePojo<any> {
@@ -370,7 +393,6 @@ abstract class AbstractObfuscatedExpressionTree<P>
       }
     });
   }
-
   static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>
     //    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform

@@ -27,7 +27,7 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     );
   }
 
-  public appendContentWithOr(
+  public x_appendContentWithOr(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {

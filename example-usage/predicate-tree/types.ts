@@ -1,5 +1,5 @@
 import type { ITree } from "../../src";
-type TOperandOperators = "$eq" | "$lte" | "$le" | "$gt" | "$gte";
+type TOperandOperators = "$eq" | "$lte" | "$lt" | "$gt" | "$gte";
 type TJunctionOperators = "$or" | "$and";
 
 type TJunction = {
