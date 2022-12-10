@@ -11,12 +11,23 @@ const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeCon
   return nodeContent.nodeContent;
 };
 
+type TAppendedNode<T> = {
+  nodeId: string;
+  nodeContent: TGenericNodeContent<T>;
+};
+
+type AppendNodeResponseType<T> = {
+  appendedNodes: TAppendedNode<T>[];
+  junctionNode: TAppendedNode<T>;
+  invisibleChild: TAppendedNode<T> | null; // if we move convert leaf to branch, this child becomes leaf
+};
+
 export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpressionTree<P> {
   constructor(rootNodeId = "_root_", nodeContent?: P) {
     super(rootNodeId, nodeContent);
   }
 
-  public x_appendContentWithAnd(
+  public appendContentWithAnd(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
@@ -27,7 +38,65 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     );
   }
 
-  public x_appendContentWithOr(
+  public appendBranch(
+    parentNodeId: string,
+    junctionNodeContent: TGenericNodeContent<P>,
+    ...leafNodes: P[]
+  ): AppendNodeResponseType<P> {
+    `
+      if isBranch 
+        replace content with junction
+        childrenTarget = parentNodeId
+      if isLeaf
+        preserve originalContent
+        replace content with junction
+        childrenTarget = parentNodeId
+        appendChild(childrenTarget, originalContent)
+        appendChild(childrenTarget, null) // no singleChildren - or ONLY if leafs.length ==0
+      end-if
+    
+      appendChildren
+    
+    `;
+    // ------------------------
+    let invisibleChild: TAppendedNode<P> | null = null;
+    let childrenTarget: string | null = null;
+
+    if (this.isBranch(parentNodeId)) {
+      this.replaceNodeContent(parentNodeId, junctionNodeContent);
+      childrenTarget = parentNodeId;
+    } else if (this.isLeaf(parentNodeId)) {
+      //
+      const originalContent = this.getChildContentAt(parentNodeId);
+      this.replaceNodeContent(parentNodeId, junctionNodeContent);
+      childrenTarget = parentNodeId; //
+      invisibleChild = {
+        nodeId: this.appendChildNodeWithContent(parentNodeId, originalContent),
+        nodeContent: originalContent,
+      };
+    } else {
+      throw new Error("THIS AINT DONE YET");
+    }
+    const junctionNode = {
+      nodeContent: this.getChildContentAt(parentNodeId),
+      nodeId: parentNodeId,
+    };
+
+    //--
+    const appendedNodes = leafNodes.map((leafNode) => {
+      return {
+        nodeId: this.appendChildNodeWithContent(childrenTarget || "_NOT_FOUND_", leafNode),
+        nodeContent: leafNode,
+      } as TAppendedNode<P>;
+    });
+    return {
+      appendedNodes,
+      junctionNode,
+      invisibleChild,
+    };
+  }
+
+  public appendContentWithOr(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
@@ -78,6 +147,11 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
+    const nullValueSiblings = this.#getChildrenWithNullValues(parentNodeId);
+    if (nullValueSiblings.length > 0) {
+      super.replaceNodeContent(nullValueSiblings[0], nodeContent);
+      return nullValueSiblings[0];
+    }
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 

@@ -3,6 +3,7 @@
   "editor.formatOnSave": true,
   "eslint.alwaysShowStatus": true,
   "cSpell.words": [
+    "betty",
     "betweeni",
     "betweenx",
     "clonedeep",
@@ -10,8 +11,9 @@
     "datetime",
     "differencewith",
     "firstname",
-    "Flintstone",
     "flintstone",
+    "Flintstone",
+    "fred",
     "lastname",
     "nany",
     "obfus",
@@ -19,7 +21,8 @@
     "projectables",
     "subtreeroot",
     "testables",
-    "uuidv4"
+    "uuidv4",
+    "wilma"
   ],
   "files.watcherExclude": {
     "**/.git/objects/**": true,

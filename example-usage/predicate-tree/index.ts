@@ -9,7 +9,7 @@ import { AbstractObfuscatedExpressionTree } from "../../src";
 import { AbstractExpressionTree, ITreeVisitor } from "../../src";
 import type { TGenericNodeContent } from "../../src";
 import { IAppendChildNodeIds } from "../../src/DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
-
+import assert from "assert";
 type TSubjectType = {
   datatype: "string" | "number" | "date";
   label: string;
@@ -47,20 +47,33 @@ class LeafVisitor implements ITreeVisitor<TPredicateNodeTypes> {
 }
 
 class ObfuscateExpressionTree extends AbstractObfuscatedExpressionTree<TPredicateNodeTypes> {
-  public appendContentWithAnd(
+  // public appendContentWithAnd(
+  //   parentNodeId: string,
+  //   nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  // ): string {
+  //   return super.appendContentWithJunction(parentNodeId, { operator: "$and" }, nodeContent)
+  //     .newNodeId;
+  // }
+  public x_appendContentWithAnd(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<TPredicateNodeTypes>
-  ): string {
-    return super.appendContentWithJunction(parentNodeId, { operator: "$and" }, nodeContent)
-      .newNodeId;
+  ): IAppendChildNodeIds {
+    return super.appendContentWithJunction(parentNodeId, { operator: "$and" }, nodeContent);
   }
 
-  public appendContentWithOr(
+  // public appendContentWithOr(
+  //   parentNodeId: string,
+  //   nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  // ): string {
+  //   return super.appendContentWithJunction(parentNodeId, { operator: "$or" }, nodeContent)
+  //     .newNodeId;
+  // }
+
+  public x_appendContentWithOr(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<TPredicateNodeTypes>
-  ): string {
-    return super.appendContentWithJunction(parentNodeId, { operator: "$or" }, nodeContent)
-      .newNodeId;
+  ): IAppendChildNodeIds {
+    return super.appendContentWithJunction(parentNodeId, { operator: "$or" }, nodeContent);
   }
 
   public appendContentWithJunction(
@@ -70,54 +83,113 @@ class ObfuscateExpressionTree extends AbstractObfuscatedExpressionTree<TPredicat
   ): IAppendChildNodeIds {
     return super.appendContentWithJunction(parentNodeId, junction, nodeContent);
   }
-}
 
+  public appendChildNodeWithContent(
+    parentNodeKey: string,
+    nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  ): string {
+    return super.appendChildNodeWithContent(parentNodeKey, nodeContent);
+  }
+}
+`
+const [nodes]=  (operator, arg1, arg2)
+
+
+
+`;
 const predicateTree = new ObfuscateExpressionTree(new InternalExpressionTree());
 
-const flintstonePredicateId = predicateTree.appendContentWithJunction(
-  predicateTree.rootNodeId,
-  { operator: "$or" },
-  {
-    value: "Flintstone",
-    subjectId: "customer.lastname",
-    operator: "$eq",
-  }
-);
-const rubblePredicateId = predicateTree.appendContentWithJunction(
-  predicateTree.rootNodeId,
-  { operator: "$or" },
-  {
-    value: "Rubble",
-    subjectId: "customer.lastname",
-    operator: "$eq",
-  }
-);
-
-const wilmaPredicateId = predicateTree.appendContentWithAnd(flintstonePredicateId.newNodeId, {
+const flintstoneLastNamePredicate = {
+  value: "Flintstone",
+  subjectId: "customer.lastname",
+  operator: "$eq",
+} as TOperand;
+const rubbleLastNamePredicate = {
+  value: "Rubble",
+  subjectId: "customer.lastname",
+  operator: "$eq",
+} as TOperand;
+const wilmaPredicate = {
   value: "Wilma",
   subjectId: "customer.firstname",
   operator: "$eq",
-});
-const fredPredicateId = predicateTree.appendContentWithOr(wilmaPredicateId, {
-  value: "Fred",
-  subjectId: "customer.firstname",
-  operator: "$eq",
-});
+} as TOperand;
 
-const bettyPredicateId = predicateTree.appendContentWithAnd(rubblePredicateId.newNodeId, {
+const bettyPredicate = {
   value: "Betty",
   subjectId: "customer.firstname",
   operator: "$eq",
-});
-const barnyPredicateId = predicateTree.appendContentWithOr(bettyPredicateId, {
+} as TOperand;
+
+const barneyPredicate = {
   value: "Barney",
   subjectId: "customer.firstname",
   operator: "$eq",
-});
+} as TOperand;
+const fredPredicate = {
+  value: "Fred",
+  subjectId: "customer.firstname",
+  operator: "$eq",
+} as TOperand;
+
+const flintstoneBranch = predicateTree.appendBranch(
+  predicateTree.rootNodeId,
+  { operator: "$or" },
+  flintstoneLastNamePredicate
+);
+
+const flintstoneFirstBranch2 = predicateTree.appendBranch(
+  // @ts-ignore
+  flintstoneBranch.appendedNodes[0].nodeId,
+  { operator: "$and" },
+  wilmaPredicate
+  // fredPredicate
+);
+const flintstoneFirstBranch = predicateTree.appendBranch(
+  // @ts-ignore
+  flintstoneFirstBranch2.appendedNodes[0].nodeId,
+  { operator: "$or" },
+  // wilmaPredicate,
+  fredPredicate
+);
+
+//predicateTree.replaceNodeContent(predicateTree.rootNodeId, flintstoneLastNamePredicate);
+const rubbleBranch = predicateTree.appendBranch(
+  predicateTree.rootNodeId,
+  { operator: "$or" },
+  rubbleLastNamePredicate
+);
+const rubbleFirstBranch2 = predicateTree.appendBranch(
+  // @ts-ignore
+  rubbleBranch.appendedNodes[0].nodeId,
+  { operator: "$and" },
+  bettyPredicate
+  // fredPredicate
+);
+const rubbleFirstBranch = predicateTree.appendBranch(
+  // @ts-ignore
+  rubbleFirstBranch2.appendedNodes[0].nodeId,
+  { operator: "$or" },
+  // wilmaPredicate,
+  barneyPredicate
+);
+
+// ----------------------------------------------
+`
+  You know what the tree is supposed to look like
+                    ||
+              &&            &&
+          Ln      ||      Ln    ||
+                Fn  Fn        Fn   Fn
+
+
+walk through and see that its doing that
+
+                `;
 
 const x = predicateTree.toPojoAt();
 
-console.log(predicateTree.toPojoAt());
+console.log(JSON.stringify(predicateTree.toPojoAt(), null, 2));
 
 const junctionOperator = (junction: TJunction) => {
   if (junction.operator === "$and") {
@@ -164,7 +236,8 @@ const quoteValue = (nodeContent: TOperand) => {
 const TAB = (tabCount: number) => {
   return " ".repeat(tabCount);
 };
-const traverseTree = (
+
+const buildExpressionFromTree = (
   rootNodeId: string,
   pTree: AbstractExpressionTree<TPredicateNodeTypes>,
   tabCount = 0
@@ -172,7 +245,7 @@ const traverseTree = (
   const nodeContent = pTree.getChildContentAt(rootNodeId);
 
   if (nodeContent instanceof AbstractExpressionTree) {
-    return traverseTree(
+    return buildExpressionFromTree(
       nodeContent.rootNodeId,
       nodeContent as AbstractExpressionTree<TPredicateNodeTypes>
     );
@@ -189,7 +262,7 @@ const traverseTree = (
 
   const childrenIds = pTree.getChildrenNodeIdsOf(rootNodeId);
   const childrenAsJs = childrenIds.map((childId) => {
-    return traverseTree(childId, pTree, tabCount + 1);
+    return buildExpressionFromTree(childId, pTree, tabCount + 1);
   });
 
   return (
@@ -204,10 +277,9 @@ const commentOutObject = (obj: Object): string => {
   return "//" + json.replace(/\n/gi, "\n//");
 };
 
-const predicateTreeToJavaScriptMatcher = (pTree: ObfuscateExpressionTree): Function => {
+const matcherRecordShape = (pTree: ObfuscateExpressionTree) => {
   const leafVisitor = new LeafVisitor();
   pTree.visitLeavesOf(leafVisitor);
-
   const recordProperties = leafVisitor.utilizedSubjectIds.map((subjectId) => {
     const { datatype } = Subjects[subjectId];
     return `${subjectId}: ${datatype}`;
@@ -216,18 +288,19 @@ const predicateTreeToJavaScriptMatcher = (pTree: ObfuscateExpressionTree): Funct
     record: recordProperties,
   };
 
-  const expression = traverseTree(pTree.rootNodeId, pTree);
-  const fnBody = [commentOutObject(recordShape), `\nreturn ${expression}`].join("");
+  return commentOutObject(recordShape);
+};
+
+const predicateTreeToJavaScriptMatcher = (pTree: ObfuscateExpressionTree): Function => {
+  const matcherExpression = buildExpressionFromTree(pTree.rootNodeId, pTree);
+  const fnBody = [matcherRecordShape(pTree), `\nreturn ${matcherExpression}`].join("");
 
   console.log(fnBody);
   return new Function("record", fnBody);
 };
-clean up this mess
-Then create similar example with subtree
-
 
 const matcherFn = predicateTreeToJavaScriptMatcher(predicateTree) as Function;
-matcherFn.toString();
+
 console.log("Iam", {
   matcherFn: matcherFn.toString(),
   'matcherFn({ "customer.firstname": "Fred", "customer.lastname": "Flintstone" })': matcherFn({
@@ -243,4 +316,17 @@ console.log("Iam", {
       "customer.firstname": "Barney",
       "customer.lastname": "Flintstone",
     }),
+});
+
+[
+  { "customer.firstname": "Barney", "customer.lastname": "Rubble", shouldBe: true },
+  { "customer.firstname": "Betty", "customer.lastname": "Rubble", shouldBe: true },
+  { "customer.firstname": "Fred", "customer.lastname": "Flintstone", shouldBe: true },
+  { "customer.firstname": "Wilma", "customer.lastname": "Flintstone", shouldBe: true },
+
+  { "customer.firstname": "Betty", "customer.lastname": "Flintstone", shouldBe: false },
+  { "customer.firstname": "Wilma", "customer.lastname": "Rubble", shouldBe: false },
+].forEach((name) => {
+  console.log(`matcher(${JSON.stringify(name)})`, matcherFn(name));
+  assert.strictEqual(matcherFn(name), name.shouldBe);
 });
