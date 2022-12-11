@@ -61,15 +61,19 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this._keyStore.putValue(newNodeId);
   }
 
-  public appendTreeAt(
+  private static appendTreeAt<T>(
+    targetTree: AbstractObfuscatedExpressionTree<T>,
     targetNodeKey: string,
-    sourceTree: AbstractTree<P>,
+    sourceTree: AbstractTree<T>,
     sourceBranchRootNodeId?: string | undefined
   ): TFromToMap[] {
-    const targetNodeId = this._getNodeIdOrThrow(targetNodeKey);
-    const fromToMapping = this._internalTree.appendTreeAt(
+    const targetNodeId = targetTree._getNodeIdOrThrow(targetNodeKey);
+    const fromToMapping = targetTree._internalTree.appendTreeAt(
       targetNodeId,
-      sourceTree,
+      sourceTree instanceof AbstractObfuscatedExpressionTree
+        ? sourceTree._internalTree
+        : sourceTree,
+      // sourceTree,
       sourceBranchRootNodeId
     );
 
@@ -77,9 +81,22 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return fromToMapping.map(({ from, to }) => {
       return {
         from,
-        to: this._keyStore.putValue(to),
+        to: targetTree._keyStore.putValue(to),
       };
     });
+  }
+
+  public appendTreeAt(
+    targetNodeKey: string,
+    sourceTree: AbstractTree<P>,
+    sourceBranchRootNodeId?: string | undefined
+  ): TFromToMap[] {
+    return AbstractObfuscatedExpressionTree.appendTreeAt(
+      this,
+      targetNodeKey,
+      sourceTree,
+      sourceBranchRootNodeId
+    );
   }
 
   appendContentWithJunction(
@@ -397,19 +414,15 @@ abstract class AbstractObfuscatedExpressionTree<P>
       }
     });
   }
-  static fromPojo<P, Q>(
-    srcPojoTree: TTreePojo<P>
-    //    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
-  ): Q {
-    //AbstractExpressionTree<P> {
-    const tree = AbstractExpressionTree.fromPojo<P, Q>(
-      srcPojoTree
-      //      undefined,
-      //    transform,
-      //AbstractObfuscatedExpressionTree as unknown as () => Q
-    );
-    AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
-    return tree as Q;
+  static fromPojo<P, Q>(srcPojoTree: TTreePojo<P>): Q {
+    // probably don't want class definition
+    class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
+
+    const tree = AbstractExpressionTree.fromPojo<P, AbstractExpressionTree<P>>(srcPojoTree);
+    AbstractExpressionTree.validateTree(tree);
+
+    const newObfuscatedTree = new GenericObfuscatedExpressionTree(tree);
+    return newObfuscatedTree as unknown as Q;
   }
 
   protected fromPojoAppendChildNodeWithContent(
