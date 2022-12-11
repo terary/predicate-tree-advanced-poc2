@@ -1,5 +1,6 @@
 import { TGenericNodeContent, TTreePojo, TGenericNodeType } from "./types";
 import { IAppendChildNodeIds } from "../DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
+import type { TFromToMap } from "./types";
 interface ITreeVisitor<T> {
   visit: (nodeId: string, nodeContent: TGenericNodeContent<T>, parentId: string) => void;
   includeSubtrees: boolean;
@@ -67,8 +68,8 @@ interface ITree<T> {
   isSubtree(nodeId: string): boolean;
 
   // does 'move*' make sense as public?
-  move(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
-  moveChildren(srcNodeId: string, targetNodeId: string): { from: string; to: string }[];
+  move(srcNodeId: string, targetNodeId: string): TFromToMap[];
+  moveChildren(srcNodeId: string, targetNodeId: string): TFromToMap[];
 
   replaceNodeContent(nodeId: string, nodeContent: TGenericNodeContent<T>): void;
   removeNodeAt(nodeId: string): void;
@@ -93,6 +94,8 @@ interface IDirectedGraph<T> extends ITree<T> {
   ) => string; // why use arrow notation?
 
   createSubtreeAt(nodeId: string): IDirectedGraph<T>;
+
+  // toPojo should be here
 }
 
 export { IDirectedGraph, IExpressionTree, ITree, ITreeVisitor };

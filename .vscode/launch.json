@@ -21,6 +21,16 @@
       "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "protocol": "inspector"
+    },
+    {
+      "name": "Example/predicate index.ts",
+      "type": "node",
+      "request": "launch",
+      "args": ["${workspaceFolder}/example-usage/predicate-tree/index.ts"],
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": true,
+      "cwd": "${workspaceFolder}",
+      "protocol": "inspector"
     }
   ]
 }

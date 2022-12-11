@@ -7,7 +7,7 @@ import type {
 } from "./types";
 import { AbstractObfuscatedExpressionTree } from "../../src";
 import { AbstractExpressionTree, ITreeVisitor } from "../../src";
-import type { TGenericNodeContent } from "../../src";
+import type { TGenericNodeContent, TTreePojo } from "../../src";
 import { IAppendChildNodeIds } from "../../src/DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
 import assert from "assert";
 type TSubjectType = {
@@ -145,6 +145,7 @@ const flintstoneFirstBranch2 = predicateTree.appendBranch(
   wilmaPredicate
   // fredPredicate
 );
+
 const flintstoneFirstBranch = predicateTree.appendBranch(
   // @ts-ignore
   flintstoneFirstBranch2.appendedNodes[0].nodeId,
@@ -153,6 +154,53 @@ const flintstoneFirstBranch = predicateTree.appendBranch(
   fredPredicate
 );
 
+const mongoStyle = {
+  $and: [
+    { value: "flintstone", operator: "$eq", subjectId: "customer.lastname" },
+    {
+      $or: [
+        { value: "wilma", operator: "$eq", subjectId: "customer.firstname" },
+        { value: "fred", operator: "$eq", subjectId: "customer.firstname" },
+      ],
+    },
+  ],
+};
+// @ts-ignore
+const fTreePojo = {
+  r0: { nodeContent: { operator: "$and" }, parentId: "r0" },
+  r1: {
+    nodeContent: { value: "mouse", operator: "$eq", subjectId: "customer.lastname" },
+    parentId: "r0",
+  },
+  r2: { nodeContent: { operator: "$or" }, parentId: "r0" },
+  r3: {
+    nodeContent: { value: "minnie", operator: "$eq", subjectId: "customer.firstname" },
+    parentId: "r2",
+  },
+  r4: {
+    nodeContent: { value: "mickey", operator: "$eq", subjectId: "customer.firstname" },
+    parentId: "r2",
+  },
+} as TTreePojo<TPredicateTypes>;
+
+const fTree = AbstractObfuscatedExpressionTree.fromPojo(
+  fTreePojo
+) as AbstractObfuscatedExpressionTree<TPredicateNodeTypes>;
+
+// const mergeTree = predicateTree.cloneAt(predicateTree.rootNodeId);
+const fromTo = predicateTree.appendTreeAt(
+  flintstoneFirstBranch.appendedNodes[0].nodeId || "ANY",
+  // predicateTree.rootNodeId,
+  fTree
+);
+// This needs to be appendBranch(target, conjuction, terms);
+//   - if is branch
+//      - change junction
+//      - append all children
+//   - if leaf
+//     - create branch
+//     - change junction (create)
+//     - append all children
 //predicateTree.replaceNodeContent(predicateTree.rootNodeId, flintstoneLastNamePredicate);
 const rubbleBranch = predicateTree.appendBranch(
   predicateTree.rootNodeId,
@@ -330,3 +378,4 @@ console.log("Iam", {
   console.log(`matcher(${JSON.stringify(name)})`, matcherFn(name));
   assert.strictEqual(matcherFn(name), name.shouldBe);
 });
+assert.strictEqual(predicateTree.countTotalNodes(), 11);

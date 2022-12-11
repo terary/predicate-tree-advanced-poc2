@@ -5,7 +5,7 @@ import { KeyStore } from "../keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
 import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
 import { ObfuscatedError } from "./ObfuscatedError";
-import type { TGenericNodeContent, TTreePojo } from "../types";
+import type { TFromToMap, TGenericNodeContent, TTreePojo } from "../types";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
 abstract class AbstractObfuscatedExpressionTree<P>
   extends AbstractExpressionTree<P>
@@ -85,6 +85,53 @@ abstract class AbstractObfuscatedExpressionTree<P>
     junctionNodeIds.newNodeId = this._keyStore.putValue(junctionNodeIds.newNodeId);
 
     return junctionNodeIds;
+  }
+  public appendTreeAt(
+    targetNodeKey: string | undefined,
+    sourceTree: AbstractTree<P>,
+    sourceBranchRootNodeId?: string | undefined
+  ): TFromToMap[] {
+    const targetNodeId = this._getNodeIdOrThrow(targetNodeKey || this.rootNodeId);
+    const fromToMapping = this._internalTree.appendTreeAt(
+      targetNodeId,
+      sourceTree,
+      sourceBranchRootNodeId
+    );
+    // const fromToMapping = super.appendTree(
+    //   this._internalTree,
+    //   sourceTree,
+    //   targetNodeId,
+    //   sourceBranchRootNodeId
+    // );
+
+    // consider doing this for source tree if instanceOf Obfuscate
+    return fromToMapping.map(({ from, to }) => {
+      return {
+        from,
+        to: this._keyStore.putValue(to),
+      };
+    });
+  }
+  public x_appendTreeAt(
+    targetNodeKey: string | undefined,
+    sourceTree: AbstractTree<P>,
+    sourceBranchRootNodeId?: string | undefined
+  ): TFromToMap[] {
+    const targetNodeId = this._getNodeIdOrThrow(targetNodeKey || this.rootNodeId);
+    const fromToMapping = AbstractTree.appendTree(
+      this._internalTree,
+      sourceTree,
+      targetNodeId,
+      sourceBranchRootNodeId
+    );
+
+    // consider doing this for source tree if instanceOf Obfuscate
+    return fromToMapping.map(({ from, to }) => {
+      return {
+        from,
+        to: this._keyStore.putValue(to),
+      };
+    });
   }
 
   public appendBranch(
@@ -174,6 +221,10 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return junctionNodeIds;
   }
 
+  public cloneAt(nodeId: string): AbstractExpressionTree<P> {
+    // *tmc* this needs to be worked out
+    return super.cloneAt(nodeId);
+  }
   // for testing purpose only.
   // wonder if there isn't a better way
   protected buildReverseMap(reverseMap: { [nodeId: string]: string } = {}): {

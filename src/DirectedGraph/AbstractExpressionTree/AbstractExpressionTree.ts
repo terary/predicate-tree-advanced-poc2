@@ -4,7 +4,7 @@ import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
 import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
 
 import { IExpressionTree } from "../ITree";
-import type { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import type { TFromToMap, TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
 
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
@@ -94,6 +94,41 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
       junctionNode,
       invisibleChild,
     };
+  }
+
+  protected defaultJunction(nodeId: string): P {
+    // the leaf node at nodeId is being converted to a junction (branch)
+    // need to return the best option for junction operator (&&, ||, '$or', ...)
+
+    // @ts-ignore - this needs to be abstract and defined in subclasses
+    return { operator: "$and" };
+  }
+
+  appendTreeAt(
+    targetNodeId: string,
+    sourceTree: AbstractTree<P>,
+    sourceBranchRootNodeId?: string | undefined
+  ): TFromToMap[] {
+    let effectiveTargetNodeId = targetNodeId;
+
+    // I think setting nodeContent to null is dangerous
+    // do we want to is root as junction?
+    if (this.isLeaf(targetNodeId)) {
+      const originalContent = this.getChildContentAt(targetNodeId);
+      this.replaceNodeContent(targetNodeId, this.defaultJunction(targetNodeId));
+      effectiveTargetNodeId = this.appendChildNodeWithContent(targetNodeId, originalContent);
+    }
+
+    const fromToMap = super.appendTreeAt(
+      effectiveTargetNodeId,
+      sourceTree,
+      sourceBranchRootNodeId
+    );
+    if (effectiveTargetNodeId !== targetNodeId) {
+      fromToMap.push({ from: targetNodeId, to: effectiveTargetNodeId });
+    }
+
+    return fromToMap;
   }
 
   public appendContentWithOr(

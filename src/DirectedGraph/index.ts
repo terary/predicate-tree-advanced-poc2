@@ -1,3 +1,3 @@
 export { DirectedGraphError } from "./DirectedGraphError";
 export { ITree } from "./ITree";
-export type { TGenericNodeContent } from "./types";
+export type { TGenericNodeContent, TTreePojo, TFromToMap } from "./types";

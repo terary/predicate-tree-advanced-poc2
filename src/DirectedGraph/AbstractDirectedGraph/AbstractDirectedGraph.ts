@@ -3,7 +3,8 @@ import treeUtils from "./treeUtilities";
 import { DirectedGraphError } from "../DirectedGraphError";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
 import { ITree, IDirectedGraph, ITreeVisitor } from "../ITree";
-import type { TNodePojo, TTreePojo, TGenericNodeContent } from "../types";
+import type { TNodePojo, TTreePojo, TGenericNodeContent, TFromToMap } from "../types";
+import { clone } from "lodash";
 
 const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
   return nodeContent.nodeContent;
@@ -57,8 +58,10 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     jsonParentId: string,
     dTree: IDirectedGraph<T>,
     treeObject: TTreePojo<T>,
-    transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>
-  ): void => {
+    transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>,
+    fromToMap: TFromToMap[] = []
+  ): TFromToMap[] => {
+    // ): void => {
     const childrenNodes = treeUtils.extractChildrenNodes<T>(
       jsonParentId,
       treeObject
@@ -73,22 +76,25 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
           nodeId,
           subtree as IDirectedGraph<T>,
           treeObject,
-          transformer
+          transformer,
+          fromToMap
         );
       } else {
         const childId = (
           dTree as unknown as AbstractDirectedGraph<T>
         ).fromPojoAppendChildNodeWithContent(treeParentId, transformer(nodePojo));
-
+        fromToMap.push({ from: nodeId, to: childId });
         AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
           childId,
           nodeId,
           dTree,
           treeObject,
-          transformer
+          transformer,
+          fromToMap
         );
       }
     });
+    return fromToMap;
   };
 
   public static fromPojo<P, Q>(

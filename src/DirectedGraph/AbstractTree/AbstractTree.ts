@@ -1,8 +1,15 @@
 import { DirectedGraphError } from "../DirectedGraphError";
 import { Incrementor } from "../Incrementor";
 import { ITree, ITreeVisitor } from "../ITree";
-import type { TNodePojo, TTreePojo, TGenericNodeContent, TGenericNodeType } from "../types";
+import type {
+  TNodePojo,
+  TTreePojo,
+  TGenericNodeContent,
+  TGenericNodeType,
+  TFromToMap,
+} from "../types";
 import { KeyStore } from "../keystore/KeyStore";
+import { sortBy } from "lodash";
 
 const defaultToPojoTransformer = <T>(nodeContent: T) => {
   return nodeContent as unknown as TNodePojo<T>;
@@ -59,6 +66,44 @@ abstract class AbstractTree<T> implements ITree<T> {
     const childNodeId = this.#getNextChildNodeId(parentNodeId);
     this._nodeDictionary[childNodeId] = { nodeContent };
     return childNodeId;
+  }
+
+  appendTreeAt(
+    targetNodeId: string = this.rootNodeId,
+    sourceTree: AbstractTree<T>,
+    sourceBranchRootNodeId?: string
+  ): TFromToMap[] {
+    return AbstractTree.appendTree<T>(this, sourceTree, targetNodeId, sourceBranchRootNodeId);
+  }
+
+  protected static appendTree<P>(
+    targetTree: AbstractTree<P>,
+    sourceTree: AbstractTree<P>,
+    targetNodeId: string,
+    sourceBranchRootNodeId?: string
+  ): TFromToMap[] {
+    const sourceRoot = sourceBranchRootNodeId || sourceTree.rootNodeId;
+    const sourceNodeIds = sourceTree.#getTreeNodeIdsAt(sourceRoot);
+    const replaceRegExp = new RegExp(sourceRoot, "g");
+    const uniqueToken = sourceTree._rootNodeId == sourceTree._rootNodeId;
+    const fromToMap = sourceNodeIds.map((sourceNodeId: string) => {
+      const to = sourceNodeId.replace(replaceRegExp, targetNodeId + ":treeAppend");
+      // const to = sourceNodeId.replace(replaceRegExp, targetNodeId);
+      return {
+        from: sourceNodeId,
+        to,
+      };
+    });
+
+    fromToMap.forEach(({ from, to }) => {
+      if (to in targetTree._nodeDictionary) {
+        throw new Error(`ID COLLISION offending node: "${to}".`);
+      }
+      // @ts-ignore - types
+      targetTree._nodeDictionary[to] = sourceTree._nodeDictionary[from]; //sourceTree.getChildContentAt(from);
+      targetTree.#getNextChildNodeId("ANY"); // need to keep this counting
+    });
+    return fromToMap;
   }
 
   abstract cloneAt(nodeId: string): ITree<T>;
