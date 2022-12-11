@@ -1,6 +1,4 @@
 import { AbstractDirectedGraph } from "../../AbstractDirectedGraph";
-import { AbstractTree } from "../../AbstractTree/AbstractTree";
-// import { ExtAbstractTestClass } from "../ExtAbstractTestClass";
 import { IExpressionTree, ITree } from "../../ITree";
 import { TGenericNodeContent } from "../../types";
 import { TestObfuscatedTree } from "../AbstractObfuscatedExpressionTree.test";

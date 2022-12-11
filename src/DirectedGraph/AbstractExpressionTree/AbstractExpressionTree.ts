@@ -132,7 +132,7 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  public cloneAt(nodeId: string): AbstractExpressionTree<P> {
+  public cloneAt(nodeId = this.rootNodeId): AbstractExpressionTree<P> {
     const pojo = this.toPojoAt(nodeId);
     return AbstractDirectedGraph.fromPojo(pojo, defaultFromPojoTransform);
   }

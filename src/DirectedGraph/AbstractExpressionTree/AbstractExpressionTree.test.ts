@@ -290,6 +290,49 @@ describe("AbstractExpressionTree", () => {
 
       expect(dTree.getCountTotalNodes()).toBe(3);
     });
+    it("Should replace null valued content child instead of creating new node for content.", () => {
+      const rootPredicate = {
+        subjectId: "customers.root",
+        operator: "$eq" as TOperandOperators,
+        value: "root",
+      };
+      const childPredicate0 = {
+        subjectId: "customers.child0",
+        operator: "$eq" as TOperandOperators,
+        value: "child0",
+      };
+      const childPredicate1 = {
+        subjectId: "customers.child1",
+        operator: "$eq" as TOperandOperators,
+        value: "child1",
+      };
+      const nullReplacePredicate = {
+        subjectId: "null replace",
+        operator: "$eq" as TOperandOperators,
+        value: "should replaced null content with this",
+      };
+      const dTree = new ClassTestAbstractExpressionTree();
+      dTree.replaceNodeContent(dTree.rootNodeId, rootPredicate);
+
+      dTree.appendChildNodeWithContent(dTree.rootNodeId, childPredicate0);
+      dTree.appendChildNodeWithContent(dTree.rootNodeId, childPredicate1);
+      dTree.appendChildNodeWithContent(dTree.rootNodeId, null);
+
+      //pre conditions
+      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
+        [rootPredicate, childPredicate0, childPredicate1, null].sort(SortPredicateTest)
+      );
+
+      // exercise
+      dTree.appendChildNodeWithContent(dTree.rootNodeId, nullReplacePredicate);
+
+      //post conditions
+      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
+        [rootPredicate, childPredicate0, childPredicate1, nullReplacePredicate].sort(
+          SortPredicateTest
+        )
+      );
+    });
   });
   describe(".appendChildNodeWith[Junction](nodeId, content)", () => {
     it("(.appendContentWithOr) should have appendChildWithAnd, appendChildWithOr,", () => {
@@ -544,6 +587,77 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       // and back-again
 
       expect(dTree.getCountTotalNodes()).toBe(9);
+    });
+  });
+  describe(".cloneAt()", () => {
+    it("Should create clone of tree.", () => {
+      const shouldIncludeSubtree = true;
+      const dTree = new ClassTestAbstractExpressionTree();
+
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+      } = make3Children2Subtree3Children(dTree);
+
+      expect(
+        dTree.getTreeContentAt(dTree.rootNodeId, shouldIncludeSubtree).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [
+          OO["root"],
+          OO["child_0"],
+          OO["child_0_0"],
+          OO["child_0_1"],
+          OO["child_0_2"],
+          OO["child_1"],
+          OO["child_1_0"],
+          OO["child_1_1"],
+          OO["child_1_2"],
+          OO["child_2"],
+          OO["child_2_0"],
+          OO["child_2_1"],
+          OO["child_2_2"],
+          OO["subtree0:root"],
+          OO["subtree0:child_0"],
+          OO["subtree0:child_1"],
+          OO["subtree0:child_2"],
+          OO["subtree1:root"],
+          OO["subtree1:child_0"],
+          OO["subtree1:child_1"],
+          OO["subtree1:child_2"],
+        ].sort(SortPredicateTest)
+      );
+
+      const clone = dTree.cloneAt();
+      expect(
+        clone.getTreeContentAt(clone.rootNodeId, shouldIncludeSubtree).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [
+          OO["root"],
+          OO["child_0"],
+          OO["child_0_0"],
+          OO["child_0_1"],
+          OO["child_0_2"],
+          OO["child_1"],
+          OO["child_1_0"],
+          OO["child_1_1"],
+          OO["child_1_2"],
+          OO["child_2"],
+          OO["child_2_0"],
+          OO["child_2_1"],
+          OO["child_2_2"],
+          OO["subtree0:root"],
+          OO["subtree0:child_0"],
+          OO["subtree0:child_1"],
+          OO["subtree0:child_2"],
+          OO["subtree1:root"],
+          OO["subtree1:child_0"],
+          OO["subtree1:child_1"],
+          OO["subtree1:child_2"],
+        ].sort(SortPredicateTest)
+      );
     });
   });
   describe(".fromPojo", () => {

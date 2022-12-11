@@ -88,7 +88,6 @@ abstract class AbstractTree<T> implements ITree<T> {
     const uniqueToken = sourceTree._rootNodeId == sourceTree._rootNodeId;
     const fromToMap = sourceNodeIds.map((sourceNodeId: string) => {
       const to = sourceNodeId.replace(replaceRegExp, targetNodeId + ":treeAppend");
-      // const to = sourceNodeId.replace(replaceRegExp, targetNodeId);
       return {
         from: sourceNodeId,
         to,

@@ -1,0 +1,63 @@
+import {
+  make3Children2Subtree3Children,
+  SortPredicateTest,
+} from "../AbstractExpressionTree/test-utilities";
+import type { TJunction, TPredicateNodeTypes } from "../AbstractExpressionTree/types";
+import { ITree } from "../ITree";
+import { AbstractTree } from "./AbstractTree";
+export class ClassTestAbstractTree extends AbstractTree<TPredicateNodeTypes> {
+  // public _appendChildNodeWithContent(
+  //   parentNodeId: string,
+  //   nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  // ): string {
+  //   return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+  // }
+  // public appendChildNodeWithContent(
+  //   parentNodeId: string,
+  //   nodeContent: TGenericNodeContent<TPredicateNodeTypes>
+  // ): string {
+  //   return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+  // }
+  cloneAt(nodeId: string): ITree<TPredicateNodeTypes> {
+    // want to consider moving 'fromPojo' from DirectedGraph to AbstractTree
+    return new ClassTestAbstractTree();
+  }
+}
+
+describe("AbstractTree", () => {
+  it("Should be awesome", () => {});
+  it("(leaf) Should, IFF target is leaf, create branch at target, add target content to new branch, attach tree new branch.", () => {
+    const dTree = new ClassTestAbstractTree();
+
+    const {
+      dTreeIds,
+      // dTree: dTree as ITree<TPredicateTypes>,
+      subtree0,
+      subtree1,
+      originalWidgets: OO,
+    } = make3Children2Subtree3Children(dTree);
+
+    // pre conditions
+    expect(dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)).toStrictEqual(
+      [OO["child_0"], OO["child_0_0"], OO["child_0_1"], OO["child_0_2"]].sort(
+        SortPredicateTest
+      )
+    );
+    expect(dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)).toStrictEqual(
+      [OO["child_0"], OO["child_0_0"], OO["child_0_1"], OO["child_0_2"]].sort(
+        SortPredicateTest
+      )
+    );
+
+    expect(dTree.getChildContentAt(dTreeIds["child_0"])).toBe(OO["child_0"]);
+    expect(dTree.getChildContentAt(dTreeIds["child_0"])).toStrictEqual({ operator: "$or" });
+    expect(dTree.isBranch(dTreeIds["child_0"])).toEqual(true);
+    expect(dTree.isLeaf(dTreeIds["child_0"])).toEqual(false);
+    expect(dTree.countTotalNodes()).toBe(21);
+
+    // exercise
+    //const fromToMap = dTree.appendTreeAt(dTreeIds["child_0_0"], sourceTree);
+
+    // post conditions
+  });
+});
