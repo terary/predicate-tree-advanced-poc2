@@ -3,10 +3,11 @@ import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpression
 import { isUUIDv4 } from "../../common/utilities/isFunctions";
 import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
 import { ITreeVisitor } from "../ITree";
-import { TGenericNodeContent } from "../types";
+import { TGenericNodeContent, TTreePojo } from "../types";
 import {
   filterPojoContent,
   filterPojoContentPredicateValues,
+  WidgetSort,
   // make3Children2Subtree3Children,
 } from "./test-helpers/test.utilities";
 import {
@@ -28,6 +29,7 @@ import type {
 } from "../AbstractExpressionTree/types";
 import { ObfuscatedError } from "./ObfuscatedError";
 import { values } from "lodash";
+import { ChildB } from "../../../dev-debug/ChildB";
 
 class TestWidget {
   private _name: string;
@@ -82,6 +84,79 @@ describe("AbstractObfuscatedExpressionTree", () => {
     });
   });
 
+  describe(".appendTreeAt()", () => {
+    it("Should append tree as child, if target is branch", () => {
+      const exposedTree = new ClassTestAbstractExpressionTree();
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
+
+      const privateTree = new TestObfuscatedTree(exposedTree);
+      expect(privateTree.countTotalNodes(undefined, true)).toEqual(
+        exposedTree.countTotalNodes(undefined, true)
+      );
+      expect(privateTree.countTotalNodes(undefined, true)).toEqual(21);
+
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
+
+      const appendPredicateRoot = {
+        operator: "$and",
+      };
+
+      const appendPredicateChild_0 = {
+        value: "child_0",
+        operator: "$eq",
+        subjectId: "customer.firstname",
+      };
+      const appendPredicateChild_1 = {
+        value: "child_0",
+        operator: "$eq",
+        subjectId: "customer.firstname",
+      };
+
+      const appendTreePojo = {
+        root: { parentId: "root", nodeContent: appendPredicateRoot },
+        child_0: { parentId: "root", nodeContent: appendPredicateChild_0 },
+        child_1: { parentId: "root", nodeContent: appendPredicateChild_1 },
+      } as TTreePojo<TPredicateNodeTypes>;
+      const sourceTree = AbstractObfuscatedExpressionTree.fromPojo<
+        TPredicateNodeTypes,
+        AbstractObfuscatedExpressionTree<TPredicateNodeTypes>
+      >(appendTreePojo);
+
+      expect(
+        sourceTree.getTreeContentAt(sourceTree.rootNodeId).sort(SortPredicateTest)
+      ).toStrictEqual(
+        (
+          [
+            appendPredicateRoot,
+            appendPredicateChild_0,
+            appendPredicateChild_1,
+          ] as TPredicateNodeTypes[]
+        ).sort(SortPredicateTest)
+      );
+
+      // exercise
+      const toFromKeys = privateTree.appendTreeAt(dTreeIds["child_0_0"], sourceTree);
+
+      // post conditions
+      expect(toFromKeys.length).toEqual(4);
+      expect(privateTree.getChildContentAt(toFromKeys[0].to)).toBe(appendPredicateRoot);
+      expect(privateTree.getChildContentAt(toFromKeys[1].to)).toBe(appendPredicateChild_0);
+      expect(privateTree.getChildContentAt(toFromKeys[2].to)).toBe(appendPredicateChild_1);
+      expect(privateTree.getChildContentAt(toFromKeys[3].to)).toBe(OO["child_0_0"]);
+    });
+    it.skip("Should create branch at specified location, append original content and new  tree as child, if target is leaf", () => {});
+  });
+
   describe(".appendContentWithJunction", () => {
     it("Should obfuscate junction ids", () => {
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
@@ -99,8 +174,191 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(isUUIDv4(junctionNodeIds.newNodeId)).toBe(true);
       expect(oTree.getChildContentAt(junctionNodeIds.newNodeId)).toBe(widgetChild_0);
     });
-  });
+    it("Should append node and change branch junction.", () => {
+      const exposedTree = new ClassTestAbstractExpressionTree();
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
 
+      const privateTree = new TestObfuscatedTree(exposedTree);
+      expect(privateTree.countTotalNodes(undefined, true)).toEqual(
+        exposedTree.countTotalNodes(undefined, true)
+      );
+      expect(privateTree.countTotalNodes(undefined, true)).toEqual(21);
+
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
+
+      // preCondition
+      expect(privateTree.isBranch(dTreeIds["child_0"])).toBe(true);
+      expect(
+        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual(
+        (
+          [
+            OO["child_0"],
+            OO["child_0_0"],
+            OO["child_0_1"],
+            OO["child_0_2"],
+          ] as TPredicateNodeTypes[]
+        ).sort(SortPredicateTest)
+      );
+
+      // exercise
+      privateTree.appendContentWithJunction(
+        dTreeIds["child_0"],
+        { operator: "$and" },
+        { value: "append", operator: "$eq", subjectId: "customer.firstname" }
+      );
+
+      //post conditions
+      expect(
+        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual(
+        (
+          [
+            { operator: "$and" },
+            // OO["child_0"],
+            OO["child_0_0"],
+            OO["child_0_1"],
+            OO["child_0_2"],
+            { value: "append", operator: "$eq", subjectId: "customer.firstname" },
+          ] as TPredicateNodeTypes[]
+        ).sort(SortPredicateTest)
+      );
+
+      const treePojo = AbstractExpressionTree.obfuscatePojo(privateTree.toPojoAt());
+    });
+  });
+  describe(".cloneAt([nodeId])", () => {
+    it("Should create clone at given point", () => {
+      const exposedTree = new ClassTestAbstractExpressionTree();
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
+
+      const privateTree = new TestObfuscatedTree(exposedTree);
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
+
+      // pre conditions
+      expect(
+        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+      ).toStrictEqual(
+        (
+          [
+            OO["child_0"],
+            OO["child_0_0"],
+            OO["child_0_1"],
+            OO["child_0_2"],
+          ] as TPredicateNodeTypes[]
+        ).sort(SortPredicateTest)
+      );
+
+      // exercise
+      const cloneTree = privateTree.cloneAt(dTreeIds["child_0"]);
+
+      // post conditions
+      expect(
+        cloneTree.getTreeContentAt(cloneTree.rootNodeId).sort(SortPredicateTest)
+      ).toStrictEqual(
+        (
+          [
+            OO["child_0"],
+            OO["child_0_0"],
+            OO["child_0_1"],
+            OO["child_0_2"],
+          ] as TPredicateNodeTypes[]
+        ).sort(SortPredicateTest)
+      );
+    });
+  });
+  describe(".getTreeContentAt()", () => {
+    it("Should be awesome", () => {
+      const exposedTree = new ClassTestAbstractExpressionTree();
+      const {
+        dTreeIds,
+        // dTree: dTree as ITree<TPredicateTypes>,
+        subtree0,
+        subtree1,
+        originalWidgets: OO,
+        //@ts-ignore - not ITree
+      } = make3Children2Subtree3Children(exposedTree);
+
+      const privateTree = new TestObfuscatedTree(exposedTree);
+      expect(privateTree.countTotalNodes(undefined, true)).toEqual(
+        exposedTree.countTotalNodes(undefined, true)
+      );
+      expect(privateTree.countTotalNodes(undefined, true)).toEqual(21);
+
+      const reverseMap = privateTree.getIdKeyReverseMap();
+      Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
+        dTreeIds[debugLabel] = reverseMap[nodeId];
+      });
+
+      // exercise
+      const treeContent = privateTree.getTreeContentAt();
+      const treeContentWithSubtrees = privateTree.getTreeContentAt(undefined, true);
+
+      expect(treeContent.sort(SortPredicateTest)).toStrictEqual(
+        [
+          OO["root"],
+          OO["child_0"],
+          OO["child_0_0"],
+          OO["child_0_1"],
+          OO["child_0_2"],
+          OO["child_1"],
+          OO["child_1_0"],
+          OO["child_1_1"],
+          OO["child_1_2"],
+          OO["child_2"],
+          OO["child_2_0"],
+          OO["child_2_1"],
+          OO["child_2_2"],
+        ].sort(SortPredicateTest)
+      );
+      expect(treeContentWithSubtrees.sort(SortPredicateTest)).toStrictEqual(
+        [
+          OO["root"],
+          OO["child_0"],
+          OO["child_0_0"],
+          OO["child_0_1"],
+          OO["child_0_2"],
+          OO["child_1"],
+          OO["child_1_0"],
+          OO["child_1_1"],
+          OO["child_1_2"],
+          OO["child_2"],
+          OO["child_2_0"],
+          OO["child_2_1"],
+          OO["child_2_2"],
+
+          OO["subtree0:root"],
+          OO["subtree0:child_0"],
+          OO["subtree0:child_1"],
+          OO["subtree0:child_2"],
+          OO["subtree1:root"],
+          OO["subtree1:child_0"],
+          OO["subtree1:child_1"],
+          OO["subtree1:child_2"],
+        ].sort(SortPredicateTest)
+      );
+    });
+  });
   describe("getChildrenNodeIdsOf", () => {
     it("Should return obfuscated nodeIds (keys).", () => {
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
@@ -147,6 +405,14 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // getTreeContentAt
       const treeContent = oTree.getTreeContentAt(oTree.rootNodeId);
       expect(treeContent).toStrictEqual([null, widgetChild_0, widgetRoot]);
+
+      // getTreeContentAt (with subtrees)
+      const shouldIncludeSubtrees = true;
+      const treeContentWithSubtrees = oTree.getTreeContentAt(
+        oTree.rootNodeId,
+        shouldIncludeSubtrees
+      );
+      expect(treeContentWithSubtrees).toStrictEqual([null, widgetChild_0, widgetRoot]);
 
       // getTreeNodeIdsAt
       const treeKeys = oTree.getTreeNodeIdsAt(oTree.rootNodeId);

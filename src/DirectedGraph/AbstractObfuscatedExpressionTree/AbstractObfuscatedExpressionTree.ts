@@ -61,67 +61,15 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this._keyStore.putValue(newNodeId);
   }
 
-  x_appendparentNodeKeyContentWithJunction(
-    parentNodeKey: string,
-    junctionContent: TGenericNodeContent<P>,
-    nodeContent: TGenericNodeContent<P>
-  ): IAppendChildNodeIds {
-    const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
-
-    const junctionNodeIds = this._internalTree.appendContentWithJunction(
-      parentNodeId,
-      junctionContent,
-      nodeContent
-    );
-
-    junctionNodeIds.junctionNodeId = this._keyStore.reverseLookUpExactlyOneOrThrow(
-      junctionNodeIds.junctionNodeId
-    );
-
-    junctionNodeIds.originalContentNodeId = this._keyStore.putValue(
-      junctionNodeIds.originalContentNodeId as string
-    );
-
-    junctionNodeIds.newNodeId = this._keyStore.putValue(junctionNodeIds.newNodeId);
-
-    return junctionNodeIds;
-  }
   public appendTreeAt(
-    targetNodeKey: string | undefined,
+    targetNodeKey: string,
     sourceTree: AbstractTree<P>,
     sourceBranchRootNodeId?: string | undefined
   ): TFromToMap[] {
-    const targetNodeId = this._getNodeIdOrThrow(targetNodeKey || this.rootNodeId);
+    const targetNodeId = this._getNodeIdOrThrow(targetNodeKey);
     const fromToMapping = this._internalTree.appendTreeAt(
       targetNodeId,
       sourceTree,
-      sourceBranchRootNodeId
-    );
-    // const fromToMapping = super.appendTree(
-    //   this._internalTree,
-    //   sourceTree,
-    //   targetNodeId,
-    //   sourceBranchRootNodeId
-    // );
-
-    // consider doing this for source tree if instanceOf Obfuscate
-    return fromToMapping.map(({ from, to }) => {
-      return {
-        from,
-        to: this._keyStore.putValue(to),
-      };
-    });
-  }
-  public x_appendTreeAt(
-    targetNodeKey: string | undefined,
-    sourceTree: AbstractTree<P>,
-    sourceBranchRootNodeId?: string | undefined
-  ): TFromToMap[] {
-    const targetNodeId = this._getNodeIdOrThrow(targetNodeKey || this.rootNodeId);
-    const fromToMapping = AbstractTree.appendTree(
-      this._internalTree,
-      sourceTree,
-      targetNodeId,
       sourceBranchRootNodeId
     );
 
@@ -142,14 +90,14 @@ abstract class AbstractObfuscatedExpressionTree<P>
     const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
 
     if (this.isBranch(parentNodeKey)) {
-      const x = this._internalTree.appendContentWithJunction(
+      const affectedNodeIds = this._internalTree.appendContentWithJunction(
         parentNodeId,
         junctionContent,
         nodeContent
       );
       return {
         isNewBranch: false,
-        newNodeId: this._keyStore.reverseLookUpExactlyOneOrThrow(x.newNodeId),
+        newNodeId: this._keyStore.putValue(affectedNodeIds.newNodeId),
         junctionNodeId: parentNodeKey,
       };
     }
@@ -173,9 +121,14 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return junctionNodeIds;
   }
 
-  public cloneAt(nodeId: string): AbstractExpressionTree<P> {
-    // *tmc* this needs to be worked out
-    return super.cloneAt(nodeId);
+  public cloneAt(nodeKey: string): AbstractExpressionTree<P> {
+    // probably don't want class definition
+    class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
+
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+
+    const cloneInternalTree = this._internalTree.cloneAt(nodeId);
+    return new GenericObfuscatedExpressionTree(cloneInternalTree);
   }
   // for testing purpose only.
   // wonder if there isn't a better way

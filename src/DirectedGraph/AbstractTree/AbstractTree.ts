@@ -52,12 +52,12 @@ abstract class AbstractTree<T> implements ITree<T> {
     return this.#appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  protected fromPojoAppendChildNodeWithContent(
-    parentNodeId: string,
-    nodeContent: TGenericNodeContent<T>
-  ): string {
-    return this.#appendChildNodeWithContent(parentNodeId, nodeContent);
-  }
+  // protected fromPojoAppendChildNodeWithContent(
+  //   parentNodeId: string,
+  //   nodeContent: TGenericNodeContent<T>
+  // ): string {
+  //   return this.#appendChildNodeWithContent(parentNodeId, nodeContent);
+  // }
 
   #appendChildNodeWithContent(
     parentNodeId: string,
