@@ -134,54 +134,6 @@ abstract class AbstractObfuscatedExpressionTree<P>
     });
   }
 
-  public appendBranch(
-    parentNodeKey: string,
-    junctionNodeContent: TGenericNodeContent<P>,
-    ...leafNodes: P[]
-  ): {
-    appendedNodes: { nodeId: string; nodeContent: TGenericNodeContent<P> }[];
-    junctionNode: { nodeId: string; nodeContent: TGenericNodeContent<P> };
-    invisibleChild: { nodeId: string; nodeContent: TGenericNodeContent<P> } | null;
-  } {
-    const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
-    const newNodeResponse = this._internalTree.appendBranch(
-      parentNodeId,
-      junctionNodeContent,
-      ...leafNodes
-    );
-    const appendedNodes = newNodeResponse.appendedNodes.map((newNode) => {
-      return {
-        nodeContent: newNode.nodeContent,
-        nodeId: this._keyStore.putValue(newNode.nodeId),
-      };
-    });
-    let obfuscateInvisibleChild = null;
-    let junctionNodeKey;
-    if (newNodeResponse.invisibleChild !== null) {
-      if (this._keyStore.reverseLookUp(newNodeResponse.invisibleChild.nodeId).length === 0) {
-        this._keyStore.putValue(newNodeResponse.invisibleChild.nodeId);
-      }
-      // this._keyStore.replaceValue(newNodeResponse.invisibleChild.nodeId, parentNodeKey);
-      // junctionNodeKey = this._keyStore.putValue(parentNodeId);
-      // // this._keyStore.reverseLookUp(parentNodeId);
-      // obfuscateInvisibleChild = {
-      //   nodeId: parentNodeKey,
-      //   nodeContent: newNodeResponse.invisibleChild.nodeContent,
-      // };
-    }
-
-    return {
-      appendedNodes: appendedNodes,
-      junctionNode: {
-        nodeContent: newNodeResponse.junctionNode.nodeContent,
-        nodeId: this._keyStore.reverseLookUpExactlyOneOrThrow(
-          newNodeResponse.junctionNode.nodeId
-        ),
-      },
-      invisibleChild: obfuscateInvisibleChild,
-    };
-  }
-
   appendContentWithJunction(
     parentNodeKey: string,
     junctionContent: TGenericNodeContent<P>,

@@ -38,64 +38,6 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     );
   }
 
-  public appendBranch(
-    parentNodeId: string,
-    junctionNodeContent: TGenericNodeContent<P>,
-    ...leafNodes: P[]
-  ): AppendNodeResponseType<P> {
-    `
-      if isBranch 
-        replace content with junction
-        childrenTarget = parentNodeId
-      if isLeaf
-        preserve originalContent
-        replace content with junction
-        childrenTarget = parentNodeId
-        appendChild(childrenTarget, originalContent)
-        appendChild(childrenTarget, null) // no singleChildren - or ONLY if leafs.length ==0
-      end-if
-    
-      appendChildren
-    
-    `;
-    // ------------------------
-    let invisibleChild: TAppendedNode<P> | null = null;
-    let childrenTarget: string | null = null;
-
-    if (this.isBranch(parentNodeId)) {
-      this.replaceNodeContent(parentNodeId, junctionNodeContent);
-      childrenTarget = parentNodeId;
-    } else if (this.isLeaf(parentNodeId)) {
-      //
-      const originalContent = this.getChildContentAt(parentNodeId);
-      this.replaceNodeContent(parentNodeId, junctionNodeContent);
-      childrenTarget = parentNodeId; //
-      invisibleChild = {
-        nodeId: this.appendChildNodeWithContent(parentNodeId, originalContent),
-        nodeContent: originalContent,
-      };
-    } else {
-      throw new Error("THIS AINT DONE YET");
-    }
-    const junctionNode = {
-      nodeContent: this.getChildContentAt(parentNodeId),
-      nodeId: parentNodeId,
-    };
-
-    //--
-    const appendedNodes = leafNodes.map((leafNode) => {
-      return {
-        nodeId: this.appendChildNodeWithContent(childrenTarget || "_NOT_FOUND_", leafNode),
-        nodeContent: leafNode,
-      } as TAppendedNode<P>;
-    });
-    return {
-      appendedNodes,
-      junctionNode,
-      invisibleChild,
-    };
-  }
-
   protected defaultJunction(nodeId: string): P {
     // the leaf node at nodeId is being converted to a junction (branch)
     // need to return the best option for junction operator (&&, ||, '$or', ...)

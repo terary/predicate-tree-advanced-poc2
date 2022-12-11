@@ -132,27 +132,27 @@ const fredPredicate = {
   operator: "$eq",
 } as TOperand;
 
-const flintstoneBranch = predicateTree.appendBranch(
-  predicateTree.rootNodeId,
-  { operator: "$or" },
-  flintstoneLastNamePredicate
-);
+// const flintstoneBranch = predicateTree.appendBranch(
+//   predicateTree.rootNodeId,
+//   { operator: "$or" },
+//   flintstoneLastNamePredicate
+// );
 
-const flintstoneFirstBranch2 = predicateTree.appendBranch(
-  // @ts-ignore
-  flintstoneBranch.appendedNodes[0].nodeId,
-  { operator: "$and" },
-  wilmaPredicate
-  // fredPredicate
-);
+// const flintstoneFirstBranch2 = predicateTree.appendBranch(
+//   // @ts-ignore
+//   flintstoneBranch.appendedNodes[0].nodeId,
+//   { operator: "$and" },
+//   wilmaPredicate
+//   // fredPredicate
+// );
 
-const flintstoneFirstBranch = predicateTree.appendBranch(
-  // @ts-ignore
-  flintstoneFirstBranch2.appendedNodes[0].nodeId,
-  { operator: "$or" },
-  // wilmaPredicate,
-  fredPredicate
-);
+// const flintstoneFirstBranch = predicateTree.appendBranch(
+//   // @ts-ignore
+//   flintstoneFirstBranch2.appendedNodes[0].nodeId,
+//   { operator: "$or" },
+//   // wilmaPredicate,
+//   fredPredicate
+// );
 
 const mongoStyle = {
   $and: [
@@ -188,11 +188,11 @@ const fTree = AbstractObfuscatedExpressionTree.fromPojo(
 ) as AbstractObfuscatedExpressionTree<TPredicateNodeTypes>;
 
 // const mergeTree = predicateTree.cloneAt(predicateTree.rootNodeId);
-const fromTo = predicateTree.appendTreeAt(
-  flintstoneFirstBranch.appendedNodes[0].nodeId || "ANY",
-  // predicateTree.rootNodeId,
-  fTree
-);
+// const fromTo = predicateTree.appendTreeAt(
+//   flintstoneFirstBranch.appendedNodes[0].nodeId || "ANY",
+//   // predicateTree.rootNodeId,
+//   fTree
+// );
 // This needs to be appendBranch(target, conjuction, terms);
 //   - if is branch
 //      - change junction
@@ -202,25 +202,25 @@ const fromTo = predicateTree.appendTreeAt(
 //     - change junction (create)
 //     - append all children
 //predicateTree.replaceNodeContent(predicateTree.rootNodeId, flintstoneLastNamePredicate);
-const rubbleBranch = predicateTree.appendBranch(
-  predicateTree.rootNodeId,
-  { operator: "$or" },
-  rubbleLastNamePredicate
-);
-const rubbleFirstBranch2 = predicateTree.appendBranch(
-  // @ts-ignore
-  rubbleBranch.appendedNodes[0].nodeId,
-  { operator: "$and" },
-  bettyPredicate
-  // fredPredicate
-);
-const rubbleFirstBranch = predicateTree.appendBranch(
-  // @ts-ignore
-  rubbleFirstBranch2.appendedNodes[0].nodeId,
-  { operator: "$or" },
-  // wilmaPredicate,
-  barneyPredicate
-);
+// const rubbleBranch = predicateTree.appendBranch(
+//   predicateTree.rootNodeId,
+//   { operator: "$or" },
+//   rubbleLastNamePredicate
+// );
+// const rubbleFirstBranch2 = predicateTree.appendBranch(
+//   // @ts-ignore
+//   rubbleBranch.appendedNodes[0].nodeId,
+//   { operator: "$and" },
+//   bettyPredicate
+//   // fredPredicate
+// );
+// const rubbleFirstBranch = predicateTree.appendBranch(
+//   // @ts-ignore
+//   rubbleFirstBranch2.appendedNodes[0].nodeId,
+//   { operator: "$or" },
+//   // wilmaPredicate,
+//   barneyPredicate
+// );
 
 // ----------------------------------------------
 `
