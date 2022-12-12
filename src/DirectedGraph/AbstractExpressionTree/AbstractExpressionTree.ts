@@ -1,25 +1,28 @@
-const todo = `
-  This class is misnamed.  It has methods like appendContentWith[And | Or]
-  which is a logic operation.
-
-  This class in theory should have appendContentWithJunction - only
-  And then a subclass which specifies And|Or.
-
-  This will allow this class to be used for arithmetic trees, or other
-  forms of trees.
-
-`;
-
+import { AbstractTree } from "../AbstractTree/AbstractTree";
 import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
-import { ITree } from "../ITree";
-import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
-import { ExpressionTreeError } from "./ExpressionTreeError";
+
 import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
+
+import { IExpressionTree } from "../ITree";
+import type { TFromToMap, TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import { ExpressionTreeError } from "./ExpressionTreeError";
+
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
 
-export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
+type TAppendedNode<T> = {
+  nodeId: string;
+  nodeContent: TGenericNodeContent<T>;
+};
+
+type AppendNodeResponseType<T> = {
+  appendedNodes: TAppendedNode<T>[];
+  junctionNode: TAppendedNode<T>;
+  invisibleChild: TAppendedNode<T> | null; // if we move convert leaf to branch, this child becomes leaf
+};
+
+export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpressionTree<P> {
   constructor(rootNodeId = "_root_", nodeContent?: P) {
     super(rootNodeId, nodeContent);
   }
@@ -33,6 +36,41 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
       { operator: "$and" } as unknown as P,
       nodeContent
     );
+  }
+
+  protected defaultJunction(nodeId: string): P {
+    // the leaf node at nodeId is being converted to a junction (branch)
+    // need to return the best option for junction operator (&&, ||, '$or', ...)
+
+    // @ts-ignore - this needs to be abstract and defined in subclasses
+    return { operator: "$and" };
+  }
+
+  appendTreeAt(
+    targetNodeId: string,
+    sourceTree: AbstractTree<P>,
+    sourceBranchRootNodeId?: string | undefined
+  ): TFromToMap[] {
+    let effectiveTargetNodeId = targetNodeId;
+
+    // I think setting nodeContent to null is dangerous
+    // do we want to is root as junction?
+    if (this.isLeaf(targetNodeId)) {
+      const originalContent = this.getChildContentAt(targetNodeId);
+      this.replaceNodeContent(targetNodeId, this.defaultJunction(targetNodeId));
+      effectiveTargetNodeId = this.appendChildNodeWithContent(targetNodeId, originalContent);
+    }
+
+    const fromToMap = super.appendTreeAt(
+      effectiveTargetNodeId,
+      sourceTree,
+      sourceBranchRootNodeId
+    );
+    if (effectiveTargetNodeId !== targetNodeId) {
+      fromToMap.push({ from: targetNodeId, to: effectiveTargetNodeId });
+    }
+
+    return fromToMap;
   }
 
   public appendContentWithOr(
@@ -51,6 +89,7 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     junctionContent: TGenericNodeContent<P>,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
+    //
     if (this.isBranch(parentNodeId)) {
       super.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
       const nullValueChildren = this.#getChildrenWithNullValues(parentNodeId);
@@ -81,11 +120,45 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
     };
   }
 
-  public appendChildNodeWithContent(
+  protected appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
+    const nullValueSiblings = this.#getChildrenWithNullValues(parentNodeId);
+    if (nullValueSiblings.length > 0) {
+      super.replaceNodeContent(nullValueSiblings[0], nodeContent);
+      return nullValueSiblings[0];
+    }
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
+  }
+
+  public cloneAt(nodeId = this.rootNodeId): AbstractExpressionTree<P> {
+    const pojo = this.toPojoAt(nodeId);
+    return AbstractDirectedGraph.fromPojo(pojo, defaultFromPojoTransform);
+  }
+
+  /**
+   * The tricky bit here is that the  subtree._rootNodeId
+   * must be the same as parent's node.nodeId
+   * @param targetParentNodeId
+   * @returns
+   */
+  public createSubtreeAt(parentNodeId: string): IExpressionTree<P> {
+    // can we rethink this.  Is there a better way?
+    // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
+    const subtree = new this.constructor(parentNodeId) as typeof this;
+
+    const subtreeParentNodeId = super.appendChildNodeWithContent(
+      parentNodeId,
+      subtree as unknown as IExpressionTree<P>
+    );
+
+    subtree._rootNodeId = subtreeParentNodeId;
+    subtree._nodeDictionary = {};
+    subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
+    subtree._incrementor = this._incrementor;
+
+    return subtree;
   }
 
   #getChildrenWithNullValues(parentNodeId: string): string[] {
@@ -131,7 +204,7 @@ export class AbstractExpressionTree<P> extends AbstractDirectedGraph<P> {
   }
 
   // *tmc* I don't think generics are necessary or even useful?
-  protected static validateTree<T>(tree: ITree<T>) {
+  protected static validateTree<T>(tree: AbstractExpressionTree<T>) {
     const allNodeIds = tree.getTreeNodeIdsAt(tree.rootNodeId);
     allNodeIds.forEach((nodeId) => {
       if (tree.isBranch(nodeId)) {

@@ -1,13 +1,12 @@
-// import { ITree } from "../DirectedGraph";
-import { ITree, ITreeVisitor } from "../ITree";
+import { IExpressionTree, ITree, ITreeVisitor } from "../ITree";
 
 import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
 import { KeyStore } from "../keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
-import { TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
 import { ObfuscatedError } from "./ObfuscatedError";
-import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
+import type { TFromToMap, TGenericNodeContent, TTreePojo } from "../types";
+import { AbstractTree } from "../AbstractTree/AbstractTree";
 abstract class AbstractObfuscatedExpressionTree<P>
   extends AbstractExpressionTree<P>
   implements IObfuscatedExpressionTree<P>
@@ -47,24 +46,81 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this._rootKey;
   }
 
-  public appendChildNodeWithContent(
+  protected appendChildNodeWithContent(
     parentNodeKey: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
     const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
-    const newNodeId = this._internalTree.appendChildNodeWithContent(parentNodeId, nodeContent);
+
+    // should do it like this
+    const newNodeId = this._internalTree["appendChildNodeWithContent"](
+      parentNodeId,
+      nodeContent
+    );
+
     return this._keyStore.putValue(newNodeId);
   }
 
+  private static appendTreeAt<T>(
+    targetTree: AbstractObfuscatedExpressionTree<T>,
+    targetNodeKey: string,
+    sourceTree: AbstractTree<T>,
+    sourceBranchRootNodeId?: string | undefined
+  ): TFromToMap[] {
+    const targetNodeId = targetTree._getNodeIdOrThrow(targetNodeKey);
+    const fromToMapping = targetTree._internalTree.appendTreeAt(
+      targetNodeId,
+      sourceTree instanceof AbstractObfuscatedExpressionTree
+        ? sourceTree._internalTree
+        : sourceTree,
+      // sourceTree,
+      sourceBranchRootNodeId
+    );
+
+    // consider doing this for source tree if instanceOf Obfuscate
+    return fromToMapping.map(({ from, to }) => {
+      return {
+        from,
+        to: targetTree._keyStore.putValue(to),
+      };
+    });
+  }
+
+  public appendTreeAt(
+    targetNodeKey: string,
+    sourceTree: AbstractTree<P>,
+    sourceBranchRootNodeId?: string | undefined
+  ): TFromToMap[] {
+    return AbstractObfuscatedExpressionTree.appendTreeAt(
+      this,
+      targetNodeKey,
+      sourceTree,
+      sourceBranchRootNodeId
+    );
+  }
+
   appendContentWithJunction(
-    parentNodeId: string,
+    parentNodeKey: string,
     junctionContent: TGenericNodeContent<P>,
     nodeContent: TGenericNodeContent<P>
   ): IAppendChildNodeIds {
-    const parentNodeKey = this._getNodeIdOrThrow(parentNodeId);
+    const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
+
+    if (this.isBranch(parentNodeKey)) {
+      const affectedNodeIds = this._internalTree.appendContentWithJunction(
+        parentNodeId,
+        junctionContent,
+        nodeContent
+      );
+      return {
+        isNewBranch: false,
+        newNodeId: this._keyStore.putValue(affectedNodeIds.newNodeId),
+        junctionNodeId: parentNodeKey,
+      };
+    }
 
     const junctionNodeIds = this._internalTree.appendContentWithJunction(
-      parentNodeKey,
+      parentNodeId,
       junctionContent,
       nodeContent
     );
@@ -82,6 +138,15 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return junctionNodeIds;
   }
 
+  public cloneAt(nodeKey: string): AbstractExpressionTree<P> {
+    // probably don't want class definition
+    class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
+
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+
+    const cloneInternalTree = this._internalTree.cloneAt(nodeId);
+    return new GenericObfuscatedExpressionTree(cloneInternalTree);
+  }
   // for testing purpose only.
   // wonder if there isn't a better way
   protected buildReverseMap(reverseMap: { [nodeId: string]: string } = {}): {
@@ -153,11 +218,11 @@ abstract class AbstractObfuscatedExpressionTree<P>
    * @param targetParentNodeId
    * @returns
    */
-  public createSubtreeAt(targetParentNodeId: string): ITree<P> {
+  public createSubtreeAt(targetParentNodeId: string): IExpressionTree<P> {
     // used by createSubTree to be flexible with actual constructor type
 
     // can we rethink this.  Is there a better way?
-    const subtreeParentNodeId = this._internalTree.appendChildNodeWithContent(
+    const subtreeParentNodeId = this._internalTree["appendChildNodeWithContent"](
       targetParentNodeId,
       null
     );
@@ -259,8 +324,6 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return {
       includeSubtrees: visitor.includeSubtrees,
       visit: (nodeKey: string, nodeContent: TGenericNodeContent<P>, parentKey: string) => {
-        // const nodeKey = this._keyStore.reverseLookUpExactlyOneOrThrow(nodeId);
-        // const parentKey = this._keyStore.reverseLookUpExactlyOneOrThrow(parentId);
         visitor.visit(nodeKey, nodeContent, parentKey);
       },
     };
@@ -271,7 +334,12 @@ abstract class AbstractObfuscatedExpressionTree<P>
     //    transformer?: transformToPojoType
   ): TTreePojo<P> {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
-    return this._internalTree.toPojoAt(nodeId);
+
+    // this calls directedGraph ? should call AbstractTree?
+    // probably need to override the whole toPojo
+
+    const pojo = this._internalTree.toPojoAt(nodeId);
+    return AbstractObfuscatedExpressionTree.obfuscatePojo(pojo);
   }
 
   static obfuscatePojo(pojo: TTreePojo<any>): TTreePojo<any> {
@@ -346,20 +414,15 @@ abstract class AbstractObfuscatedExpressionTree<P>
       }
     });
   }
+  static fromPojo<P, Q>(srcPojoTree: TTreePojo<P>): Q {
+    // probably don't want class definition
+    class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
 
-  static fromPojo<P, Q>(
-    srcPojoTree: TTreePojo<P>
-    //    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
-  ): Q {
-    //AbstractExpressionTree<P> {
-    const tree = AbstractExpressionTree.fromPojo<P, Q>(
-      srcPojoTree
-      //      undefined,
-      //    transform,
-      //AbstractObfuscatedExpressionTree as unknown as () => Q
-    );
-    AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
-    return tree as Q;
+    const tree = AbstractExpressionTree.fromPojo<P, AbstractExpressionTree<P>>(srcPojoTree);
+    AbstractExpressionTree.validateTree(tree);
+
+    const newObfuscatedTree = new GenericObfuscatedExpressionTree(tree);
+    return newObfuscatedTree as unknown as Q;
   }
 
   protected fromPojoAppendChildNodeWithContent(

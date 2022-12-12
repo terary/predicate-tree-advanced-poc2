@@ -1,10 +1,10 @@
-import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
-// import { ExtAbstractTestClass } from "../ExtAbstractTestClass";
-import { ITree } from "../ITree";
-
+import { AbstractDirectedGraph } from "../../AbstractDirectedGraph";
+import { IExpressionTree, ITree } from "../../ITree";
+import { TGenericNodeContent } from "../../types";
+import { TestObfuscatedTree } from "../AbstractObfuscatedExpressionTree.test";
 class ExtAbstractTestClass extends AbstractDirectedGraph<WidgetType> {}
 
-const make3ChildrenSubtree2Children = (dTree: ITree<WidgetType>) => {
+const make3ChildrenSubtree2Children = (dTree: TestObfuscatedTree<WidgetType>) => {
   // const dTree = new DirectedGraph<WidgetType>();
   const dTreeIds: { [id: string]: string } = {};
   dTree.replaceNodeContent(dTree.rootNodeId, { label: "root" });
@@ -25,7 +25,7 @@ const make3ChildrenSubtree2Children = (dTree: ITree<WidgetType>) => {
     originalWidgets["child_2"]
   );
 
-  const subtree = dTree.createSubtreeAt(dTreeIds["child_1"]);
+  const subtree = dTree.createSubtreeAt(dTreeIds["child_1"]) as TestObfuscatedTree<WidgetType>;
   dTreeIds["child_1:subtree_root"] = subtree.rootNodeId;
   subtree.replaceNodeContent(subtree.rootNodeId, { label: "subtree:root" });
   dTreeIds["child_1:subtree_0"] = subtree.appendChildNodeWithContent(subtree.rootNodeId, {
@@ -45,7 +45,7 @@ const make3ChildrenSubtree2Children = (dTree: ITree<WidgetType>) => {
   };
 };
 
-const make3Children2Subtree3Children = (dTree: ITree<WidgetType>) => {
+const make3Children2Subtree3Children = (dTree: TestObfuscatedTree<WidgetType>) => {
   const dTreeIds: { [id: string]: string } = {};
   dTree.replaceNodeContent(dTree.rootNodeId, { label: "root" });
 
@@ -57,7 +57,7 @@ const make3Children2Subtree3Children = (dTree: ITree<WidgetType>) => {
     originalWidgetsSubtree["child_0"]
   );
 
-  const subtree0 = dTree.createSubtreeAt(dTree.rootNodeId);
+  const subtree0 = dTree.createSubtreeAt(dTree.rootNodeId) as TestObfuscatedTree<WidgetType>;
   dTreeIds["subtree0:root"] = subtree0.rootNodeId;
   subtree0.replaceNodeContent(subtree0.rootNodeId, originalWidgetsSubtree["subtree0:root"]);
 
@@ -66,7 +66,7 @@ const make3Children2Subtree3Children = (dTree: ITree<WidgetType>) => {
     originalWidgetsSubtree["child_1"]
   );
 
-  const subtree1 = dTree.createSubtreeAt(dTree.rootNodeId);
+  const subtree1 = dTree.createSubtreeAt(dTree.rootNodeId) as TestObfuscatedTree<WidgetType>;
   dTreeIds["subtree1:root"] = subtree1.rootNodeId;
   subtree1.replaceNodeContent(subtree1.rootNodeId, originalWidgetsSubtree["subtree1:root"]);
 
@@ -162,7 +162,7 @@ const make3Children2Subtree3Children = (dTree: ITree<WidgetType>) => {
   };
 };
 
-const make3Children9GrandchildrenTreeAbstract = (dTree: ITree<WidgetType>) => {
+const make3Children9GrandchildrenTreeAbstract = (dTree: TestObfuscatedTree<WidgetType>) => {
   return _make3Children9GrandchildrenTree(dTree);
 };
 
@@ -170,7 +170,8 @@ const make3Children9GrandchildrenTree = () => {
   // @ts-ignore - missing ITree properties
   return _make3Children9GrandchildrenTree(new ExtAbstractTestClass<WidgetType>());
 };
-const _make3Children9GrandchildrenTree = (dTree: ITree<WidgetType>) => {
+
+const _make3Children9GrandchildrenTree = (dTree: TestObfuscatedTree<WidgetType>) => {
   // const dTree = new ExtAbstractTestClass<WidgetType>();
   const dTreeIds: { [id: string]: string } = {};
   dTree.replaceNodeContent(dTree.rootNodeId, originalWidgets["root"]);

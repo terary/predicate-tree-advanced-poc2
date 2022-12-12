@@ -2,6 +2,7 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  coveragePathIgnorePatterns: ["/src/DirectedGraph/test-helpers/"],
-  testPathIgnorePatterns: ["/node_modules/", "/dist/", "/save/" ],
+  coveragePathIgnorePatterns: ["/src/DirectedGraph/test-helpers/", , "/test.utilities.ts" ],
+  testPathIgnorePatterns: ["/node_modules/", "/dist/", "/save/"],
+  
 };

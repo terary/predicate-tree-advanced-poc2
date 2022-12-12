@@ -17,9 +17,12 @@ type TTreePojo<T> = { [nodeId: string]: TNodePojo<T> };
 
 type NodeType<T> = TNodePojo<T>;
 
+type TFromToMap = { from: string; to: string };
+
 export type {
   NodeType,
   TDirectedTreeVisitor,
+  TFromToMap,
   TGenericNodeContent,
   TGenericNodeType,
   TNodePojo,
