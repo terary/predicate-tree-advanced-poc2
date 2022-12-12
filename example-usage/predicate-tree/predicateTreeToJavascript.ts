@@ -1,13 +1,7 @@
-import type {
-  TPredicateNodeTypes,
-  TPredicateTypes,
-  TJunction,
-  TOperandOperators,
-  TOperand,
-} from "./types";
+import type { TPredicateNodeTypes, TJunction, TOperandOperators, TOperand } from "./types";
 import { LeafVisitor } from "./LeafVisitor";
 import { AbstractObfuscatedExpressionTree } from "../../src";
-import { AbstractExpressionTree, ITreeVisitor } from "../../src";
+import { AbstractExpressionTree } from "../../src";
 type TSubjectType = {
   datatype: "string" | "number" | "date";
   label: string;
@@ -21,6 +15,10 @@ const Subjects: { [subjectId: string]: TSubjectType } = {
   "customer.lastname": {
     datatype: "string",
     label: "Last Name",
+  },
+  "customer.birthdate": {
+    datatype: "string",
+    label: "Birth Date",
   },
 };
 
@@ -49,6 +47,7 @@ const quoteValue = (nodeContent: TOperand) => {
   const { datatype } = Subjects[nodeContent.subjectId];
   const { value } = nodeContent;
   switch (datatype) {
+    case "date":
     case "string":
       return `'${value}'`;
     case "number":
@@ -57,6 +56,7 @@ const quoteValue = (nodeContent: TOperand) => {
       return value;
   }
 };
+
 const junctionOperator = (junction: TJunction) => {
   if (junction.operator === "$and") {
     return "&&";
@@ -69,7 +69,7 @@ const junctionOperator = (junction: TJunction) => {
   throw Error(`Unrecognized junction operator: "${junction.operator}".`);
 };
 
-const buildExpressionFromTree = (
+const buildMatcherExpressionFromTree = (
   rootNodeId: string,
   pTree: AbstractExpressionTree<TPredicateNodeTypes>,
   tabCount = 0
@@ -77,24 +77,24 @@ const buildExpressionFromTree = (
   const nodeContent = pTree.getChildContentAt(rootNodeId);
 
   if (nodeContent instanceof AbstractExpressionTree) {
-    return buildExpressionFromTree(
+    return buildMatcherExpressionFromTree(
       nodeContent.rootNodeId,
       nodeContent as AbstractExpressionTree<TPredicateNodeTypes>
     );
   }
 
   if (pTree.isLeaf(rootNodeId)) {
-    const { subjectId, operator, value } = nodeContent as TOperand;
+    const { subjectId, operator } = nodeContent as TOperand;
     const quotedValue = quoteValue(nodeContent as TOperand);
-    const term = `record['${subjectId}'] ${predicateOperatorToJsOperator(
-      operator
-    )} ${quotedValue}`;
+    const jsOperator = predicateOperatorToJsOperator(operator);
+    const term = `record['${subjectId}'] ${jsOperator} ${quotedValue}`;
+
     return `${term}`;
   }
 
   const childrenIds = pTree.getChildrenNodeIdsOf(rootNodeId);
   const childrenAsJs = childrenIds.map((childId) => {
-    return buildExpressionFromTree(childId, pTree, tabCount + 1);
+    return buildMatcherExpressionFromTree(childId, pTree, tabCount + 1);
   });
 
   return (
@@ -125,12 +125,17 @@ const matcherRecordShape = (pTree: AbstractObfuscatedExpressionTree<TPredicateNo
 
 const predicateTreeToJavaScriptMatcher = (
   pTree: AbstractObfuscatedExpressionTree<TPredicateNodeTypes>
-): Function => {
-  const matcherExpression = buildExpressionFromTree(pTree.rootNodeId, pTree);
-  const fnBody = [matcherRecordShape(pTree), `\nreturn ${matcherExpression}`].join("");
+): { fnBody: string } => {
+  const matcherExpression = buildMatcherExpressionFromTree(pTree.rootNodeId, pTree);
+  const fnBody = [
+    "//function anonymous(record",
+    matcherRecordShape(pTree),
+    `\nreturn ${matcherExpression}`,
+  ].join("");
 
-  console.log(fnBody);
-  return new Function("record", fnBody);
+  return {
+    fnBody,
+  };
 };
 
 export { predicateTreeToJavaScriptMatcher };
