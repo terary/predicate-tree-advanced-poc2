@@ -261,8 +261,14 @@ abstract class AbstractTree<T> implements ITree<T> {
       const nodeContent = this.#getChildContent(key);
       if (nodeContent instanceof AbstractTree) {
         const nodeContentAsAbstract = nodeContent as AbstractTree<T>;
+
+        const content = nodeContentAsAbstract.getTreeContentAt(
+          nodeContentAsAbstract.rootNodeId,
+          shouldIncludeSubtrees
+        );
         descendantContent.push(
-          ...nodeContentAsAbstract.getTreeContentAt(nodeContentAsAbstract.rootNodeId)
+          ...content
+          //...nodeContentAsAbstract.getTreeContentAt(nodeContentAsAbstract.rootNodeId, true)
         );
       } else {
         descendantContent.push(nodeContent);

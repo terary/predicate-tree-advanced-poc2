@@ -15,6 +15,7 @@ import type {
   TPredicateNodeTypes,
   TPredicateTypes,
 } from "./types";
+import { AbstractTree } from "../AbstractTree/AbstractTree";
 `
 the single subtree node idea wont work, nor do we want it to work.
 
@@ -127,7 +128,10 @@ describe("AbstractExpressionTree", () => {
       expect(dTree.countTotalNodes()).toBe(21);
 
       // exercise
-      const fromToMap = dTree.appendTreeAt(dTreeIds["child_0_0"], sourceTree);
+      const fromToMap = dTree.appendTreeAt(
+        dTreeIds["child_0_0"],
+        sourceTree as unknown as AbstractTree<TPredicateNodeTypes>
+      );
 
       // post conditions
       expect(fromToMap.length).toEqual(4);
@@ -223,7 +227,10 @@ describe("AbstractExpressionTree", () => {
       expect(dTree.countTotalNodes()).toBe(21);
 
       // exercise
-      const fromToMap = dTree.appendTreeAt(dTreeIds["child_0"], sourceTree);
+      const fromToMap = dTree.appendTreeAt(
+        dTreeIds["child_0"],
+        sourceTree as unknown as AbstractTree<TPredicateNodeTypes>
+      );
 
       // post conditions
       expect(fromToMap.length).toEqual(3);
@@ -630,7 +637,38 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         ].sort(SortPredicateTest)
       );
 
+      // exercise
       const clone = dTree.cloneAt();
+
+      // post conditions
+      const x = clone
+        .getTreeContentAt(clone.rootNodeId, shouldIncludeSubtree)
+        .sort(SortPredicateTest);
+
+      const z = [
+        OO["root"],
+        OO["child_0"],
+        OO["child_0_0"],
+        OO["child_0_1"],
+        OO["child_0_2"],
+        OO["child_1"],
+        OO["child_1_0"],
+        OO["child_1_1"],
+        OO["child_1_2"],
+        OO["child_2"],
+        OO["child_2_0"],
+        OO["child_2_1"],
+        OO["child_2_2"],
+        OO["subtree0:root"],
+        OO["subtree0:child_0"],
+        OO["subtree0:child_1"],
+        OO["subtree0:child_2"],
+        OO["subtree1:root"],
+        OO["subtree1:child_0"],
+        OO["subtree1:child_1"],
+        OO["subtree1:child_2"],
+      ].sort(SortPredicateTest);
+
       expect(
         clone.getTreeContentAt(clone.rootNodeId, shouldIncludeSubtree).sort(SortPredicateTest)
       ).toStrictEqual(

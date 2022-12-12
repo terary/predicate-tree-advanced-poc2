@@ -1,8 +1,8 @@
 import { AbstractTree } from "../AbstractTree/AbstractTree";
 import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
-
+import { DirectedGraphError } from "../DirectedGraphError";
 import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
-
+import treeUtils from "../AbstractDirectedGraph/treeUtilities";
 import { IExpressionTree } from "../ITree";
 import type { TFromToMap, TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
@@ -132,9 +132,16 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  public cloneAt(nodeId = this.rootNodeId): AbstractExpressionTree<P> {
+  public cloneAt(nodeId = this.rootNodeId): IExpressionTree<P> {
     const pojo = this.toPojoAt(nodeId);
-    return AbstractDirectedGraph.fromPojo(pojo, defaultFromPojoTransform);
+    return AbstractExpressionTree.fromPojo(
+      pojo,
+      defaultFromPojoTransform,
+
+      (nodeId?: string, nodeContent?: P) => {
+        return new GenericExpressionTree(nodeId, nodeContent);
+      }
+    );
   }
 
   /**
@@ -168,13 +175,112 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     });
   }
 
+  static #fromPojo<P, Q>(
+    srcPojoTree: TTreePojo<P>,
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform, // branch coverage complains
+    TreeClassBuilder: (rootNodeId?: string, nodeContent?: P) => IExpressionTree<P>
+  ): IExpressionTree<P> {
+    const pojoObject = { ...srcPojoTree };
+
+    const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
+
+    const rootNodePojo = pojoObject[rootNodeId];
+
+    const dTree = TreeClassBuilder("root"); // as AbstractTree<T>;
+
+    dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
+    delete pojoObject[rootNodeId];
+
+    AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
+      (dTree as AbstractExpressionTree<P>)._rootNodeId,
+      rootNodeId,
+      dTree,
+      pojoObject,
+      transform
+    );
+
+    if (Object.keys(pojoObject).length > 0) {
+      throw new DirectedGraphError("Orphan nodes detected while parson pojo object.");
+    }
+    return dTree;
+  }
+
+  static #fromPojoTraverseAndExtractChildren = <T>(
+    treeParentId: string,
+    jsonParentId: string,
+    dTree: IExpressionTree<T>,
+    treeObject: TTreePojo<T>,
+    transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>,
+    fromToMap: TFromToMap[] = []
+  ): TFromToMap[] => {
+    // ): void => {
+    const childrenNodes = treeUtils.extractChildrenNodes<T>(
+      jsonParentId,
+      treeObject
+    ) as TTreePojo<T>;
+
+    Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
+      if (nodePojo.nodeType === AbstractTree.SubtreeNodeTypeName) {
+        const subtree = dTree.createSubtreeAt(treeParentId);
+        subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
+        AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
+          (dTree as AbstractExpressionTree<T>)._rootNodeId,
+
+          // subtree.AbstractExpressionTree,
+          nodeId,
+          subtree as IExpressionTree<T>,
+          treeObject,
+          transformer,
+          fromToMap
+        );
+      } else {
+        const childId = (
+          dTree as unknown as AbstractExpressionTree<T>
+        ).fromPojoAppendChildNodeWithContent(treeParentId, transformer(nodePojo));
+        fromToMap.push({ from: nodeId, to: childId });
+        AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
+          childId,
+          nodeId,
+          dTree,
+          treeObject,
+          transformer,
+          fromToMap
+        );
+      }
+    });
+    return fromToMap;
+  };
+
+  private static ClassBuilder<P>(): (
+    rootNodeId?: string,
+    nodeContent?: P
+  ) => IExpressionTree<P> {
+    const builderFunction = (rootNodeId?: string, nodeContent?: P): IExpressionTree<P> => {
+      return new GenericExpressionTree(rootNodeId, nodeContent);
+    };
+    return builderFunction;
+  }
+
   static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
-  ): Q {
-    const tree = AbstractDirectedGraph.fromPojo<P, Q>(srcPojoTree, transform);
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform,
+    TreeClassBuilder: (
+      rootNodeId?: string,
+      nodeContent?: P
+    ) => IExpressionTree<P> = AbstractExpressionTree.ClassBuilder<P>()
+  ): IExpressionTree<P> {
+    // I think this is calling itself
+    const tree = AbstractExpressionTree.#fromPojo<P, Q>(
+      srcPojoTree,
+      transform,
+      TreeClassBuilder
+    );
     AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
-    return tree as Q;
+    return tree;
   }
 
   protected fromPojoAppendChildNodeWithContent(
@@ -218,3 +324,4 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     });
   }
 }
+class GenericExpressionTree extends AbstractExpressionTree<any> {}
