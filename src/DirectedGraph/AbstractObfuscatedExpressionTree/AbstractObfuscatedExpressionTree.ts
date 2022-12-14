@@ -145,6 +145,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
     const nodeId = this._getNodeIdOrThrow(nodeKey);
 
     const cloneInternalTree = this._internalTree.cloneAt(nodeId);
+    // @ts-ignore typing
     return new GenericObfuscatedExpressionTree(cloneInternalTree);
   }
   // for testing purpose only.
@@ -419,8 +420,10 @@ abstract class AbstractObfuscatedExpressionTree<P>
     class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
 
     const tree = AbstractExpressionTree.fromPojo<P, AbstractExpressionTree<P>>(srcPojoTree);
+    // @ts-ignore - typing
     AbstractExpressionTree.validateTree(tree);
 
+    //@ts-ignore - typing
     const newObfuscatedTree = new GenericObfuscatedExpressionTree(tree);
     return newObfuscatedTree as unknown as Q;
   }

@@ -16,6 +16,7 @@ import type {
   TPredicateTypes,
 } from "./types";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
+import { DirectedGraphError } from "../DirectedGraphError";
 `
 the single subtree node idea wont work, nor do we want it to work.
 
@@ -34,7 +35,9 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
   ): string {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
-
+  public reflect(...args: any[]) {
+    return Reflect.construct(this.constructor, []);
+  }
   public appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<TPredicateNodeTypes>
@@ -641,34 +644,6 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       const clone = dTree.cloneAt();
 
       // post conditions
-      const x = clone
-        .getTreeContentAt(clone.rootNodeId, shouldIncludeSubtree)
-        .sort(SortPredicateTest);
-
-      const z = [
-        OO["root"],
-        OO["child_0"],
-        OO["child_0_0"],
-        OO["child_0_1"],
-        OO["child_0_2"],
-        OO["child_1"],
-        OO["child_1_0"],
-        OO["child_1_1"],
-        OO["child_1_2"],
-        OO["child_2"],
-        OO["child_2_0"],
-        OO["child_2_1"],
-        OO["child_2_2"],
-        OO["subtree0:root"],
-        OO["subtree0:child_0"],
-        OO["subtree0:child_1"],
-        OO["subtree0:child_2"],
-        OO["subtree1:root"],
-        OO["subtree1:child_0"],
-        OO["subtree1:child_1"],
-        OO["subtree1:child_2"],
-      ].sort(SortPredicateTest);
-
       expect(
         clone.getTreeContentAt(clone.rootNodeId, shouldIncludeSubtree).sort(SortPredicateTest)
       ).toStrictEqual(
@@ -773,6 +748,29 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         ClassTestAbstractExpressionTree.fromPojo(pojo);
       };
       expect(willThrow).toThrow(Error);
+    });
+
+    it("Should throw error orphans are found.", () => {
+      const pojoObj = {
+        root1: { parentId: "root1", nodeContent: { label: "root1" } },
+        child1: { parentId: "root1", nodeContent: { label: "child1" } },
+        child00: { parentId: "child1", nodeContent: { label: "child00" } },
+        child2: { parentId: "_ORPHAN_", nodeContent: { label: "child2" } },
+      };
+
+      const willThrow = () => {
+        AbstractExpressionTree.fromPojo(
+          pojoObj
+          // undefined,
+          // (nodeId, nodeContent) => {
+          //   return new TestAbstractDirectedGraph(nodeId, nodeContent);
+          // }
+          //AbstractDirectedGraph
+        );
+      };
+      expect(willThrow).toThrow(
+        new DirectedGraphError("Orphan nodes detected while parson pojo object.")
+      );
     });
   });
   describe(".removeNodeAt", () => {

@@ -151,6 +151,7 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
    * @returns
    */
   public createSubtreeAt(parentNodeId: string): IExpressionTree<P> {
+    // look at the Reflect built-in utility
     // can we rethink this.  Is there a better way?
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
     const subtree = new this.constructor(parentNodeId) as typeof this;
@@ -226,8 +227,8 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
         const subtree = dTree.createSubtreeAt(treeParentId);
         subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
         AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
-          (dTree as AbstractExpressionTree<T>)._rootNodeId,
-
+          // (dTree as AbstractExpressionTree<T>)._rootNodeId,
+          subtree.rootNodeId,
           // subtree.AbstractExpressionTree,
           nodeId,
           subtree as IExpressionTree<T>,
