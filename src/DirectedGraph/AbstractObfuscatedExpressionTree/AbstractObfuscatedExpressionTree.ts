@@ -11,17 +11,23 @@ abstract class AbstractObfuscatedExpressionTree<P>
   extends AbstractExpressionTree<P>
   implements IObfuscatedExpressionTree<P>
 {
-  private _internalTree: AbstractExpressionTree<P>;
+  private _internalTree: IExpressionTree<P>; // AbstractExpressionTree<P>;
   private _rootKey: string;
   private _keyStore: KeyStore<string>;
 
   constructor(
-    tree: AbstractExpressionTree<P> = new AbstractExpressionTree(),
+    tree?: IExpressionTree<P>, // AbstractExpressionTree<P>, //new AbstractExpressionTree(),
     rootNodeId?: string,
     nodeContent?: P
   ) {
     super(rootNodeId, nodeContent);
-    this._internalTree = tree;
+
+    // this._internalTree = tree ||  this.getNewInstance<IExpressionTree<P>>();
+    this._internalTree =
+      tree ||
+      (AbstractExpressionTree.fromPojo({
+        root: { parentId: "root", nodeContent: AbstractTree.EmptyNode },
+      }) as unknown as IExpressionTree<P>); // I think this is because it's not using GenericNode (null, tree, content)
 
     this._keyStore = new KeyStore<string>();
     this._internalTree.getTreeNodeIdsAt(this._internalTree.rootNodeId).forEach((nodeId) => {
@@ -36,8 +42,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
 
       this._internalTree.replaceNodeContent(
         subtreeId,
-        // @ts-ignore
-        new ObfuscatedSubtree<P>(subtree as ITree<P>)
+        new ObfuscatedSubtree<P>(subtree as IExpressionTree<P>)
       );
     });
   }
@@ -46,13 +51,12 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return this._rootKey;
   }
 
-  protected appendChildNodeWithContent(
+  public appendChildNodeWithContent(
     parentNodeKey: string,
     nodeContent: TGenericNodeContent<P>
   ): string {
     const parentNodeId = this._getNodeIdOrThrow(parentNodeKey);
 
-    // should do it like this
     const newNodeId = this._internalTree["appendChildNodeWithContent"](
       parentNodeId,
       nodeContent
@@ -64,7 +68,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
   private static appendTreeAt<T>(
     targetTree: AbstractObfuscatedExpressionTree<T>,
     targetNodeKey: string,
-    sourceTree: AbstractTree<T>,
+    sourceTree: ITree<T>, //IExpressionTree<T>,
     sourceBranchRootNodeId?: string | undefined
   ): TFromToMap[] {
     const targetNodeId = targetTree._getNodeIdOrThrow(targetNodeKey);
@@ -88,10 +92,10 @@ abstract class AbstractObfuscatedExpressionTree<P>
 
   public appendTreeAt(
     targetNodeKey: string,
-    sourceTree: AbstractTree<P>,
+    sourceTree: ITree<P>,
     sourceBranchRootNodeId?: string | undefined
   ): TFromToMap[] {
-    return AbstractObfuscatedExpressionTree.appendTreeAt(
+    return AbstractObfuscatedExpressionTree.appendTreeAt<P>(
       this,
       targetNodeKey,
       sourceTree,
@@ -138,14 +142,13 @@ abstract class AbstractObfuscatedExpressionTree<P>
     return junctionNodeIds;
   }
 
-  public cloneAt(nodeKey: string): AbstractExpressionTree<P> {
+  public cloneAt(nodeKey: string): IExpressionTree<P> {
     // probably don't want class definition
     class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
 
     const nodeId = this._getNodeIdOrThrow(nodeKey);
 
     const cloneInternalTree = this._internalTree.cloneAt(nodeId);
-    // @ts-ignore typing
     return new GenericObfuscatedExpressionTree(cloneInternalTree);
   }
   // for testing purpose only.
@@ -227,11 +230,16 @@ abstract class AbstractObfuscatedExpressionTree<P>
       targetParentNodeId,
       null
     );
+    const internalTree = this._internalTree.getNewInstance(subtreeParentNodeId); // (subtreeParentNodeId); // as typeof this._internalTree;
+
+    const subtree = this.getNewInstance(
+      subtreeParentNodeId
+    ) as AbstractObfuscatedExpressionTree<P>; // as typeof this;
 
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
-    const privateTree = new this._internalTree.constructor(subtreeParentNodeId); // as typeof this._internalTree;
+    // const privateTree = new this._internalTree.constructor(subtreeParentNodeId); // as typeof this._internalTree;
+    // const subtree = new this.constructor(privateTree) as typeof this;
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
-    const subtree = new this.constructor(privateTree) as typeof this;
     this._internalTree.replaceNodeContent(subtreeParentNodeId, subtree);
 
     const subtreeParentNodeKey = this._keyStore.putValue(subtreeParentNodeId);
@@ -244,9 +252,21 @@ abstract class AbstractObfuscatedExpressionTree<P>
     };
 
     subtree._rootKey = subtreeParentNodeKey;
+    // @ts-ignore - private property doesn't exist on interface
     subtree._internalTree["_incrementor"] = this._internalTree["_incrementor"];
 
-    return subtree; //
+    return subtree;
+  }
+
+  public getNewInstance<P>(
+    rootNodeId?: string,
+    nodeContent?: P | undefined
+  ): IExpressionTree<P> {
+    class GenericExpressionTree extends AbstractExpressionTree<P> {}
+    class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
+    const internalTree = new GenericExpressionTree(rootNodeId, nodeContent);
+
+    return new GenericObfuscatedExpressionTree(internalTree);
   }
 
   public getParentNodeId(nodeKey: string): string {

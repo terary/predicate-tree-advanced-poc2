@@ -1402,14 +1402,7 @@ describe("AbstractDirectedGraph", () => {
       const newTree = AbstractDirectedGraph.fromPojo<
         WidgetType,
         AbstractDirectedGraph<WidgetType>
-      >(
-        subtreePojo,
-        undefined,
-        // TestAbstractDirectedGraph
-        (nodeId, nodeContent) => {
-          return new TestAbstractDirectedGraph(nodeId, nodeContent);
-        }
-      );
+      >(subtreePojo, undefined);
       expect(newTree.getChildContentAt(newTree.rootNodeId)).toStrictEqual({
         label: "child_0",
       });
@@ -1433,15 +1426,11 @@ describe("AbstractDirectedGraph", () => {
       const reTree = TestAbstractDirectedGraph.fromPojo<
         WidgetType,
         AbstractDirectedGraph<WidgetType>
-      >(treePojo, undefined, (nodeId, nodeContent) => {
-        return new TestAbstractDirectedGraph(nodeId, nodeContent);
-      });
+      >(treePojo, undefined);
       const reSubtreeFromPojo = TestAbstractDirectedGraph.fromPojo<
         WidgetType,
         AbstractDirectedGraph<WidgetType>
-      >(subtreePojo, undefined, (nodeId, nodeContent) => {
-        return new TestAbstractDirectedGraph(nodeId, nodeContent);
-      });
+      >(subtreePojo, undefined);
 
       const reTreeContents = filterPojoContent(reTree.toPojoAt());
       const reSubtreeContents = filterPojoContent(reSubtreeFromPojo.toPojoAt());
@@ -1488,9 +1477,7 @@ describe("AbstractDirectedGraph", () => {
       const reTree = TestAbstractDirectedGraph.fromPojo<
         WidgetType,
         AbstractDirectedGraph<WidgetType>
-      >(treePojo, alternativeFromPojoTransform, (nodeId, nodeContent) => {
-        return new TestAbstractDirectedGraph(nodeId, nodeContent);
-      });
+      >(treePojo, alternativeFromPojoTransform);
 
       // post conditions
       const reTreeContents = filterPojoContent(reTree.toPojoAt());
@@ -1515,14 +1502,7 @@ describe("AbstractDirectedGraph", () => {
         orphan: { parentId: "_DOES_NOT_EXIST_", nodeContent: { label: "orphan" } },
       };
       const willThrow = () => {
-        const dTree = TestAbstractDirectedGraph.fromPojo(
-          orphanNodePojo,
-          undefined,
-          (nodeId, nodeContent) => {
-            return new TestAbstractDirectedGraph(nodeId, nodeContent);
-          }
-          // TestAbstractDirectedGraph
-        );
+        const dTree = TestAbstractDirectedGraph.fromPojo(orphanNodePojo, undefined);
       };
       expect(willThrow).toThrow(
         new DirectedGraphError("Orphan nodes detected while parson pojo object.")
@@ -1630,8 +1610,6 @@ describe("AbstractDirectedGraph", () => {
 
       const treePojo = dTree.toPojoAt();
       const treePojoObfuscated = AbstractDirectedGraph.obfuscatePojo(treePojo);
-      // const subtree0Pojo = dTree.toPojoAt(subtree0.rootNodeId);
-      // const subtree1Pojo = dTree.toPojoAt(subtree1.rootNodeId);
 
       const pojoContent = filterPojoContent(treePojo);
       expect(Object.keys(treePojo).length).toEqual(21);
@@ -1650,9 +1628,7 @@ describe("AbstractDirectedGraph", () => {
       const reTree = AbstractDirectedGraph.fromPojo<
         WidgetType,
         AbstractDirectedGraph<WidgetType>
-      >(treePojoObfuscated, undefined, (nodeId, nodeContent) => {
-        return new TestAbstractDirectedGraph(nodeId, nodeContent);
-      });
+      >(treePojoObfuscated, undefined);
 
       expect(reTree.getSubtreeIdsAt().length).toEqual(2);
       expect(reTree.countTotalNodes(reTree.rootNodeId, true)).toEqual(21);
@@ -1876,14 +1852,7 @@ describe("AbstractDirectedGraph", () => {
       const dTree = AbstractDirectedGraph.fromPojo<
         WidgetType,
         AbstractDirectedGraph<WidgetType>
-      >(
-        treePojoObject,
-        undefined,
-        // AbstractDirectedGraph
-        (nodeId, nodeContent) => {
-          return new TestAbstractDirectedGraph(nodeId, nodeContent);
-        }
-      );
+      >(treePojoObject, undefined);
       const childrenIds = dTree.getChildrenNodeIdsOf(dTree.rootNodeId);
       const content = [
         dTree.getChildContentAt(dTree.rootNodeId),
@@ -1936,14 +1905,7 @@ describe("AbstractDirectedGraph", () => {
       const dTree = AbstractDirectedGraph.fromPojo<
         WidgetType,
         AbstractDirectedGraph<WidgetType>
-      >(
-        treePojoObject,
-        undefined,
-        (nodeId, nodeContent) => {
-          return new TestAbstractDirectedGraph(nodeId, nodeContent);
-        }
-        // AbstractDirectedGraph
-      );
+      >(treePojoObject, undefined);
 
       const rootAndChildrenContent = [
         dTree.getChildContentAt(dTree.rootNodeId),
@@ -1995,14 +1957,7 @@ describe("AbstractDirectedGraph", () => {
       };
 
       const willThrow = () => {
-        AbstractDirectedGraph.fromPojo(
-          pojoObj,
-          undefined,
-          (nodeId, nodeContent) => {
-            return new TestAbstractDirectedGraph(nodeId, nodeContent);
-          }
-          // AbstractDirectedGraph
-        );
+        AbstractDirectedGraph.fromPojo(pojoObj, undefined);
       };
 
       expect(willThrow).toThrow(
@@ -2020,14 +1975,7 @@ describe("AbstractDirectedGraph", () => {
       };
 
       const willThrow = () => {
-        AbstractDirectedGraph.fromPojo(
-          pojoObj,
-          undefined,
-          (nodeId, nodeContent) => {
-            return new TestAbstractDirectedGraph(nodeId, nodeContent);
-          }
-          //AbstractDirectedGraph
-        );
+        AbstractDirectedGraph.fromPojo(pojoObj, undefined);
       };
       expect(willThrow).toThrow(
         new DirectedGraphError(
@@ -2044,14 +1992,7 @@ describe("AbstractDirectedGraph", () => {
       };
 
       const willThrow = () => {
-        AbstractDirectedGraph.fromPojo(
-          pojoObj,
-          undefined,
-          (nodeId, nodeContent) => {
-            return new TestAbstractDirectedGraph(nodeId, nodeContent);
-          }
-          //AbstractDirectedGraph
-        );
+        AbstractDirectedGraph.fromPojo(pojoObj, undefined);
       };
 
       expect(willThrow).toThrow(

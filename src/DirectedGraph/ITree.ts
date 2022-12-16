@@ -21,12 +21,16 @@ getChildren[Of] takes the 2 bottom dots
 interface ITree<T> {
   rootNodeId: string;
 
-  // appendChildNodeWithContent: (
-  //   treeParentId: string,
-  //   nodeContent: TGenericNodeContent<T>
-  // ) => string; // why use arrow notation?
+  appendChildNodeWithContent(
+    treeParentId: string,
+    nodeContent: TGenericNodeContent<T>
+  ): string;
 
-  cloneAt(nodeId: string): ITree<T>;
+  appendTreeAt(
+    targetNodeId: string,
+    sourceTree: ITree<T>,
+    sourceBranchRootNodeId?: string | undefined
+  ): TFromToMap[];
 
   // should these all be ...At(...)
   countGreatestDepthOf(nodeId?: string): number;
@@ -53,6 +57,8 @@ interface ITree<T> {
     nodeId: string,
     shouldIncludeSubtrees?: boolean
   ): TGenericNodeContent<T>[];
+  getDescendantNodeIds(parentNodeKey: string, shouldIncludeSubtrees?: boolean): string[];
+
   getParentNodeId(nodeId: string): string;
   getSiblingIds(nodeId: string): string[];
   getSubtreeIdsAt(nodeId?: string): string[];
@@ -85,13 +91,16 @@ interface IExpressionTree<P> extends ITree<P> {
     junctionContent: TGenericNodeContent<P>,
     nodeContent: TGenericNodeContent<P>
   ) => IAppendChildNodeIds;
+  cloneAt(nodeId: string): IExpressionTree<P>;
   createSubtreeAt(nodeId: string): IExpressionTree<P>;
+  getNewInstance(rootSeed?: string, nodeContent?: P): IExpressionTree<P>;
 }
 interface IDirectedGraph<T> extends ITree<T> {
   appendChildNodeWithContent: (
     treeParentId: string,
     nodeContent: TGenericNodeContent<T>
   ) => string; // why use arrow notation?
+  cloneAt(nodeId: string): IDirectedGraph<T>;
 
   createSubtreeAt(nodeId: string): IDirectedGraph<T>;
 
