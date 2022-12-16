@@ -1,4 +1,4 @@
-import { AbstractExpressionTree } from "./AbstractExpressionTree";
+import { AbstractExpressionTree, GenericExpressionTree } from "./AbstractExpressionTree";
 import type { TNodePojo, TTreePojo, TGenericNodeContent, TGenericNodeType } from "../types";
 
 import {
@@ -15,6 +15,8 @@ import type {
   TPredicateNodeTypes,
   TPredicateTypes,
 } from "./types";
+import { AbstractTree } from "../AbstractTree/AbstractTree";
+import { DirectedGraphError } from "../DirectedGraphError";
 `
 the single subtree node idea wont work, nor do we want it to work.
 
@@ -33,6 +35,20 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
   ): string {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
+  public reflect(...args: any[]) {
+    return Reflect.construct(this.constructor, []);
+  }
+
+  // @ts-ignore - property types
+  public getNewInstance(
+    rootNodeId?: string,
+    nodeContent?: TPredicateNodeTypes
+  ): ClassTestAbstractExpressionTree {
+    return super.getNewInstance(
+      rootNodeId,
+      nodeContent
+    ) as unknown as ClassTestAbstractExpressionTree;
+  }
 
   public appendChildNodeWithContent(
     parentNodeId: string,
@@ -40,26 +56,8 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
   ): string {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
-  // public appendContentWithAnd(
-  //   parentNodeId: string,
-  //   nodeContent: TGenericNodeContent<TPredicateNodeTypes>
-  // ): string {
-  //   return super.appendContentWithJunction(parentNodeId, { operator: "$and" }, nodeContent)
-  //     .newNodeId;
-  // }
-
-  // public appendContentWithOr(
-  //   parentNodeId: string,
-  //   nodeContent: TGenericNodeContent<TPredicateNodeTypes>
-  // ): string {
-  //   return super.appendContentWithJunction(parentNodeId, { operator: "$or" }, nodeContent)
-  //     .newNodeId;
-  // }
 }
 describe("AbstractExpressionTree", () => {
-  describe.skip(".toPojo", () => {
-    it("Should convert entire tree including subtree to pojo", () => {});
-  });
   describe(".appendTreeAt()", () => {
     it("(leaf) Should, IFF target is leaf, create branch at target, add target content to new branch, attach tree new branch.", () => {
       const dTree = new ClassTestAbstractExpressionTree();
@@ -127,7 +125,10 @@ describe("AbstractExpressionTree", () => {
       expect(dTree.countTotalNodes()).toBe(21);
 
       // exercise
-      const fromToMap = dTree.appendTreeAt(dTreeIds["child_0_0"], sourceTree);
+      const fromToMap = dTree.appendTreeAt(
+        dTreeIds["child_0_0"],
+        sourceTree as unknown as AbstractTree<TPredicateNodeTypes>
+      );
 
       // post conditions
       expect(fromToMap.length).toEqual(4);
@@ -223,7 +224,10 @@ describe("AbstractExpressionTree", () => {
       expect(dTree.countTotalNodes()).toBe(21);
 
       // exercise
-      const fromToMap = dTree.appendTreeAt(dTreeIds["child_0"], sourceTree);
+      const fromToMap = dTree.appendTreeAt(
+        dTreeIds["child_0"],
+        sourceTree as unknown as AbstractTree<TPredicateNodeTypes>
+      );
 
       // post conditions
       expect(fromToMap.length).toEqual(3);
@@ -602,6 +606,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         originalWidgets: OO,
       } = make3Children2Subtree3Children(dTree);
 
+      const x = dTree.getNewInstance();
       expect(
         dTree.getTreeContentAt(dTree.rootNodeId, shouldIncludeSubtree).sort(SortPredicateTest)
       ).toStrictEqual(
@@ -630,7 +635,10 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         ].sort(SortPredicateTest)
       );
 
+      // exercise
       const clone = dTree.cloneAt();
+
+      // post conditions
       expect(
         clone.getTreeContentAt(clone.rootNodeId, shouldIncludeSubtree).sort(SortPredicateTest)
       ).toStrictEqual(
@@ -660,6 +668,24 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       );
     });
   });
+  describe(".getNewInstance", () => {
+    it("Should return GenericExpressionTree if method of subclass does not override.", () => {
+      expect(ClassTestAbstractExpressionTree.getNewInstance()).toBeInstanceOf(
+        GenericExpressionTree
+      );
+    });
+
+    it("Should return class provided by override.", () => {
+      class ClassTestGetNewInstance extends AbstractExpressionTree<TPredicateNodeTypes> {
+        test_getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypes) {
+          return this.getNewInstance(rootSeedNodeId, nodeContent);
+        }
+      }
+      const instanceClass = new ClassTestGetNewInstance();
+      expect(instanceClass.test_getNewInstance()).toBeInstanceOf(ClassTestGetNewInstance);
+    });
+  });
+
   describe(".fromPojo", () => {
     it("Should create a tree from Plain Ole Javascript Object.", () => {
       const pojo = makePojo3Children9Grandchildren() as TTreePojo<TPredicateTypes>;
@@ -735,6 +761,29 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         ClassTestAbstractExpressionTree.fromPojo(pojo);
       };
       expect(willThrow).toThrow(Error);
+    });
+
+    it("Should throw error orphans are found.", () => {
+      const pojoObj = {
+        root1: { parentId: "root1", nodeContent: { label: "root1" } },
+        child1: { parentId: "root1", nodeContent: { label: "child1" } },
+        child00: { parentId: "child1", nodeContent: { label: "child00" } },
+        child2: { parentId: "_ORPHAN_", nodeContent: { label: "child2" } },
+      };
+
+      const willThrow = () => {
+        AbstractExpressionTree.fromPojo(
+          pojoObj
+          // undefined,
+          // (nodeId, nodeContent) => {
+          //   return new TestAbstractDirectedGraph(nodeId, nodeContent);
+          // }
+          //AbstractDirectedGraph
+        );
+      };
+      expect(willThrow).toThrow(
+        new DirectedGraphError("Orphan nodes detected while parson pojo object.")
+      );
     });
   });
   describe(".removeNodeAt", () => {

@@ -1,4 +1,4 @@
-import { AbstractDirectedGraph } from "../AbstractDirectedGraph";
+import { AbstractDirectedGraph } from "./AbstractDirectedGraph";
 // import { ExtAbstractTestClass } from "../ExtAbstractTestClass";
 import { IDirectedGraph, ITree } from "../ITree";
 
@@ -40,8 +40,8 @@ const make3ChildrenSubtree2Children = (dTree: IDirectedGraph<WidgetType>) => {
 
   return {
     dTreeIds,
-    dTree: dTree as ITree<WidgetType>,
-    subtree: subtree as ITree<WidgetType>,
+    dTree: dTree as IDirectedGraph<WidgetType>,
+    subtree: subtree as IDirectedGraph<WidgetType>,
   };
 };
 

@@ -215,65 +215,65 @@ const make3Children2Subtree3Children = (dTree: ClassTestAbstractExpressionTree) 
   );
 
   /// --- children of subtree0
-  dTreeIds["subtree0:child_0"] = subtree0._appendChildNodeWithContent(
+  dTreeIds["subtree0:child_0"] = subtree0.appendChildNodeWithContent(
     dTreeIds["subtree0:root"],
     originalWidgetsSubtree["subtree0:child_0"]
   );
 
-  dTreeIds["subtree0:child_1"] = subtree0._appendChildNodeWithContent(
+  dTreeIds["subtree0:child_1"] = subtree0.appendChildNodeWithContent(
     dTreeIds["subtree0:root"],
     originalWidgetsSubtree["subtree0:child_1"]
   );
 
-  dTreeIds["subtree0:child_2"] = subtree0._appendChildNodeWithContent(
+  dTreeIds["subtree0:child_2"] = subtree0.appendChildNodeWithContent(
     dTreeIds["subtree0:root"],
     originalWidgetsSubtree["subtree0:child_2"]
   );
 
   /// --- children of child_1
-  dTreeIds["child_1_0"] = dTree._appendChildNodeWithContent(
+  dTreeIds["child_1_0"] = dTree.appendChildNodeWithContent(
     dTreeIds["child_1"],
     originalWidgetsSubtree["child_1_0"]
   );
 
-  dTreeIds["child_1_1"] = dTree._appendChildNodeWithContent(
+  dTreeIds["child_1_1"] = dTree.appendChildNodeWithContent(
     dTreeIds["child_1"],
     originalWidgetsSubtree["child_1_1"]
   );
 
-  dTreeIds["child_1_2"] = dTree._appendChildNodeWithContent(
+  dTreeIds["child_1_2"] = dTree.appendChildNodeWithContent(
     dTreeIds["child_1"],
     originalWidgetsSubtree["child_1_2"]
   );
 
   /// --- children of subtree1
-  dTreeIds["subtree1:child_0"] = subtree1._appendChildNodeWithContent(
+  dTreeIds["subtree1:child_0"] = subtree1.appendChildNodeWithContent(
     dTreeIds["subtree1:root"],
     originalWidgetsSubtree["subtree1:child_0"]
   );
 
-  dTreeIds["subtree1:child_1"] = subtree1._appendChildNodeWithContent(
+  dTreeIds["subtree1:child_1"] = subtree1.appendChildNodeWithContent(
     dTreeIds["subtree1:root"],
     originalWidgetsSubtree["subtree1:child_1"]
   );
 
-  dTreeIds["subtree1:child_2"] = subtree1._appendChildNodeWithContent(
+  dTreeIds["subtree1:child_2"] = subtree1.appendChildNodeWithContent(
     dTreeIds["subtree1:root"],
     originalWidgetsSubtree["subtree1:child_2"]
   );
 
   // --- children of child_2
-  dTreeIds["child_2_0"] = dTree._appendChildNodeWithContent(
+  dTreeIds["child_2_0"] = dTree.appendChildNodeWithContent(
     dTreeIds["child_2"],
     originalWidgetsSubtree["child_2_0"]
   );
 
-  dTreeIds["child_2_1"] = dTree._appendChildNodeWithContent(
+  dTreeIds["child_2_1"] = dTree.appendChildNodeWithContent(
     dTreeIds["child_2"],
     originalWidgetsSubtree["child_2_1"]
   );
 
-  dTreeIds["child_2_2"] = dTree._appendChildNodeWithContent(
+  dTreeIds["child_2_2"] = dTree.appendChildNodeWithContent(
     dTreeIds["child_2"],
     originalWidgetsSubtree["child_2_2"]
   );

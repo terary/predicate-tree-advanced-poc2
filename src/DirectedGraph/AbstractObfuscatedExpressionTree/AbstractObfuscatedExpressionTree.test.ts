@@ -70,6 +70,7 @@ class TestClearTextTree<P> extends AbstractExpressionTree<P> {}
 describe("AbstractObfuscatedExpressionTree", () => {
   describe("constructor", () => {
     it("Should obfuscate root nodeId.", () => {
+      // @ts-ignore
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
       expect(oTree.getChildContentAt(oTree.rootNodeId)).toBeNull();
 
@@ -96,6 +97,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
         //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
+      // @ts-ignore
       const privateTree = new TestObfuscatedTree(exposedTree);
       expect(privateTree.countTotalNodes(undefined, true)).toEqual(
         exposedTree.countTotalNodes(undefined, true)

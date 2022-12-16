@@ -1,10 +1,12 @@
-import { AbstractDirectedGraph } from "../../AbstractDirectedGraph";
+import { AbstractExpressionTree } from "../../AbstractExpressionTree";
 import { IExpressionTree, ITree } from "../../ITree";
 import { TGenericNodeContent } from "../../types";
+//import { TestObfuscatedTree } from "../AbstractObfuscatedExpressionTree.test";
 import { TestObfuscatedTree } from "../AbstractObfuscatedExpressionTree.test";
-class ExtAbstractTestClass extends AbstractDirectedGraph<WidgetType> {}
+class ExtAbstractTestClass extends AbstractExpressionTree<WidgetType> {}
 
-const make3ChildrenSubtree2Children = (dTree: TestObfuscatedTree<WidgetType>) => {
+// const make3ChildrenSubtree2Children = (dTree: TestObfuscatedTree<WidgetType>) => {
+const make3ChildrenSubtree2Children = (dTree: AbstractExpressionTree<WidgetType>) => {
   // const dTree = new DirectedGraph<WidgetType>();
   const dTreeIds: { [id: string]: string } = {};
   dTree.replaceNodeContent(dTree.rootNodeId, { label: "root" });

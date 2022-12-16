@@ -4,7 +4,6 @@ import { DirectedGraphError } from "../DirectedGraphError";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
 import { ITree, IDirectedGraph, ITreeVisitor } from "../ITree";
 import type { TNodePojo, TTreePojo, TGenericNodeContent, TFromToMap } from "../types";
-import { clone } from "lodash";
 
 const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
   return nodeContent.nodeContent;
@@ -17,7 +16,7 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  public cloneAt(nodeId: string): ITree<T> {
+  public cloneAt(nodeId: string): IDirectedGraph<T> {
     const pojo = this.toPojoAt(nodeId);
     return AbstractDirectedGraph.fromPojo(pojo, defaultFromPojoTransform);
   }
@@ -97,38 +96,37 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     return fromToMap;
   };
 
+  protected static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P) {
+    class GenericDirectedGraph extends AbstractDirectedGraph<P> {}
+
+    return new GenericDirectedGraph(rootSeedNodeId, nodeContent);
+  }
+
   public static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
     transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
-  ): Q {
-    return AbstractDirectedGraph.#fromPojo<P, Q>(
-      srcPojoTree,
-      transform,
-      AbstractDirectedGraph as unknown as () => Q
-    ) as unknown as Q;
+    //    TreeClassBuilder?: (rootNodeId?: string, nodeContent?: P) => IDirectedGraph<P>
+  ): IDirectedGraph<P> {
+    return AbstractDirectedGraph.#fromPojo<P, Q>(srcPojoTree, transform);
   }
 
   static #fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform: (
-      nodeContent: TNodePojo<P>
-    ) => TGenericNodeContent<P> = defaultFromPojoTransform, // branch coverage complains
-    TreeClass: () => Q
-  ): Q {
+    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform // branch coverage complains
+  ): IDirectedGraph<P> {
     const pojoObject = { ...srcPojoTree };
 
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
 
     const rootNodePojo = pojoObject[rootNodeId];
 
-    // @ts-ignore - expression is not newable, I think ok in js, not ts
-    const dTree = new TreeClass<P>(); // as AbstractTree<T>;
-
+    // const dTree = TreeClassBuilder("root"); // as AbstractTree<T>;
+    const dTree = AbstractDirectedGraph.getNewInstance<P>();
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
     AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
-      dTree._rootNodeId,
+      (dTree as AbstractDirectedGraph<P>)._rootNodeId,
       rootNodeId,
       dTree,
       pojoObject,
@@ -141,5 +139,6 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     return dTree;
   }
 }
+class GenericDirectedGraph<P> extends AbstractDirectedGraph<P> implements IDirectedGraph<P> {}
 
 export { AbstractDirectedGraph };

@@ -45,7 +45,7 @@ abstract class AbstractTree<T> implements ITree<T> {
     }
   }
 
-  protected appendChildNodeWithContent(
+  public appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>
   ): string {
@@ -91,7 +91,6 @@ abstract class AbstractTree<T> implements ITree<T> {
       if (to in targetTree._nodeDictionary) {
         throw new Error(`ID COLLISION offending node: "${to}".`);
       }
-      // @ts-ignore - types
       targetTree._nodeDictionary[to] = sourceTree._nodeDictionary[from]; //sourceTree.getChildContentAt(from);
       targetTree.#getNextChildNodeId("ANY"); // need to keep this counting
     });
@@ -261,8 +260,14 @@ abstract class AbstractTree<T> implements ITree<T> {
       const nodeContent = this.#getChildContent(key);
       if (nodeContent instanceof AbstractTree) {
         const nodeContentAsAbstract = nodeContent as AbstractTree<T>;
+
+        const content = nodeContentAsAbstract.getTreeContentAt(
+          nodeContentAsAbstract.rootNodeId,
+          shouldIncludeSubtrees
+        );
         descendantContent.push(
-          ...nodeContentAsAbstract.getTreeContentAt(nodeContentAsAbstract.rootNodeId)
+          ...content
+          //...nodeContentAsAbstract.getTreeContentAt(nodeContentAsAbstract.rootNodeId, true)
         );
       } else {
         descendantContent.push(nodeContent);
@@ -282,6 +287,11 @@ abstract class AbstractTree<T> implements ITree<T> {
         (nodeId) => descendantsRegExp.test(nodeId) && !this.isSubtree(nodeId)
       );
     }
+  }
+
+  protected _getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: T): P {
+    // return new this.constructor();
+    return Reflect.construct(this.constructor, [rootSeedNodeId, nodeContent]) as P;
   }
 
   #getNextChildNodeId(parentNodeId: string) {
