@@ -2,6 +2,7 @@ import type { TPredicateNodeTypes, TJunction, TOperandOperators, TOperand } from
 import { LeafVisitor } from "./LeafVisitor";
 import { AbstractObfuscatedExpressionTree } from "../../src";
 import { AbstractExpressionTree } from "../../src";
+import { AbstractTree } from "../../src/DirectedGraph/AbstractTree/AbstractTree";
 type TSubjectType = {
   datatype: "string" | "number" | "date";
   label: string;
@@ -92,7 +93,10 @@ const buildMatcherExpressionFromTree = (
     return `${term}`;
   }
 
-  const childrenIds = pTree.getChildrenNodeIdsOf(rootNodeId);
+  const childrenIds = pTree.getChildrenNodeIdsOf(
+    rootNodeId,
+    AbstractTree.SHOULD_INCLUDE_SUBTREES
+  );
   const childrenAsJs = childrenIds.map((childId) => {
     return buildMatcherExpressionFromTree(childId, pTree, tabCount + 1);
   });

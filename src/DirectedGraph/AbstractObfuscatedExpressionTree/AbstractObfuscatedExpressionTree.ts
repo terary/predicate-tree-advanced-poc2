@@ -336,14 +336,19 @@ abstract class AbstractObfuscatedExpressionTree<P>
     const subtreeIds = this._internalTree.getSubtreeIdsAt();
 
     subtreeIds.forEach((subtreeId) => {
+      const x = subtreeIds; // debug;
       const subtree = this._internalTree.getChildContentAt(subtreeId);
+      const parentNodeId = this._internalTree.getParentNodeId(subtreeId);
       if (subtree instanceof ObfuscatedSubtree) {
+        const subtreeAsPojo = subtree.toPojoAtFromParent();
         // maybe this guard isn't a great idea, how subclasses deal with this?
         Object.entries(subtree.toPojoAtFromParent()).forEach(
           ([subtreeNodeId, subtreeNodeContent]) => {
             mainTreePojo[subtreeNodeId] = subtreeNodeContent;
           }
         );
+        mainTreePojo[subtreeId].parentId = parentNodeId;
+        const xq = mainTreePojo[subtree._rootNodeId];
       }
     });
 
@@ -448,6 +453,9 @@ class ObfuscatedSubtree<T> extends AbstractObfuscatedExpressionTree<T> {
     transformer?: <T>(nodeContent: T) => TNodePojo<T>
   ): TTreePojo<T> {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
-    return this._internalTree.toPojoAt(nodeId, transformer);
+    const x = this._internalTree.toPojoAt(nodeId, transformer);
+    const pojo = this._internalTree.toPojoAt(nodeId, transformer);
+    pojo[this._internalTree.rootNodeId].nodeType = AbstractTree.SubtreeNodeTypeName;
+    return pojo;
   }
 }

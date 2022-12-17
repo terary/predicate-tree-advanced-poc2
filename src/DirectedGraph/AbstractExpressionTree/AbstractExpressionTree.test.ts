@@ -57,9 +57,6 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
   // }
 }
 describe("AbstractExpressionTree", () => {
-  describe.skip(".toPojo", () => {
-    it("Should convert entire tree including subtree to pojo", () => {});
-  });
   describe(".appendTreeAt()", () => {
     it("(leaf) Should, IFF target is leaf, create branch at target, add target content to new branch, attach tree new branch.", () => {
       const dTree = new ClassTestAbstractExpressionTree();

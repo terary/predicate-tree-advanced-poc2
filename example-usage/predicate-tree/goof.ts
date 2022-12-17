@@ -4,7 +4,7 @@ import type { TTreePojo } from "../../src";
 import { AbstractObfuscatedExpressionTree } from "../../src";
 import { predicateTreeToJavaScriptMatcher } from "./predicateTreeToJavascript";
 import assert from "assert";
-import { matcherPojo, notTreePojo } from "./MatcherPojoWithSubtree";
+import { matcherPojo, notTreePojo, agePojo } from "./MatcherPojoWithSubtree";
 import { PredicateTreeJs } from "../../dev-debug/PredicateTreeJs/PredicateTreeJs";
 class ObfuscateExpressionTree extends AbstractObfuscatedExpressionTree<TPredicateNodeTypes> {}
 class ObfuscateNotTree extends AbstractObfuscatedExpressionTree<TPredicateNodeTypes | TNot> {}
@@ -13,26 +13,19 @@ type TNot = {
   operator: "$not";
 };
 
-const notTree = AbstractObfuscatedExpressionTree.fromPojo<
-  TPredicateNodeTypes,
-  ObfuscateNotTree
-  // @ts-ignore
->(notTreePojo as TTreePojo<TPredicateNodeTypes | TNot>);
-
 const predicateTree = AbstractObfuscatedExpressionTree.fromPojo<
   TPredicateNodeTypes,
   ObfuscateExpressionTree
->(matcherPojo);
+>({ ...matcherPojo, ...agePojo } as TTreePojo<TPredicateNodeTypes>);
 
-// predicateTree.appendTreeAt(
-//   predicateTree.rootNodeId,
-//   notTree as AbstractObfuscatedExpressionTree<TPredicateNodeTypes>
-// );
 const x = predicateTree.toPojoAt();
-const fromPojo = ObfuscateExpressionTree.fromPojo(predicateTree.toPojoAt());
-// assert.strictEqual(predicateTree.getSubtreeIdsAt().length, 1);
+const fromPredicatePojo = AbstractObfuscatedExpressionTree.fromPojo<
+  TPredicateNodeTypes,
+  AbstractObfuscatedExpressionTree<TPredicateNodeTypes>
+>(predicateTree.toPojoAt());
 
-const { fnBody } = predicateTreeToJavaScriptMatcher(predicateTree);
+const { fnBody } = predicateTreeToJavaScriptMatcher(fromPredicatePojo);
+// const { fnBody } = predicateTreeToJavaScriptMatcher(predicateTree);
 console.log(fnBody);
 const matcherFn = new Function("record", fnBody);
 [
@@ -47,4 +40,5 @@ const matcherFn = new Function("record", fnBody);
   console.log(`matcher(${JSON.stringify(name)})`, matcherFn(name));
   assert.strictEqual(matcherFn(name), name.shouldBe);
 });
-assert.strictEqual(predicateTree.countTotalNodes(), 11);
+
+//assert.strictEqual(predicateTree.countTotalNodes(), 11);
