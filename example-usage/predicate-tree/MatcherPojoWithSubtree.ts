@@ -41,6 +41,30 @@ const flintstonePojo = {
   },
 };
 
+const agePojo = {
+  age: { parentId: "root", nodeType: "subtree", nodeContent: { operator: "$and" } },
+  "age.min": {
+    parentId: "age",
+    nodeContent: { value: 3, operator: "$ge", subjectId: "customer.age" },
+  },
+  "age.max": {
+    parentId: "age",
+    nodeContent: { value: 42, operator: "$lt", subjectId: "customer.age" },
+  },
+};
+
+const notTree = {
+  not: { parentId: "not", nodeType: "subtree", nodeContent: { operator: "$not" } },
+  "not.001": {
+    parentId: "not",
+    nodeContent: { value: "mickey", operator: "$eq", subjectId: "customer.firstname" },
+  },
+  "not.002": {
+    parentId: "not",
+    nodeContent: { value: "minnie", operator: "$eq", subjectId: "customer.firstname" },
+  },
+};
+
 const rootPojo = {
   root: { parentId: "root", nodeContent: { operator: "$or" } },
 };
@@ -49,6 +73,7 @@ const matcherPojo = {
   ...rootPojo,
   ...rubblePojo,
   ...flintstonePojo,
+  ...agePojo,
 } as TTreePojo<TPredicateNodeTypes>;
 
-export { matcherPojo };
+export { matcherPojo, notTree as notTreePojo };

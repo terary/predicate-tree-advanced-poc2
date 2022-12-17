@@ -1608,51 +1608,6 @@ describe("AbstractDirectedGraph", () => {
       expect(childPojoContent_0_0).toStrictEqual([OO["child_0_0"]]);
     });
   }); // subtree fromPojo
-  describe("AbstractDirectedGraph.obfuscatePojo", () => {
-    it("Should export (toPojo) subtree like normal tree.", () => {
-      const {
-        dTreeIds,
-        dTree,
-        subtree0,
-        subtree1,
-        originalWidgets: OO,
-      } = make3Children2Subtree3Children(
-        new TestAbstractDirectedGraph() as IDirectedGraph<WidgetType>
-      );
-
-      const treePojo = dTree.toPojoAt();
-      const treePojoObfuscated = AbstractDirectedGraph.obfuscatePojo(treePojo);
-      // const subtree0Pojo = dTree.toPojoAt(subtree0.rootNodeId);
-      // const subtree1Pojo = dTree.toPojoAt(subtree1.rootNodeId);
-
-      const pojoContent = filterPojoContent(treePojo);
-      expect(Object.keys(treePojo).length).toEqual(21);
-
-      const pojoContentObfuscate = filterPojoContent(treePojoObfuscated);
-      expect(Object.keys(pojoContentObfuscate).length).toEqual(21);
-
-      expect(Object.keys(pojoContent).length).toEqual(
-        Object.keys(pojoContentObfuscate).length
-      );
-
-      expect(pojoContent.sort(WidgetSort)).toStrictEqual(
-        pojoContentObfuscate.sort(WidgetSort)
-      );
-
-      const reTree = AbstractDirectedGraph.fromPojo<
-        WidgetType,
-        AbstractDirectedGraph<WidgetType>
-      >(treePojoObfuscated);
-
-      expect(reTree.getSubtreeIdsAt().length).toEqual(2);
-      expect(reTree.countTotalNodes(reTree.rootNodeId, true)).toEqual(21);
-      expect(dTree.countTotalNodes(reTree.rootNodeId, true)).toEqual(21);
-      expect(reTree.countTotalNodes()).toEqual(dTree.countTotalNodes());
-      expect(reTree.getTreeContentAt().sort(WidgetSort)).toStrictEqual(
-        dTree.getTreeContentAt().sort(WidgetSort)
-      );
-    });
-  });
   describe("Subtree - get[Child | Children | Tree][Content | Ids ] (getChildrenIds getTreeContent)", () => {
     it("Should get nodeIds and content of child, children, descendants, tree", () => {
       const shouldIncludeSubtrees = true;

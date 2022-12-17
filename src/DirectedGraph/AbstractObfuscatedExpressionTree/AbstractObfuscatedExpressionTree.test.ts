@@ -2,7 +2,7 @@ import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpres
 import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpressionTree";
 import { isUUIDv4 } from "../../common/utilities/isFunctions";
 import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
-import { ITreeVisitor } from "../ITree";
+import { IExpressionTree, ITreeVisitor } from "../ITree";
 import { TGenericNodeContent, TTreePojo } from "../types";
 import {
   filterPojoContent,
@@ -234,7 +234,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
         ).sort(SortPredicateTest)
       );
 
-      const treePojo = AbstractExpressionTree.obfuscatePojo(privateTree.toPojoAt());
+      const treePojo = privateTree.toPojoAt(); // AbstractExpressionTree.obfuscatePojo();
     });
   });
   describe(".cloneAt([nodeId])", () => {
@@ -457,13 +457,13 @@ describe("AbstractObfuscatedExpressionTree", () => {
   });
 
   describe(".toPojo", () => {
-    it.skip("Should produce pojo for whole tree.", () => {
+    it("Should produce pojo for whole tree.", () => {
       const exposedTree = new ClassTestAbstractExpressionTree();
       const {
         dTreeIds,
         // dTree: dTree as ITree<TPredicateTypes>,
-        subtree0,
-        subtree1,
+        // subtree0,
+        // subtree1,
         originalWidgets: OO,
         //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
@@ -474,21 +474,27 @@ describe("AbstractObfuscatedExpressionTree", () => {
       );
       expect(privateTree.countTotalNodes(undefined, true)).toEqual(21);
 
+      const subtreeIds = privateTree.getSubtreeIdsAt();
+      expect(subtreeIds.length).toEqual(2);
+      const subtree0 = privateTree.getChildContentAt(
+        subtreeIds[0]
+      ) as IExpressionTree<TPredicateNodeTypes>;
+      const subtree1 = privateTree.getChildContentAt(
+        subtreeIds[1]
+      ) as IExpressionTree<TPredicateNodeTypes>;
+
       const reverseMap = privateTree.getIdKeyReverseMap();
       Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
         dTreeIds[debugLabel] = reverseMap[nodeId];
       });
 
-      const treePojo = AbstractExpressionTree.obfuscatePojo(privateTree.toPojoAt());
-      const subtree0Pojo = AbstractExpressionTree.obfuscatePojo(
-        subtree0.toPojoAt(subtree0.rootNodeId)
-      );
-      const subtree1Pojo = AbstractExpressionTree.obfuscatePojo(
-        subtree1.toPojoAt(subtree1.rootNodeId)
-      );
+      const treePojo = privateTree.toPojoAt();
+
+      const subtree0Pojo = subtree0.toPojoAt(subtree0.rootNodeId);
+      const subtree1Pojo = subtree1.toPojoAt(subtree1.rootNodeId);
 
       const pojoContent = filterPojoContent(treePojo);
-      const pojoContentValues = filterPojoContentPredicateValues(treePojo);
+      // const pojoContentValues = filterPojoContentPredicateValues(treePojo);
 
       expect(Object.keys(treePojo).length).toEqual(21);
 

@@ -8,8 +8,6 @@ import type {
   TGenericNodeType,
   TFromToMap,
 } from "../types";
-import { KeyStore } from "../keystore/KeyStore";
-import { sortBy } from "lodash";
 
 const defaultToPojoTransformer = <T>(nodeContent: T) => {
   return nodeContent as unknown as TNodePojo<T>;
@@ -512,26 +510,6 @@ abstract class AbstractTree<T> implements ITree<T> {
     });
   }
 
-  static obfuscatePojo<P>(pojo: TTreePojo<P>): TTreePojo<P> {
-    const obfusPojo = { ...pojo };
-    const keyStore = new KeyStore<string>();
-
-    // first pass - keys
-    Object.keys(obfusPojo).forEach((nodeId) => {
-      const nodeKey = keyStore.putValue(nodeId);
-      obfusPojo[nodeKey] = { ...obfusPojo[nodeId] };
-      delete obfusPojo[nodeId];
-    });
-
-    // second pass - update parentNodeId
-    Object.entries(obfusPojo).forEach(([nodeKey, node]) => {
-      obfusPojo[nodeKey].parentId = keyStore.reverseLookUpExactlyOneOrThrow(
-        obfusPojo[nodeKey].parentId
-      );
-    });
-    return obfusPojo;
-  }
-
   public toPojoAt(
     nodeId: string = this.rootNodeId,
     transformer?: transformToPojoType
@@ -539,15 +517,21 @@ abstract class AbstractTree<T> implements ITree<T> {
     return this.#toPojo(nodeId, nodeId, transformer);
   }
 
+  toPojoWithoutSubtreesAt(nodeId: string): TTreePojo<T> {
+    return this.#toPojo(nodeId, nodeId, undefined, undefined, false);
+  }
+
   #toPojo(
     currentNodeId: string,
     parentNodeId: string,
     transformTtoPojo: transformToPojoType = defaultToPojoTransformer,
-    workingPojoDocument: TTreePojo<T> = {}
+    workingPojoDocument: TTreePojo<T> = {},
+    shouldIncludeSubtrees = true
   ): TTreePojo<T> {
     const nodeContent = this.getChildContentAt(currentNodeId) as T;
-
-    if (nodeContent instanceof AbstractTree) {
+    if (nodeContent instanceof AbstractTree && !shouldIncludeSubtrees) {
+      return workingPojoDocument;
+    } else if (nodeContent instanceof AbstractTree) {
       const subtreePojo = nodeContent.toPojoAt(nodeContent.rootNodeId);
       Object.entries(subtreePojo).forEach(([nodeId, nodeContent]) => {
         workingPojoDocument[nodeId] = nodeContent;
@@ -570,7 +554,11 @@ abstract class AbstractTree<T> implements ITree<T> {
       );
 
       children.forEach((childId) => {
-        this.#toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument);
+        if (shouldIncludeSubtrees) {
+          this.#toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument);
+        } else {
+          this.#toPojo(childId, currentNodeId, transformTtoPojo, workingPojoDocument, false);
+        }
       });
     }
 

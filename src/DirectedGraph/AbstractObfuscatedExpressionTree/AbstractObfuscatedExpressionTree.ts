@@ -5,13 +5,14 @@ import { KeyStore } from "../keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
 import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
 import { ObfuscatedError } from "./ObfuscatedError";
-import type { TFromToMap, TGenericNodeContent, TTreePojo } from "../types";
+import type { TFromToMap, TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
 abstract class AbstractObfuscatedExpressionTree<P>
   extends AbstractExpressionTree<P>
   implements IObfuscatedExpressionTree<P>
 {
-  private _internalTree: AbstractExpressionTree<P>;
+  //
+  protected _internalTree: AbstractExpressionTree<P>;
   private _rootKey: string;
   private _keyStore: KeyStore<string>;
 
@@ -140,12 +141,12 @@ abstract class AbstractObfuscatedExpressionTree<P>
 
   public cloneAt(nodeKey: string): AbstractExpressionTree<P> {
     // probably don't want class definition
-    class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
+    // class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
 
     const nodeId = this._getNodeIdOrThrow(nodeKey);
 
     const cloneInternalTree = this._internalTree.cloneAt(nodeId);
-    return new GenericObfuscatedExpressionTree(cloneInternalTree);
+    return new GenericObfuscatedExpressionTree<P>(cloneInternalTree);
   }
   // for testing purpose only.
   // wonder if there isn't a better way
@@ -329,20 +330,27 @@ abstract class AbstractObfuscatedExpressionTree<P>
     };
   }
 
-  public toPojoAt(
-    nodeKey: string = this.rootNodeId
-    //    transformer?: transformToPojoType
-  ): TTreePojo<P> {
+  public toPojoAt(nodeKey: string = this.rootNodeId, transformer?: Function): TTreePojo<P> {
     const nodeId = this._getNodeIdOrThrow(nodeKey);
+    const mainTreePojo = this._internalTree.toPojoWithoutSubtreesAt(nodeId);
+    const subtreeIds = this._internalTree.getSubtreeIdsAt();
 
-    // this calls directedGraph ? should call AbstractTree?
-    // probably need to override the whole toPojo
+    subtreeIds.forEach((subtreeId) => {
+      const subtree = this._internalTree.getChildContentAt(subtreeId);
+      if (subtree instanceof ObfuscatedSubtree) {
+        // maybe this guard isn't a great idea, how subclasses deal with this?
+        Object.entries(subtree.toPojoAtFromParent()).forEach(
+          ([subtreeNodeId, subtreeNodeContent]) => {
+            mainTreePojo[subtreeNodeId] = subtreeNodeContent;
+          }
+        );
+      }
+    });
 
-    const pojo = this._internalTree.toPojoAt(nodeId);
-    return AbstractObfuscatedExpressionTree.obfuscatePojo(pojo);
+    return AbstractObfuscatedExpressionTree.obfuscatePojo(mainTreePojo);
   }
 
-  static obfuscatePojo(pojo: TTreePojo<any>): TTreePojo<any> {
+  private static obfuscatePojo(pojo: TTreePojo<any>): TTreePojo<any> {
     // I *think* because toPojo also calls toPojo of subtree
     // the result is the subtree gets pojo'd independently
     // which goofs everything.
@@ -415,13 +423,10 @@ abstract class AbstractObfuscatedExpressionTree<P>
     });
   }
   static fromPojo<P, Q>(srcPojoTree: TTreePojo<P>): Q {
-    // probably don't want class definition
-    class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
-
     const tree = AbstractExpressionTree.fromPojo<P, AbstractExpressionTree<P>>(srcPojoTree);
     AbstractExpressionTree.validateTree(tree);
 
-    const newObfuscatedTree = new GenericObfuscatedExpressionTree(tree);
+    const newObfuscatedTree = new GenericObfuscatedExpressionTree<P>(tree);
     return newObfuscatedTree as unknown as Q;
   }
 
@@ -436,4 +441,13 @@ abstract class AbstractObfuscatedExpressionTree<P>
 }
 
 export { AbstractObfuscatedExpressionTree };
-class ObfuscatedSubtree<T> extends AbstractObfuscatedExpressionTree<T> {}
+class GenericObfuscatedExpressionTree<P> extends AbstractObfuscatedExpressionTree<P> {}
+class ObfuscatedSubtree<T> extends AbstractObfuscatedExpressionTree<T> {
+  public toPojoAtFromParent(
+    nodeKey = this.rootNodeId,
+    transformer?: <T>(nodeContent: T) => TNodePojo<T>
+  ): TTreePojo<T> {
+    const nodeId = this._getNodeIdOrThrow(nodeKey);
+    return this._internalTree.toPojoAt(nodeId, transformer);
+  }
+}
