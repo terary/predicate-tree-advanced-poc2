@@ -1964,7 +1964,7 @@ describe("AbstractDirectedGraph", () => {
       };
       expect(willThrow).toThrow(
         new DirectedGraphError(
-          "No distinct root found. There must exist on and only one nodeId === {parentId}. Found 2."
+          "No distinct root found. There must exist on and only one nodeId === {parentId}. Found 2. ['root0','root1']."
         )
       );
     });

@@ -35,11 +35,12 @@ const parseUniquePojoRootKeyOrThrow = <T>(pojoDocument: TTreePojo<T>) => {
   const candidateRootIds = parseCandidateRootNodeId(pojoDocument);
 
   if (candidateRootIds.length !== 1) {
-    throw new DirectedGraphError(
-      `No distinct root found. There must exist on and only one nodeId === {parentId}. Found ${
-        candidateRootIds.length
-      }. ["${candidateRootIds.join("','")}"] `
-    );
+    let throwMessage = `No distinct root found. There must exist on and only one nodeId === {parentId}. Found ${candidateRootIds.length}.`;
+    if (candidateRootIds.length > 1) {
+      throwMessage += ` ['${candidateRootIds.join("','")}'].`;
+    }
+
+    throw new DirectedGraphError(throwMessage);
   }
 
   return candidateRootIds[0];
