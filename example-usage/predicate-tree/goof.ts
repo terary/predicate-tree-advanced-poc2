@@ -12,20 +12,23 @@ class ObfuscateNotTree extends AbstractObfuscatedExpressionTree<TPredicateNodeTy
 type TNot = {
   operator: "$not";
 };
+const agelessPredicateTree = AbstractObfuscatedExpressionTree.fromPojo<
+  TPredicateNodeTypes,
+  ObfuscateExpressionTree
+>(matcherPojo as TTreePojo<TPredicateNodeTypes>);
 
 const predicateTree = AbstractObfuscatedExpressionTree.fromPojo<
   TPredicateNodeTypes,
   ObfuscateExpressionTree
 >({ ...matcherPojo, ...agePojo } as TTreePojo<TPredicateNodeTypes>);
 
-const x = predicateTree.toPojoAt();
 const fromPredicatePojo = AbstractObfuscatedExpressionTree.fromPojo<
   TPredicateNodeTypes,
   AbstractObfuscatedExpressionTree<TPredicateNodeTypes>
 >(predicateTree.toPojoAt());
 
 const { fnBody } = predicateTreeToJavaScriptMatcher(fromPredicatePojo);
-// const { fnBody } = predicateTreeToJavaScriptMatcher(predicateTree);
+// const { fnBody } = predicateTreeToJavaScriptMatcher(agelessPredicateTree);
 console.log(fnBody);
 const matcherFn = new Function("record", fnBody);
 [
@@ -36,6 +39,14 @@ const matcherFn = new Function("record", fnBody);
 
   { "customer.firstname": "Betty", "customer.lastname": "Flintstone", shouldBe: false },
   { "customer.firstname": "Wilma", "customer.lastname": "Rubble", shouldBe: false },
+
+  { "customer.firstname": "Mickey", "customer.lastname": "Mouse", shouldBe: false },
+  {
+    "customer.firstname": "Mickey",
+    "customer.lastname": "Mouse",
+    "customer.age": 7,
+    shouldBe: true,
+  },
 ].forEach((name) => {
   console.log(`matcher(${JSON.stringify(name)})`, matcherFn(name));
   assert.strictEqual(matcherFn(name), name.shouldBe);

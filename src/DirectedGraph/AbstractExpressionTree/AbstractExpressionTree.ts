@@ -10,6 +10,7 @@ import { ExpressionTreeError } from "./ExpressionTreeError";
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
+type TTreeInitiator = <P, Q>(rootSeedNodeId: string, nodeContent: P) => Q;
 
 type TAppendedNode<T> = {
   nodeId: string;
@@ -22,7 +23,7 @@ type AppendNodeResponseType<T> = {
   invisibleChild: TAppendedNode<T> | null; // if we move convert leaf to branch, this child becomes leaf
 };
 
-export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpressionTree<P> {
+class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpressionTree<P> {
   constructor(rootNodeId = "_root_", nodeContent?: P) {
     super(rootNodeId, nodeContent);
   }
@@ -170,9 +171,14 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
 
   static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform,
+    instanceBuilder: TTreeInitiator = <P, Q>(nodeId?: string, nodeContent?: P) => {
+      return new GenericExpressionTree<P>() as unknown as Q;
+    }
   ): Q {
-    const tree = AbstractDirectedGraph.fromPojo<P, Q>(srcPojoTree, transform);
+    const tree = AbstractDirectedGraph.fromPojo<P, Q>(srcPojoTree, transform, instanceBuilder);
     AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
     return tree as Q;
   }
@@ -218,3 +224,6 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     });
   }
 }
+
+class GenericExpressionTree<T> extends AbstractExpressionTree<T> {}
+export { AbstractExpressionTree };

@@ -5,6 +5,9 @@ import { AbstractTree } from "../AbstractTree/AbstractTree";
 import { ITree, IDirectedGraph, ITreeVisitor } from "../ITree";
 import type { TNodePojo, TTreePojo, TGenericNodeContent, TFromToMap } from "../types";
 import { clone } from "lodash";
+import { extname } from "path";
+
+type TTreeInitiator = <P, Q>(rootSeedNodeId: string, nodeContent: P) => Q;
 
 const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
   return nodeContent.nodeContent;
@@ -99,12 +102,20 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
 
   public static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform,
+    instanceBuilder: TTreeInitiator = <P, Q>(nodeId?: string, nodeContent?: P) => {
+      return new GenericDirectedGraph() as unknown as Q;
+    }
+
+    // () => Q = AbstractDirectedGraph as unknown as () => Q
   ): Q {
     return AbstractDirectedGraph.#fromPojo<P, Q>(
       srcPojoTree,
       transform,
-      AbstractDirectedGraph as unknown as () => Q
+      instanceBuilder
+      // AbstractDirectedGraph as unknown as () => Q
     ) as unknown as Q;
   }
 
@@ -113,7 +124,7 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     transform: (
       nodeContent: TNodePojo<P>
     ) => TGenericNodeContent<P> = defaultFromPojoTransform, // branch coverage complains
-    TreeClass: () => Q
+    TreeClass: TTreeInitiator // () => Q
   ): Q {
     const pojoObject = { ...srcPojoTree };
 
@@ -122,13 +133,15 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     const rootNodePojo = pojoObject[rootNodeId];
 
     // @ts-ignore - expression is not newable, I think ok in js, not ts
-    const dTree = new TreeClass<P>(); // as AbstractTree<T>;
+    // const dTree = new TreeClass<P>(); // as AbstractTree<T>;
+    const dTree = TreeClass<P>() as IDirectedGraph<T>; // as AbstractTree<T>;
 
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
     AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
-      dTree._rootNodeId,
+      // @ts-ignore
+      dTree["_rootNodeId"],
       rootNodeId,
       dTree,
       pojoObject,
@@ -138,8 +151,11 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     if (Object.keys(pojoObject).length > 0) {
       throw new DirectedGraphError("Orphan nodes detected while parson pojo object.");
     }
+
+    // @ts-ignore
     return dTree;
   }
 }
 
+class GenericDirectedGraph<T> extends AbstractDirectedGraph<T> {}
 export { AbstractDirectedGraph };

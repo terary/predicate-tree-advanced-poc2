@@ -44,7 +44,7 @@ const agePojo = {
   age: { parentId: "root", nodeType: "subtree", nodeContent: { operator: "$and" } },
   "age.min": {
     parentId: "age",
-    nodeContent: { value: 3, operator: "$ge", subjectId: "customer.age" },
+    nodeContent: { value: 3, operator: "$gt", subjectId: "customer.age" },
   },
   "age.max": {
     parentId: "age",

@@ -4,7 +4,7 @@ import { AbstractObfuscatedExpressionTree } from "../../src";
 import { AbstractExpressionTree } from "../../src";
 import { AbstractTree } from "../../src/DirectedGraph/AbstractTree/AbstractTree";
 type TSubjectType = {
-  datatype: "string" | "number" | "date";
+  datatype: "string" | "number" | "datetime";
   label: string;
 };
 
@@ -19,6 +19,10 @@ const Subjects: { [subjectId: string]: TSubjectType } = {
   },
   "customer.birthdate": {
     datatype: "string",
+    label: "Birth Date",
+  },
+  "customer.age": {
+    datatype: "datetime",
     label: "Birth Date",
   },
 };
@@ -48,7 +52,7 @@ const quoteValue = (nodeContent: TOperand) => {
   const { datatype } = Subjects[nodeContent.subjectId];
   const { value } = nodeContent;
   switch (datatype) {
-    case "date":
+    case "datetime":
     case "string":
       return `'${value}'`;
     case "number":
@@ -142,4 +146,4 @@ const predicateTreeToJavaScriptMatcher = (
   };
 };
 
-export { predicateTreeToJavaScriptMatcher };
+export { predicateTreeToJavaScriptMatcher, predicateOperatorToJsOperator };
