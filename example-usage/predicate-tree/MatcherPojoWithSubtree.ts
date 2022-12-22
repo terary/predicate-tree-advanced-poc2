@@ -163,12 +163,4 @@ const matcherPojo = {
   ...flintstonePojo,
 } as TTreePojo<TPredicateNodeTypes>;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-export { matcherPojo };
-=======
 export { matcherPojo, notTree as notTreePojo, agePojo, addressTreePojo };
->>>>>>> Stashed changes
-=======
-export { matcherPojo, notTree as notTreePojo, agePojo, addressTreePojo };
->>>>>>> Stashed changes
