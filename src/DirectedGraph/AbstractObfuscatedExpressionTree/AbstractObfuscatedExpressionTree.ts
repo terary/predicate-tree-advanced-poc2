@@ -1,6 +1,9 @@
 import { IExpressionTree, ITree, ITreeVisitor } from "../ITree";
 
-import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
+import {
+  AbstractExpressionTree,
+  GenericExpressionTree,
+} from "../AbstractExpressionTree/AbstractExpressionTree";
 import { KeyStore } from "../keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
 import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
@@ -16,7 +19,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
   private _keyStore: KeyStore<string>;
 
   constructor(
-    tree: AbstractExpressionTree<P> = new AbstractExpressionTree(),
+    tree: AbstractExpressionTree<P> = new GenericExpressionTree(),
     rootNodeId?: string,
     nodeContent?: P
   ) {

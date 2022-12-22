@@ -22,7 +22,10 @@ type AppendNodeResponseType<T> = {
   invisibleChild: TAppendedNode<T> | null; // if we move convert leaf to branch, this child becomes leaf
 };
 
-export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpressionTree<P> {
+abstract class AbstractExpressionTree<P>
+  extends AbstractTree<P>
+  implements IExpressionTree<P>
+{
   constructor(rootNodeId = "_root_", nodeContent?: P) {
     super(rootNodeId, nodeContent);
   }
@@ -218,3 +221,6 @@ export class AbstractExpressionTree<P> extends AbstractTree<P> implements IExpre
     });
   }
 }
+
+class GenericExpressionTree<T> extends AbstractExpressionTree<T> {}
+export { AbstractExpressionTree, GenericExpressionTree };
