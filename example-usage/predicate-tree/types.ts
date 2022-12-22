@@ -1,7 +1,6 @@
 import type { ITree } from "../../src";
 type TOperandOperators = "$eq" | "$lte" | "$lt" | "$gt" | "$gte";
-type TJunctionOperators = "$or" | "$and";
-
+type TJunctionOperators = "$or" | "$and" | "$addressTree";
 type TJunction = {
   operator: TJunctionOperators;
 };

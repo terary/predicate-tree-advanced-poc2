@@ -45,10 +45,70 @@ const rootPojo = {
   root: { parentId: "root", nodeContent: { operator: "$or" } },
 };
 
+const addressTreePojo = {
+  "customer.address": {
+    nodeType: "subtree",
+    parentId: "customer.address",
+    nodeContent: { operator: "$addressTree" },
+  },
+  "customer.address.address1": {
+    parentId: "customer.address",
+    nodeContent: { operator: "$eq", subjectId: "customer.address.address1", value: "addr1" },
+  },
+  "customer.address.address2": {
+    parentId: "customer.address",
+    nodeContent: { operator: "$eq", subjectId: "customer.address.address2", value: "addr2" },
+  },
+  "customer.address.address3": {
+    parentId: "customer.address",
+    nodeContent: { operator: "$eq", subjectId: "customer.address.address3", value: "addr3" },
+  },
+  "customer.address.city": {
+    parentId: "customer.address",
+    nodeContent: { operator: "$eq", subjectId: "customer.address.city", value: "city" },
+  },
+  "customer.address.stateOrProvince": {
+    parentId: "customer.address",
+    nodeContent: {
+      operator: "$eq",
+      subjectId: "customer.address.stateOrProvince",
+      value: "stateOrProvince",
+    },
+  },
+  "customer.address.postalCode": {
+    parentId: "customer.address",
+    nodeContent: {
+      operator: "$eq",
+      subjectId: "customer.address.postalCode",
+      value: "postalCode",
+    },
+  },
+  "customer.address.country": {
+    parentId: "customer.address",
+    nodeContent: {
+      operator: "$eq",
+      subjectId: "customer.address.country",
+      value: "country",
+    },
+  },
+  "customer.address.specialInstructions": {
+    parentId: "customer.address",
+    nodeContent: {
+      operator: "$eq",
+      subjectId: "customer.address.specialInstructions",
+      value: "specialInstructions",
+    },
+  },
+};
+
 const matcherPojo = {
   ...rootPojo,
   ...rubblePojo,
   ...flintstonePojo,
 } as TTreePojo<TPredicateNodeTypes>;
 
+<<<<<<< Updated upstream
 export { matcherPojo };
+=======
+export { matcherPojo, notTree as notTreePojo, agePojo, addressTreePojo };
+>>>>>>> Stashed changes
