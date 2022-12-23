@@ -1,4 +1,9 @@
-import { matcherPojo, notTreePojo, agePojo, addressTreePojo } from "./MatcherPojoWithSubtree";
+import {
+  matcherPojo,
+  //notTreePojo,
+  // agePojo,
+  addressTreePojo,
+} from "./MatcherPojoWithSubtree";
 import { JsPredicateTree } from "./JsPredicateTree/JsPredicateTree";
 import type { TJsPredicate, TSubjectDictionary } from "./JsPredicateTree/types";
 import assert from "assert";
@@ -8,7 +13,7 @@ import { AsyncLocalStorage } from "async_hooks";
 import { rootCertificates } from "tls";
 import { AbstractTree } from "../../src/DirectedGraph/AbstractTree/AbstractTree";
 import { TPredicateTypes } from "./types";
-import { UtilizedLeafVisitor } from "./JsPredicateTree/UtilizedLeafVisitor";
+//import { UtilizedLeafVisitor } from "";
 const x = `
   also, the Abstract classes that have generic counter parts
   But the Abstract depends on an inherited class, kinda a big no-no
@@ -97,12 +102,14 @@ const reRootedPojo = {
     },
   },
 };
-const jsTree = JsPredicateTree.fromPojo<TJsPredicate, JsPredicateTree>({
+
+// @ts-ignore
+const jsTree = JsPredicateTree.fromPojo<TPredicateTypes, JsPredicateTree>({
   ...matcherPojo,
   // ...agePojo,
   // ...notTreePojo,
   ...reRootedPojo,
-});
+}) as JsPredicateTree;
 
 const factory = SubtreeFactory.getInstance();
 const t4 = SubtreeFactory.getNewTreeInstance("$addressTree");
@@ -128,10 +135,10 @@ const a = AddressTree.fromPojo(AddressTree.defaultTreePojo("customer.address"));
 // subtreeLeafVisitor.includeSubtrees = true;
 // subtree.visitLeavesOf(subtreeLeafVisitor);
 
-const superTreeLeafVisitor = new UtilizedLeafVisitor();
-superTreeLeafVisitor.includeSubtrees = true;
-// @ts-ignore TJsPredicate TPredicate
-jsTree.visitLeavesOf(superTreeLeafVisitor);
+// const superTreeLeafVisitor = new UtilizedLeafVisitor();
+// superTreeLeafVisitor.includeSubtrees = true;
+// // @ts-ignore TJsPredicate TPredicate
+// jsTree.visitLeavesOf(superTreeLeafVisitor);
 
 const notes = `
   This looks good, probably need to override visitor 
@@ -145,30 +152,31 @@ const notes = `
 // jsTree.replaceNodeContent(subtreeIds[0], addressTree);
 
 // const jsTreeObfus = new JsPredicateTreeObfuscated(jsTree);
-const recordShape = jsTree.commentedRecord(Subjects);
-const fnBody: any = jsTree.toFunctionBody(undefined, Subjects);
-const matcherFn = new Function("record", `${recordShape}\nreturn (\n${fnBody}\n)`);
-console.log({ fnBody, fnBody_toString: matcherFn.toString() });
+// const recordShape = jsTree.commentedRecord(Subjects);
+// const fnBody: any = jsTree.toFunctionBody(undefined, Subjects);
+// const matcherFn = new Function("record", `${recordShape}\nreturn (\n${fnBody}\n)`);
+// console.log({ fnBody, fnBody_toString: matcherFn.toString() });
 
-[
-  { "customer.firstname": "Barney", "customer.lastname": "Rubble", shouldBe: true },
-  { "customer.firstname": "Betty", "customer.lastname": "Rubble", shouldBe: true },
-  { "customer.firstname": "Fred", "customer.lastname": "Flintstone", shouldBe: true },
-  { "customer.firstname": "Wilma", "customer.lastname": "Flintstone", shouldBe: true },
+// [
+//   { "customer.firstname": "Barney", "customer.lastname": "Rubble", shouldBe: true },
+//   { "customer.firstname": "Betty", "customer.lastname": "Rubble", shouldBe: true },
+//   { "customer.firstname": "Fred", "customer.lastname": "Flintstone", shouldBe: true },
+//   { "customer.firstname": "Wilma", "customer.lastname": "Flintstone", shouldBe: true },
 
-  { "customer.firstname": "Betty", "customer.lastname": "Flintstone", shouldBe: false },
-  { "customer.firstname": "Wilma", "customer.lastname": "Rubble", shouldBe: false },
-  { "customer.firstname": "Mickey", "customer.lastname": "Mouse", shouldBe: false },
-  {
-    "customer.firstname": "Mickey",
-    "customer.lastname": "Mouse",
-    "customer.age": 23,
-    shouldBe: true,
-  },
-].forEach((name) => {
-  console.log(`matcher(${JSON.stringify(name)})`, matcherFn(name));
-  assert.strictEqual(matcherFn(name), name.shouldBe);
-});
-assert.strictEqual(jsTree.countTotalNodes(), 177);
+//   { "customer.firstname": "Betty", "customer.lastname": "Flintstone", shouldBe: false },
+//   { "customer.firstname": "Wilma", "customer.lastname": "Rubble", shouldBe: false },
+//   { "customer.firstname": "Mickey", "customer.lastname": "Mouse", shouldBe: false },
+//   {
+//     "customer.firstname": "Mickey",
+//     "customer.lastname": "Mouse",
+//     "customer.age": 23,
+//     shouldBe: true,
+//   },
+// ].forEach((name) => {
+//   console.log(`matcher(${JSON.stringify(name)})`, matcherFn(name));
+//   assert.strictEqual(matcherFn(name), name.shouldBe);
+// });
+
+// assert.strictEqual(jsTree.countTotalNodes(), 177);
 
 //console.log(jsTreeObfus.getTreeContentAt());

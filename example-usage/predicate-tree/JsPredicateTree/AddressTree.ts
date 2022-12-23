@@ -24,7 +24,7 @@ class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
     return "";
   }
 
-  static getNewInstance(
+  static x_getNewInstance(
     rootSeedNodeId = "address",
     nodeContent?: TPredicateTypes
   ): AddressTree {
@@ -71,13 +71,6 @@ class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
     return this.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  protected appendChildNodeWithContent(
-    parentNodeId: string,
-    nodeContent: TGenericNodeContent<TPredicateTypes>
-  ): string {
-    return super.appendChildNodeWithContent(parentNodeId, nodeContent);
-  }
-
   static subfieldNames() {
     return [
       "address1",
@@ -96,7 +89,10 @@ class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
       nodeContent: TNodePojo<P>
     ) => TGenericNodeContent<P> = defaultFromPojoTransform,
     instanceBuilder: TTreeInitiator = <P, Q>(nodeId?: string, nodeContent?: P) => {
-      return new GenericExpressionTree<P>(nodeId, nodeContent) as unknown as Q;
+      return new AddressTree(
+        nodeId,
+        nodeContent as unknown as TPredicateTypes
+      ) as unknown as Q;
     }
   ): Q {
     const tree = AddressTree.getNewInstance("subtreeRoot");

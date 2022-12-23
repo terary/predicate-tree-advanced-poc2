@@ -145,9 +145,9 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
     return commentOutObject(recordShape);
   }
 
-  getNewInstance() {
-    return new JsPredicateTree();
-  }
+  // getNewInstance() {
+  //   return new JsPredicateTree();
+  // }
 
   protected fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
@@ -156,40 +156,9 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
     return super.fromPojoAppendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  static fromPojo<P, Q>(srcPojoTree: TTreePojo<P>): Q {
-    const translate = (nodePojo: TNodePojo<P>) => {
-      const { parentId, nodeContent } = nodePojo;
-
-      // @ts-ignore
-      const { operator, subjectId, value } = { ...nodeContent };
-
-      if (subjectId === undefined) {
-        return {
-          operator: predicateJunctionToJsOperator(operator),
-        };
-      }
-
-      return {
-        operator: predicateOperatorToJsOperator(operator),
-        subjectId,
-        value,
-      };
-    };
-
-    return AbstractExpressionTree.fromPojo<P, Q>(
-      srcPojoTree,
-      // @ts-ignore - translate typing
-      translate,
-      (rootSeedNodeId: string, nodeContent: P) => {
-        return SubtreeFactory.getNewTreeInstance(rootSeedNodeId, nodeContent, "$addressTree");
-        // return JsPredicateTree.getNewInstance(rootSeedNodeId, nodeContent);
-      }
-    );
-  }
-
-  static getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateTypes) {
-    return new JsPredicateTree(rootSeedNodeId, nodeContent);
-  }
+  // static getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateTypes) {
+  //   return new JsPredicateTree(rootSeedNodeId, nodeContent);
+  // }
 }
 export const dev_only_export = {
   predicateOperatorToJsOperator,
