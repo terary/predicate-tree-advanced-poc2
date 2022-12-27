@@ -40,6 +40,12 @@ abstract class AbstractExpressionTree<P>
     );
   }
 
+  abstract createSubtreeAt(nodeId: string): IExpressionTree<P>;
+  abstract getNewInstance(
+    rootSeed?: string | undefined,
+    nodeContent?: P | undefined
+  ): IExpressionTree<P>;
+
   protected defaultJunction(nodeId: string): P {
     // the leaf node at nodeId is being converted to a junction (branch)
     // need to return the best option for junction operator (&&, ||, '$or', ...)
@@ -140,7 +146,7 @@ abstract class AbstractExpressionTree<P>
     return AbstractExpressionTree.fromPojo(pojo, defaultFromPojoTransform);
   }
 
-  getNewInstance(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
+  x_getNewInstance(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
     return super._getNewInstance<IExpressionTree<P>>(
       rootSeedNodeId,
       nodeContent
@@ -153,7 +159,7 @@ abstract class AbstractExpressionTree<P>
    * @param targetParentNodeId
    * @returns
    */
-  public createSubtreeAt(parentNodeId: string): IExpressionTree<P> {
+  public x_createSubtreeAt(parentNodeId: string): IExpressionTree<P> {
     // look at the Reflect built-in utility
     // can we rethink this.  Is there a better way?
 
@@ -168,6 +174,45 @@ abstract class AbstractExpressionTree<P>
     subtree._nodeDictionary = {};
     subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
     subtree._incrementor = this._incrementor;
+
+    // @ts-ignore AbstractExpression not the same as IExpression
+    return subtree;
+  }
+
+  private static reRootTreeAt<T>(
+    tree: AbstractExpressionTree<T>,
+    from: string,
+    to: string
+  ): TFromToMap[] {
+    const treeIds = tree.getTreeNodeIdsAt(from);
+    const fromToMap: TFromToMap[] = [];
+    treeIds.forEach((nodeId) => {
+      const newNodeId = nodeId.replace(from, to);
+      tree._nodeDictionary[newNodeId] = tree._nodeDictionary[nodeId];
+      delete tree._nodeDictionary[nodeId];
+      fromToMap.push({ from: nodeId, to: newNodeId });
+    });
+    return fromToMap;
+  }
+
+  static createSubtreeAt_x<T>(
+    targetTree: AbstractExpressionTree<T>,
+    targetNodeId: string,
+    subtree: AbstractExpressionTree<T>
+  ): AbstractExpressionTree<T> {
+    // look at the Reflect built-in utility
+    // can we rethink this.  Is there a better way?
+
+    // const subtree = super._getNewInstance<AbstractExpressionTree<P>>(parentNodeId);
+
+    const subtreeParentNodeId = targetTree.appendChildNodeWithContent(targetNodeId, subtree);
+
+    AbstractExpressionTree.reRootTreeAt(subtree, subtree.rootNodeId, subtreeParentNodeId);
+    subtree._rootNodeId = subtreeParentNodeId;
+    // subtree._rootNodeId = subtreeParentNodeId;
+    // subtree._nodeDictionary = {};
+    // subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
+    subtree._incrementor = targetTree._incrementor;
 
     return subtree;
   }
@@ -187,11 +232,12 @@ abstract class AbstractExpressionTree<P>
 
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
     const rootNodePojo = pojoObject[rootNodeId];
-    const dTree = AbstractExpressionTree.getNewInstance<P>("root");
+    const dTree = AbstractExpressionTree.x_getNewInstance<P>("root");
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
     AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
+      // @ts-ignore - IExpression not the same as Abstract
       (dTree as AbstractExpressionTree<P>)._rootNodeId,
       rootNodeId,
       dTree,
@@ -200,7 +246,7 @@ abstract class AbstractExpressionTree<P>
     );
 
     if (Object.keys(pojoObject).length > 0) {
-      throw new DirectedGraphError("Orphan nodes detected while parson pojo object.");
+      throw new DirectedGraphError("Orphan nodes detected while parsing pojo object.");
     }
 
     return dTree;
@@ -252,7 +298,10 @@ abstract class AbstractExpressionTree<P>
     return fromToMap;
   };
 
-  static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
+  //  static getNewInstance(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P>;
+
+  static x_getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
+    // @ts-ignore - IExpression not the same as Abstract
     return new GenericExpressionTree(rootSeedNodeId, nodeContent) as IExpressionTree<P>;
   }
 
@@ -306,6 +355,14 @@ abstract class AbstractExpressionTree<P>
     });
   }
 }
-class GenericExpressionTree extends AbstractExpressionTree<any> {}
+class GenericExpressionTree extends AbstractExpressionTree<any> {
+  getNewInstance(rootSeed?: string | undefined, nodeContent?: any): IExpressionTree<any> {
+    return new GenericExpressionTree(rootSeed, nodeContent);
+  }
+  createSubtreeAt(nodeId: string): IExpressionTree<any> {
+    // *tmc* not an actual createSubtreeAt
+    return new GenericExpressionTree(nodeId);
+  }
+}
 
 export { AbstractExpressionTree, GenericExpressionTree };

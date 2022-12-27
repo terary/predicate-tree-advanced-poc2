@@ -9,8 +9,6 @@ import type { TJsPredicate, TSubjectDictionary } from "./JsPredicateTree/types";
 import assert from "assert";
 import { AddressTree } from "./JsPredicateTree/AddressTree";
 import { SubtreeFactory } from "./JsPredicateTree/SubtreeFactory";
-import { AsyncLocalStorage } from "async_hooks";
-import { rootCertificates } from "tls";
 import { AbstractTree } from "../../src/DirectedGraph/AbstractTree/AbstractTree";
 import { TPredicateTypes } from "./types";
 //import { UtilizedLeafVisitor } from "";

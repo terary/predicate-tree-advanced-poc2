@@ -134,7 +134,7 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     );
 
     if (Object.keys(pojoObject).length > 0) {
-      throw new DirectedGraphError("Orphan nodes detected while parson pojo object.");
+      throw new DirectedGraphError("Orphan nodes detected while parsing pojo object.");
     }
     return dTree;
   }

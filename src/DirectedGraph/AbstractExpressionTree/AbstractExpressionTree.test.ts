@@ -782,7 +782,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         );
       };
       expect(willThrow).toThrow(
-        new DirectedGraphError("Orphan nodes detected while parson pojo object.")
+        new DirectedGraphError("Orphan nodes detected while parsing pojo object.")
       );
     });
   });

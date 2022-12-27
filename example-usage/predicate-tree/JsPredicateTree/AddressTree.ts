@@ -1,33 +1,88 @@
 import { AbstractExpressionTree } from "../../../src";
 import { GenericExpressionTree } from "../../../src/DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../../../src/DirectedGraph/types";
-import { TPredicateNodeTypes, TPredicateTypes } from "../types";
+import { TOperand, TPredicateNodeTypes, TPredicateTypes } from "../types";
 import { JsPredicateTree } from "./JsPredicateTree";
 import { TJsPredicate, TSubjectDictionary } from "./types";
 import { dev_only_export } from "./JsPredicateTree";
 import { IDirectedGraph, IExpressionTree, ITree } from "../../../src/DirectedGraph/ITree";
 import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
+import {
+  quoteValue,
+  predicateJunctionToJsOperator,
+  predicateOperatorToJsOperator,
+} from "./helperFunctions";
+import { AbstractExpressionFactory } from "../AbstractExpressionFactory";
+import { TSubject } from "../../../dev-debug/PredicateTreeJs/type";
 // class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
 type TTreeInitiator = <P, Q>(rootSeedNodeId: string, nodeContent: P) => Q;
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
 
-class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
+// class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
+class AddressTree extends JsPredicateTree {
+  // class AddressTree extends AbstractExpressionFactory {
+  private _subjectId!: string;
   private constructor(rootSendNodeId?: string, nodeContent?: TPredicateTypes) {
     super(rootSendNodeId, nodeContent);
   }
   toFunctionBody(rootNodeId: string = this.rootNodeId, subjects: TSubjectDictionary): string {
-    return "";
+    const subSubject = subjects[this._subjectId];
+    const subjectIds: { [subjectId: string]: any } = {};
+    const subfields: { [subjectId: string]: any } = {};
+    const logicTerms: string[] = [];
+    Object.entries(subSubject).forEach(([subjectId, subject]) => {
+      const nodeId = this._rootNodeId + ":" + subjectId;
+
+      const nodeContent = this.getChildContentAt(nodeId) as TOperand;
+      if (nodeContent === null) {
+        return;
+      }
+
+      if (!nodeContent.subjectId) {
+        console.log("Found it");
+      }
+      const term = ` record['${nodeContent.subjectId}'] ${predicateOperatorToJsOperator(
+        nodeContent.operator
+      )} ${quoteValue(
+        // @ts-ignore - .datatype not member of subject
+        subject.datatype,
+        nodeContent.value
+      )}`;
+      logicTerms.push(term);
+      // subfields[this._rootNodeId + ":" + subjectId] = "x";
+      // subjectIds[this._subjectId + ":" + subjectId] = subject;
+    });
+    return `(${logicTerms.join(" && ")})`;
   }
+
   commentedRecord(subjects: TSubjectDictionary): string {
     return "";
   }
 
-  static x_getNewInstance(
+  getNewInstance(
+    rootSeed?: string | undefined,
+    nodeContent?: TPredicateTypes | undefined
+  ): IExpressionTree<TPredicateTypes> {
+    return new AddressTree(rootSeed, nodeContent);
+  }
+
+  static getNewInstance_typed(
+    rootSeedNodeId?: string,
+    nodeContent?: TPredicateTypes
+  ): IExpressionTree<TPredicateTypes> {
+    return new AddressTree(rootSeedNodeId, nodeContent) as unknown as AddressTree;
+  }
+
+  createSubtreeAt(nodeId: string): IExpressionTree<TPredicateTypes> {
+    // *tmc* not a real createSubgraphAt
+    return this;
+  }
+  static getNewInstance(
     rootSeedNodeId = "address",
     nodeContent?: TPredicateTypes
-  ): AddressTree {
+  ): IExpressionTree<TPredicateTypes> {
     const tree = new AddressTree(rootSeedNodeId, nodeContent);
 
     tree._nodeDictionary = {
@@ -50,17 +105,6 @@ class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
     tree._incrementor.next; // once for root
 
     return tree;
-    // return AddressTree.fromPojo(AddressTree.defaultTreePojo(rootSeedNodeId));
-    // return new AddressTree(rootSeedNodeId, nodeContent);
-    // return AddressTree.fromPojo<TPredicateTypes, AddressTree>(
-    //   AddressTree.treeNodes(),
-    //   // undefined,
-    //   // @ts-ignore P is not assignable to TPredicateTypes
-    //   (subfieldSeedNodeId: string, nodeContent: TPredicateTypes) => {
-    //     const seedId = [rootSeedNodeId, subfieldSeedNodeId].join(":");
-    //     return new AddressTree(seedId, nodeContent);
-    //   }
-    // );
   }
 
   protected fromPojoAppendChildNodeWithContent(
@@ -95,9 +139,10 @@ class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
       ) as unknown as Q;
     }
   ): Q {
-    const tree = AddressTree.getNewInstance("subtreeRoot");
+    const tree = AddressTree.getNewInstance("subtreeRoot") as AddressTree;
     // should we be cloning the pojo, as to not be destructive
     const pojoRootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(srcPojoTree);
+    tree._subjectId = pojoRootNodeId;
     if (!srcPojoTree[pojoRootNodeId] || !srcPojoTree[pojoRootNodeId].nodeContent) {
       throw new Error("No Node Content at root.");
     }
@@ -127,8 +172,10 @@ class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
           // @ts-ignore
           srcPojoTree[pojoNodeId].nodeContent
         );
+        delete srcPojoTree[pojoNodeId];
       }
     });
+    delete srcPojoTree[pojoRootNodeId];
 
     return tree as unknown as Q;
   }

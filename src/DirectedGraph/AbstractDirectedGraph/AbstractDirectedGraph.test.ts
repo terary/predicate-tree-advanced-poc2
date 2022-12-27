@@ -1505,7 +1505,7 @@ describe("AbstractDirectedGraph", () => {
         const dTree = TestAbstractDirectedGraph.fromPojo(orphanNodePojo, undefined);
       };
       expect(willThrow).toThrow(
-        new DirectedGraphError("Orphan nodes detected while parson pojo object.")
+        new DirectedGraphError("Orphan nodes detected while parsing pojo object.")
       );
     });
 
@@ -1996,7 +1996,7 @@ describe("AbstractDirectedGraph", () => {
       };
 
       expect(willThrow).toThrow(
-        new DirectedGraphError("Orphan nodes detected while parson pojo object.")
+        new DirectedGraphError("Orphan nodes detected while parsing pojo object.")
       );
     });
   }); // describe('DirectedGraph.fromPojo'

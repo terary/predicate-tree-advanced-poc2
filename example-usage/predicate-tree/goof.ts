@@ -1,24 +1,42 @@
-class Thingy {
-  private _name: string;
-  constructor(nodeContent: object) {
-    // @ts-ignore
-    this._name = nodeContent["x"];
-  }
+import { AbstractExpressionTree } from "../../src";
+import { AbstractExpressionFactory } from "./AbstractExpressionFactory";
+import { TPredicateTypes } from "./types";
+import { SubjectsSimple } from "./SubjectsExamples";
+import {
+  matcherPojo,
+  //notTreePojo,
+  // agePojo,
+  rubblePojo,
+  addressTreePojo,
+} from "./MatcherPojoWithSubtree";
+import { JsPredicateTree } from "./JsPredicateTree/JsPredicateTree";
 
-  get name() {
-    return this._name;
-  }
-}
+const genericTree = AbstractExpressionFactory.createExpressionTree("_root_", {
+  operator: "$and",
+}) as AbstractExpressionTree<TPredicateTypes>;
+const addressTree = AbstractExpressionFactory.createExpressionTree("_root_", {
+  operator: "$addressTree",
+}) as AbstractExpressionTree<TPredicateTypes>;
 
-// default for rest operator?
-const nodeFactory = (operator: string, ...nodeContentItems: object[]) => {
-  [];
-  return nodeContentItems.map((nodeContent) => {
-    return {
-      nodeId: Math.random() + ";",
-      nodeContent: new Thingy(nodeContent),
-    };
-  });
-};
-const [n1, n2] = nodeFactory("$eq", { x: "1" }, { x: "2" });
-console.log({ n1, n2 });
+const address2 = AbstractExpressionFactory.createSubtreeAt(
+  genericTree,
+  genericTree.rootNodeId,
+  {
+    operator: "$addressTree",
+  }
+);
+// AbstractExpressionTree.createSubtreeAt_x(genericTree, genericTree.rootNodeId, addressTree);
+const treeFromPojo = AbstractExpressionFactory.fromPojo({
+  ...matcherPojo,
+  ...rubblePojo,
+  ...addressTreePojo,
+}) as JsPredicateTree;
+
+console.log({
+  genericTree,
+  addressTree,
+  address2,
+  treeFromPojo,
+});
+const fnBody = treeFromPojo.toFunctionBody(treeFromPojo.rootNodeId, SubjectsSimple);
+console.log({ fnBody });

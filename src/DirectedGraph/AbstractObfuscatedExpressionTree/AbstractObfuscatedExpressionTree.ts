@@ -1,6 +1,9 @@
 import { IExpressionTree, ITree, ITreeVisitor } from "../ITree";
 
-import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
+import {
+  AbstractExpressionTree,
+  GenericExpressionTree,
+} from "../AbstractExpressionTree/AbstractExpressionTree";
 import { KeyStore } from "../keystore/KeyStore";
 import { IObfuscatedExpressionTree } from "./IObfuscatedExpressionTree";
 import { IAppendChildNodeIds } from "../AbstractExpressionTree/IAppendChildNodeIds";
@@ -262,7 +265,7 @@ abstract class AbstractObfuscatedExpressionTree<P>
     rootNodeId?: string,
     nodeContent?: P | undefined
   ): IExpressionTree<P> {
-    class GenericExpressionTree extends AbstractExpressionTree<P> {}
+    // class GenericExpressionTree extends AbstractExpressionTree<P> {}
     class GenericObfuscatedExpressionTree extends AbstractObfuscatedExpressionTree<P> {}
     const internalTree = new GenericExpressionTree(rootNodeId, nodeContent);
 

@@ -12,52 +12,18 @@ import type {
   TJsLeafNode,
   TJsBranchNode,
 } from "./types";
+import {
+  quoteValue,
+  predicateJunctionToJsOperator,
+  predicateOperatorToJsOperator,
+} from "./helperFunctions";
 import { SubtreeFactory } from "./SubtreeFactory";
 import { TJunction, TOperand, TPredicateTypes } from "../types";
+import { IExpressionTree } from "../../../src/DirectedGraph/ITree";
 
 const commentOutObject = (obj: Object): string => {
   const json = JSON.stringify(obj, null, 2);
   return "//" + json.replace(/\n/gi, "\n//");
-};
-
-const predicateJunctionToJsOperator = (operator: TJunctionOperators): TJsJunctionOperators => {
-  switch (operator) {
-    case "$and":
-      return "&&";
-    case "$or":
-      return "||";
-    default:
-      return operator;
-  }
-};
-
-const predicateOperatorToJsOperator = (operator: TOperandOperators): TJsOperandOperators => {
-  switch (operator) {
-    case "$eq":
-      return "===";
-    case "$gt":
-      return ">";
-    case "$gte":
-      return ">=";
-    case "$lt":
-      return "<";
-    case "$lte":
-      return "<=";
-    default:
-      return operator;
-  }
-};
-const quoteValue = (datatype: TSubjectDataTypes, value: any) => {
-  switch (datatype) {
-    case "string":
-    case "datetime":
-      return `'${value}'`;
-    case "number":
-      return value;
-
-    default:
-      break;
-  }
 };
 
 class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
@@ -67,6 +33,12 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
     super(rootSeedNodeId, nodeContent);
   }
 
+  getNewInstance(
+    rootSeed?: string | undefined,
+    nodeContent?: TPredicateTypes | undefined
+  ): IExpressionTree<TPredicateTypes> {
+    return new JsPredicateTree(rootSeed, nodeContent);
+  }
   toFunctionBody(rootNodeId: string = this.rootNodeId, subjects: TSubjectDictionary): string {
     if (this.isSubtree(rootNodeId)) {
       const subtree = this.getChildContentAt(rootNodeId);
@@ -156,6 +128,10 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
     return super.fromPojoAppendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
+  createSubtreeAt(nodeId: string): IExpressionTree<TPredicateTypes> {
+    // *tmc* not a real subtree
+    return this;
+  }
   // static getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateTypes) {
   //   return new JsPredicateTree(rootSeedNodeId, nodeContent);
   // }

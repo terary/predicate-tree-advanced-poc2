@@ -48,7 +48,7 @@ const rootPojo = {
 const addressTreePojo = {
   "customer.address": {
     nodeType: "subtree",
-    parentId: "customer.address",
+    parentId: "root",
     nodeContent: { operator: "$addressTree" },
   },
   "customer.address.address1": {
@@ -111,5 +111,6 @@ export {
   matcherPojo,
   // notTree as notTreePojo,
   // agePojo,
+  rubblePojo,
   addressTreePojo,
 };
