@@ -32,11 +32,20 @@ const treeFromPojo = AbstractExpressionFactory.fromPojo({
   ...addressTreePojo,
 }) as JsPredicateTree;
 
-console.log({
-  genericTree,
-  addressTree,
-  address2,
-  treeFromPojo,
-});
 const fnBody = treeFromPojo.toFunctionBody(treeFromPojo.rootNodeId, SubjectsSimple);
-console.log({ fnBody });
+if (require.main === module) {
+  console.log('called directly');
+  console.log({
+    genericTree,
+    addressTree,
+    address2,
+    treeFromPojo,
+  });
+  console.log({ fnBody });
+
+} else {
+  // Likely being called from tests
+  // console.log('required as a module');
+}
+
+export { fnBody }

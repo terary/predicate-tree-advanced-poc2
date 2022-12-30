@@ -62,8 +62,8 @@ class AddressTree extends JsPredicateTree {
   }
 
   getNewInstance(
-    rootSeed?: string | undefined,
-    nodeContent?: TPredicateTypes | undefined
+    rootSeed?: string,
+    nodeContent?: TPredicateTypes
   ): IExpressionTree<TPredicateTypes> {
     return new AddressTree(rootSeed, nodeContent);
   }
@@ -79,11 +79,12 @@ class AddressTree extends JsPredicateTree {
     // *tmc* not a real createSubgraphAt
     return this;
   }
-  static getNewInstance(
+
+  static getNewInstance<P>(
     rootSeedNodeId = "address",
-    nodeContent?: TPredicateTypes
-  ): IExpressionTree<TPredicateTypes> {
-    const tree = new AddressTree(rootSeedNodeId, nodeContent);
+    nodeContent?: P
+  ): IExpressionTree<P> {
+    const tree = new AddressTree(rootSeedNodeId, nodeContent as unknown as TPredicateTypes);
 
     tree._nodeDictionary = {
       [`${rootSeedNodeId}`]: { nodeContent: null },
@@ -104,7 +105,7 @@ class AddressTree extends JsPredicateTree {
     });
     tree._incrementor.next; // once for root
 
-    return tree;
+    return tree as unknown as IExpressionTree<P>;
   }
 
   protected fromPojoAppendChildNodeWithContent(

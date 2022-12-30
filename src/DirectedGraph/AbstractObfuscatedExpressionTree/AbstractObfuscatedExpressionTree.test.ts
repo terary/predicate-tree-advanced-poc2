@@ -168,7 +168,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(privateTree.getChildContentAt(toFromKeys[2].to)).toBe(appendPredicateChild_1);
       expect(privateTree.getChildContentAt(toFromKeys[3].to)).toBe(OO["child_0_0"]);
     });
-    it.skip("Should create branch at specified location, append original content and new  tree as child, if target is leaf", () => { });
   });
 
   describe(".appendContentWithJunction", () => {

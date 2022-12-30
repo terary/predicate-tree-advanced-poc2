@@ -70,11 +70,11 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     return null;
   }
 
-  static getNewInstance(
-    rootSeedNodeId?: string | undefined,
-    nodeContent?: TPredicateTypes | undefined
-  ): IExpressionTree<TPredicateTypes> {
-    return AbstractExpressionFactory.createExpressionTree(rootSeedNodeId, nodeContent);
+  static getNewInstance<P>(
+    rootSeedNodeId?: string,
+    nodeContent?: P
+  ): IExpressionTree<P> {
+    return AbstractExpressionFactory.createExpressionTree(rootSeedNodeId, nodeContent as unknown as TPredicateTypes) as unknown as IExpressionTree<P>;
   }
 
   static createSubtreeAt<Q = GenericExpressionTree>(
@@ -179,23 +179,7 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
           dTree,
           treeParentId,
           yTree
-          // xTree
         );
-        console.log("What");
-        // //@ts-ignore -transformer
-        // subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
-
-        // AbstractExpressionFactory.#fromPojoTraverseAndExtractChildren(
-        //   // (dTree as AbstractExpressionTree<T>)._rootNodeId,
-        //   subtree.rootNodeId,
-        //   // subtree.AbstractExpressionTree,
-        //   nodeId,
-        //   // @ts-ignore IExpression<T>
-        //   subtree as IExpressionTree<T>,
-        //   treeObject,
-        //   transformer,
-        //   fromToMap
-        // );
       } else {
         const childId = (dTree as unknown as AbstractExpressionFactory)
           // @ts-ignore - transformer

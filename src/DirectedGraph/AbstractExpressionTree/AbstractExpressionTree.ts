@@ -43,10 +43,10 @@ abstract class AbstractExpressionTree<P>
 
   abstract createSubtreeAt(nodeId: string): IExpressionTree<P>;
 
-  abstract getNewInstance(
-    rootSeed?: string | undefined,
-    nodeContent?: P | undefined
-  ): IExpressionTree<P>;
+  // abstract getNewInstance(
+  //   rootSeed?: string | undefined,
+  //   nodeContent?: P | undefined
+  // ): IExpressionTree<P>;
 
   protected defaultJunction(nodeId: string): P {
     // the leaf node at nodeId is being converted to a junction (branch)
@@ -148,7 +148,7 @@ abstract class AbstractExpressionTree<P>
     return AbstractExpressionTree.fromPojo(pojo, defaultFromPojoTransform);
   }
 
-  x_getNewInstance(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
+  getNewInstance(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
     return super._getNewInstance<IExpressionTree<P>>(
       rootSeedNodeId,
       nodeContent
@@ -234,7 +234,7 @@ abstract class AbstractExpressionTree<P>
 
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
     const rootNodePojo = pojoObject[rootNodeId];
-    const dTree = AbstractExpressionTree.x_getNewInstance<P>("root");
+    const dTree = AbstractExpressionTree.getNewInstance<P>("root");
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
@@ -302,8 +302,7 @@ abstract class AbstractExpressionTree<P>
 
   //  static getNewInstance(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P>;
 
-  static x_getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
-    // @ts-ignore - IExpression not the same as Abstract
+  static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
     return new GenericExpressionTree(rootSeedNodeId, nodeContent) as IExpressionTree<P>;
   }
 

@@ -42,11 +42,16 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
   }
 
   public getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypes): IExpressionTree<TPredicateNodeTypes> {
-    return ClassTestAbstractExpressionTree.getNewInstance(rootSeedNodeId, nodeContent)
+    return ClassTestAbstractExpressionTree.getNewInstance(rootSeedNodeId, nodeContent) as IExpressionTree<TPredicateNodeTypes>;
   }
-  static getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypes): IExpressionTree<TPredicateNodeTypes> {
-    return new ClassTestAbstractExpressionTree(rootSeedNodeId, nodeContent)
+
+  static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
+    return new ClassTestAbstractExpressionTree(rootSeedNodeId, nodeContent as unknown as TPredicateNodeTypes) as unknown as IExpressionTree<P>;
   }
+
+  // static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypes): IExpressionTree<TPredicateNodeTypes> {
+  //   return new ClassTestAbstractExpressionTree(rootSeedNodeId, nodeContent) as IExpressionTree<TPredicateNodeTypes>
+  // }
 
   createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
     return AbstractExpressionFactory.createSubtreeAt(
@@ -694,7 +699,7 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       );
     });
 
-    it.skip("Should return class provided by override.", () => {
+    it("Should return class provided by override.", () => {
       // @ts-ignore - no getNewInstance
       class ClassTestGetNewInstance extends AbstractExpressionTree<TPredicateNodeTypes> {
         test_getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypes) {
