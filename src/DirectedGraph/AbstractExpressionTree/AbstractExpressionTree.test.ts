@@ -59,7 +59,6 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
       nodeId,
       // @ts-ignore -null not PredicateType
       null
-
     ) as IExpressionTree<TPredicateNodeTypes>;
   }
 

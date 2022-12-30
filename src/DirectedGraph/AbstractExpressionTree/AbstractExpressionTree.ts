@@ -161,27 +161,28 @@ abstract class AbstractExpressionTree<P>
    * @param targetParentNodeId
    * @returns
    */
-  public x_createSubtreeAt(parentNodeId: string): IExpressionTree<P> {
-    // look at the Reflect built-in utility
-    // can we rethink this.  Is there a better way?
+  // public x_createSubtreeAt(parentNodeId: string): IExpressionTree<P> {
+  //   // look at the Reflect built-in utility
+  //   // can we rethink this.  Is there a better way?
 
-    const subtree = super._getNewInstance<AbstractExpressionTree<P>>(parentNodeId);
+  //   const subtree = super._getNewInstance<AbstractExpressionTree<P>>(parentNodeId);
 
-    const subtreeParentNodeId = super.appendChildNodeWithContent(
-      parentNodeId,
-      subtree as unknown as IExpressionTree<P>
-    );
+  //   const subtreeParentNodeId = super.appendChildNodeWithContent(
+  //     parentNodeId,
+  //     subtree as unknown as IExpressionTree<P>
+  //   );
 
-    subtree._rootNodeId = subtreeParentNodeId;
-    subtree._nodeDictionary = {};
-    subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
-    subtree._incrementor = this._incrementor;
+  //   subtree._rootNodeId = subtreeParentNodeId;
+  //   subtree._nodeDictionary = {};
+  //   subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
+  //   subtree._incrementor = this._incrementor;
 
-    // @ts-ignore AbstractExpression not the same as IExpression
-    return subtree;
-  }
+  //   // @ts-ignore AbstractExpression not the same as IExpression
+  //   return subtree;
+  // }
 
-  private static reRootTreeAt<T>(
+  // this should not be public
+  public static reRootTreeAt<T>(
     tree: AbstractExpressionTree<T>,
     from: string,
     to: string
@@ -195,28 +196,6 @@ abstract class AbstractExpressionTree<P>
       fromToMap.push({ from: nodeId, to: newNodeId });
     });
     return fromToMap;
-  }
-
-  static createSubtreeAt_x<T>(
-    targetTree: AbstractExpressionTree<T>,
-    targetNodeId: string,
-    subtree: AbstractExpressionTree<T>
-  ): AbstractExpressionTree<T> {
-    // look at the Reflect built-in utility
-    // can we rethink this.  Is there a better way?
-
-    // const subtree = super._getNewInstance<AbstractExpressionTree<P>>(parentNodeId);
-
-    const subtreeParentNodeId = targetTree.appendChildNodeWithContent(targetNodeId, subtree);
-
-    AbstractExpressionTree.reRootTreeAt(subtree, subtree.rootNodeId, subtreeParentNodeId);
-    subtree._rootNodeId = subtreeParentNodeId;
-    // subtree._rootNodeId = subtreeParentNodeId;
-    // subtree._nodeDictionary = {};
-    // subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
-    subtree._incrementor = targetTree._incrementor;
-
-    return subtree;
   }
 
   #getChildrenWithNullValues(parentNodeId: string): string[] {
@@ -356,17 +335,25 @@ abstract class AbstractExpressionTree<P>
     });
   }
 }
-class GenericExpressionTree extends AbstractExpressionTree<any> {
-  getNewInstance(rootSeed?: string | undefined, nodeContent?: any): IExpressionTree<any> {
+
+class GenericExpressionTree<T> extends AbstractExpressionTree<T> {
+  getNewInstance(rootSeed?: string | undefined, nodeContent?: any): IExpressionTree<T> {
     return new GenericExpressionTree(rootSeed, nodeContent);
   }
-  createSubtreeAt(nodeId: string): IExpressionTree<any> {
-    const subtree = this.getNewInstance();
-    return AbstractExpressionTree.createSubtreeAt_x(this, nodeId, subtree as AbstractExpressionTree<any>)
-    // return AbstractExpressionFactory.createSubtreeAt(this, nodeId, null);
-    //    return this.createSubtreeAt(nodeId)
-    // *tmc* not an actual createSubtreeAt
-    return new GenericExpressionTree(nodeId);
+
+  createSubtreeAt<Q>(
+    targetNodeId: string,
+  ): IExpressionTree<Q> {
+    const subtree = new GenericExpressionTree<Q>('_subtree_');
+
+    // @ts-ignore  Type 'T' is not assignable to type 'TGenericNodeContent<Q>'.
+    const subtreeParentNodeId = this.appendChildNodeWithContent(targetNodeId, subtree);
+
+    AbstractExpressionTree.reRootTreeAt(subtree, subtree.rootNodeId, subtreeParentNodeId);
+    subtree._rootNodeId = subtreeParentNodeId;
+    subtree._incrementor = this._incrementor;
+
+    return subtree as IExpressionTree<Q>;
   }
 }
 

@@ -24,9 +24,9 @@ const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeCon
 class AddressTree extends JsPredicateTree {
   // class AddressTree extends AbstractExpressionFactory {
   private _subjectId!: string;
-  private constructor(rootSendNodeId?: string, nodeContent?: TPredicateTypes) {
-    super(rootSendNodeId, nodeContent);
-  }
+  // private constructor(rootSendNodeId?: string, nodeContent?: TPredicateTypes) {
+  //   // super(rootSendNodeId, nodeContent);
+  // }
   toFunctionBody(rootNodeId: string = this.rootNodeId, subjects: TSubjectDictionary): string {
     const subSubject = subjects[this._subjectId];
     const subjectIds: { [subjectId: string]: any } = {};
@@ -68,7 +68,7 @@ class AddressTree extends JsPredicateTree {
     return new AddressTree(rootSeed, nodeContent);
   }
 
-  static getNewInstance_typed(
+  static x_getNewInstance_typed(
     rootSeedNodeId?: string,
     nodeContent?: TPredicateTypes
   ): IExpressionTree<TPredicateTypes> {

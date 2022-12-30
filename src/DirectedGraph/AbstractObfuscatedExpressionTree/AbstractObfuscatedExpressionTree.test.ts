@@ -468,9 +468,8 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(oTree.countTotalNodes()).toEqual(13);
     });
   });
-
   describe(".toPojo", () => {
-    it.skip("Should produce pojo for whole tree.", () => {
+    it.only("Should produce pojo for whole tree.", () => {
       const exposedTree = new ClassTestAbstractExpressionTree();
       const {
         dTreeIds,

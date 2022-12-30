@@ -4,8 +4,6 @@ import { TPredicateTypes } from "./types";
 import { SubjectsSimple } from "./SubjectsExamples";
 import {
   matcherPojo,
-  //notTreePojo,
-  // agePojo,
   rubblePojo,
   addressTreePojo,
 } from "./MatcherPojoWithSubtree";
@@ -18,13 +16,14 @@ const addressTree = AbstractExpressionFactory.createExpressionTree("_root_", {
   operator: "$addressTree",
 }) as AbstractExpressionTree<TPredicateTypes>;
 
-const address2 = AbstractExpressionFactory.createSubtreeAt(
-  genericTree,
-  genericTree.rootNodeId,
-  {
-    operator: "$addressTree",
-  }
-);
+// const address2 = AbstractExpressionFactory.createSubtreeAt(
+//   genericTree,
+//   genericTree.rootNodeId,
+//   {
+//     // @ts-ignore
+//     operator: "$addressTree",
+//   }
+// );
 // AbstractExpressionTree.createSubtreeAt_x(genericTree, genericTree.rootNodeId, addressTree);
 const treeFromPojo = AbstractExpressionFactory.fromPojo({
   ...matcherPojo,
@@ -38,7 +37,7 @@ if (require.main === module) {
   console.log({
     genericTree,
     addressTree,
-    address2,
+    // address2,
     treeFromPojo,
   });
   console.log({ fnBody });

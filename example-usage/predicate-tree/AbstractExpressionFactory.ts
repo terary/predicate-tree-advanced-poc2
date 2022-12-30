@@ -27,7 +27,10 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     const { operator } = nodeContent ? nodeContent : { operator: "_ANY_" };
     switch (operator) {
       case "$addressTree":
-        return AddressTree.getNewInstance_typed(rootSeedNodeId, nodeContent);
+        // return AddressTree.fromPojo(AddressTree.defaultTreePojo())
+
+        return AddressTree.getNewInstance(rootSeedNodeId, nodeContent);
+        // return AddressTree.getNewInstance_typed(rootSeedNodeId, nodeContent);
         break;
 
       default:
@@ -36,85 +39,93 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     }
   }
 
-  private static createSubtreeFromPojo<TPredicateTypes>(
-    srcPojoTree: TTreePojo<TPredicateTypes>,
+  private static createSubtreeFromPojo<Q>(
+    srcPojoTree: TTreePojo<Q>,
     rootPojoKey: string,
-    parentNodePojo: TNodePojo<TPredicateTypes>,
+    parentNodePojo: TNodePojo<Q>,
     rootSeedNodeId?: string,
     transform?: (
-      nodeContent: TNodePojo<TPredicateTypes>
-    ) => TGenericNodeContent<TPredicateTypes>
-  ): IExpressionTree<TPredicateTypes> {
+      nodeContent: TNodePojo<Q>
+    ) => TGenericNodeContent<Q>
+  ): IExpressionTree<Q> {
     const { nodeContent } = parentNodePojo as any; // transform
     const operator = "operator" in nodeContent ? nodeContent.operator : "_NO_OP_";
 
     // this should be done by parent class?
     parentNodePojo.parentId = rootPojoKey;
-    // const parentNode = { ...srcPojoTree, ...{ [rootPojoKey]: parentNodePojo } };
     srcPojoTree[rootPojoKey] = parentNodePojo;
     switch (operator) {
       case "$addressTree":
+        `
+        Conversion of type 'AddressTree' to type 'IExpressionTree<Q>' may be a mistake because 
+        neither type sufficiently overlaps with the other. If this was intentional, 
+        convert the expression to 'unknown' first.
+        `
         // @ts-ignore
-        const a = AddressTree.fromPojo<TPredicateTypes, AddressTree>(srcPojoTree, transform);
-        // @ts-ignore
-        return a as IExpressionTree<TPredicateTypes>;
-        // return AddressTree.getNewInstance_typed(rootSeedNodeId, nodeContent);
-        break;
+        return AddressTree.fromPojo<TPredicateTypes, AddressTree>(srcPojoTree, transform) as IExpressionTree<Q>;
 
       default:
-        // @ts-ignore
-        return new JsPredicateTree.fromPojo(parentNode);
-        break;
+        return JsPredicateTree.fromPojo(srcPojoTree);
     }
-    // @ts-ignore
+    // @ts-ignore - null not IExpressionTree<Q>
     return null;
   }
 
-  static getNewInstance<P>(
-    rootSeedNodeId?: string,
-    nodeContent?: P
-  ): IExpressionTree<P> {
-    return AbstractExpressionFactory.createExpressionTree(rootSeedNodeId, nodeContent as unknown as TPredicateTypes) as unknown as IExpressionTree<P>;
-  }
-
-  static createSubtreeAt<Q = GenericExpressionTree>(
-    targetTree: AbstractExpressionFactory,
-    targetNodeId: string,
-    subtreeRootNodeContent: TPredicateTypes
-  ): Q {
-    const subtree = AbstractExpressionFactory.getNewInstance_typed(
-      targetNodeId,
-      subtreeRootNodeContent
-    );
-    AbstractExpressionTree.createSubtreeAt_x(
-      targetTree,
-      targetNodeId,
-      subtree as AbstractExpressionTree<TPredicateTypes>
-    );
-    return subtree as unknown as Q;
-  }
-
-  static getNewInstance_typed(
+  static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P>;
+  static getNewInstance(
     rootSeedNodeId?: string,
     nodeContent?: TPredicateTypes
   ): IExpressionTree<TPredicateTypes> {
-    return new GenericExpressionTree(
+    return AbstractExpressionFactory.createExpressionTree(
       rootSeedNodeId,
-      nodeContent
+      nodeContent as unknown as TPredicateTypes
     ) as unknown as IExpressionTree<TPredicateTypes>;
+  }
+
+  static createSubtreeAt(
+    targetTree: AbstractExpressionFactory,
+    targetNodeId: string,
+    subtreeRootNodeContent: AbstractExpressionFactory
+  ): IExpressionTree<TPredicateTypes> {
+    // const subtree = targetTree.getNewInstance() as AbstractExpressionFactory
+    const subtree = subtreeRootNodeContent ?? targetTree.getNewInstance() as AbstractExpressionFactory
+    const subtreeParentNodeId = targetTree.appendChildNodeWithContent(targetNodeId, subtree);
+
+    AbstractExpressionTree.reRootTreeAt(subtree, subtree.rootNodeId, subtreeParentNodeId);
+    subtree._rootNodeId = subtreeParentNodeId;
+    subtree._incrementor = targetTree._incrementor;
+
+    return subtree as IExpressionTree<TPredicateTypes>;
+    // const subtree = AbstractExpressionFactory.getNewInstance(
+    //   targetNodeId,
+    //   subtreeRootNodeContent
+    // );
+
+    // AbstractExpressionFactory.createSubtreeAt_x(
+    // AbstractExpressionFactory.createSubtreeAt(
+    //   targetTree,
+    //   targetNodeId,
+    //   // @ts-ignore - type 'AbstractExpressionTree<TPredicateTypes>' is not assignable to parameter of type 'TPredicateTypes'
+    //   subtree as AbstractExpressionTree<TPredicateTypes>
+    // );
+    // return subtree as unknown as IExpressionTree<TPredicateTypes>;
   }
 
   static fromPojo<P, Q>(
     srcPojoTree: TTreePojo<P>,
     transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
-  ): IExpressionTree<P> {
+  ): IExpressionTree<P>;
+  static fromPojo(
+    srcPojoTree: TTreePojo<TPredicateTypes>,
+    transform?: (nodeContent: TNodePojo<TPredicateTypes>) => TGenericNodeContent<TPredicateTypes>
+  ): IExpressionTree<TPredicateTypes> {
     return AbstractExpressionFactory.#fromPojo(srcPojoTree, transform);
   }
 
-  static #fromPojo<P, Q>(
-    srcPojoTree: TTreePojo<P>,
-    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform // branch coverage complains
-  ): IExpressionTree<P> {
+  static #fromPojo(
+    srcPojoTree: TTreePojo<TPredicateTypes>,
+    transform: (nodeContent: TNodePojo<TPredicateTypes>) => TGenericNodeContent<TPredicateTypes> = defaultFromPojoTransform // branch coverage complains
+  ): IExpressionTree<TPredicateTypes> {
     const pojoObject = { ...srcPojoTree };
 
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
@@ -141,27 +152,26 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
       throw new DirectedGraphError("Orphan nodes detected while parson pojo object.");
     }
 
-    // @ts-ignore - not an IExpressionTree
-    return dTree;
+    return dTree as IExpressionTree<TPredicateTypes>;
   }
 
-  static #fromPojoTraverseAndExtractChildren = <T>(
+  //TPredicateTypes
+  static #fromPojoTraverseAndExtractChildren = <TPredicateTypes>(
     treeParentId: string,
     jsonParentId: string,
-    dTree: IExpressionTree<T>,
-    treeObject: TTreePojo<T>,
-    transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>,
+    dTree: IExpressionTree<TPredicateTypes>,
+    treeObject: TTreePojo<TPredicateTypes>,
+    transformer: (nodePojo: TNodePojo<TPredicateTypes>) => TGenericNodeContent<TPredicateTypes>,
     fromToMap: TFromToMap[] = []
   ): TFromToMap[] => {
-    // ): void => {
-    const childrenNodes = treeUtils.extractChildrenNodes<T>(
+
+    const childrenNodes = treeUtils.extractChildrenNodes<TPredicateTypes>(
       jsonParentId,
       treeObject
-    ) as TTreePojo<T>;
+    ) as TTreePojo<TPredicateTypes>;
 
     Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
       if (nodePojo.nodeType === AbstractTree.SubtreeNodeTypeName) {
-        // const subtree = dTree.createSubtreeAt(treeParentId);
         const yTree = AbstractExpressionFactory.createSubtreeFromPojo(
           treeObject,
           nodeId,
@@ -169,12 +179,8 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
           "_subtree_",
           transformer
         );
-        const xTree = AbstractExpressionFactory.createExpressionTree(
-          treeParentId,
-          // @ts-ignore - nodePojo
-          nodePojo.nodeContent
-        );
-        const subtree = AbstractExpressionFactory.createSubtreeAt_x(
+        // AbstractExpressionFactory.createSubtreeAt_x(
+        AbstractExpressionFactory.createSubtreeAt(
           // @ts-ignore - dTree not IExpressionTree
           dTree,
           treeParentId,
@@ -198,6 +204,23 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     });
     return fromToMap;
   };
+
+  // static createSubtreeAt_x(
+  static x__createSubtreeAt(
+    targetTree: AbstractExpressionFactory,
+    targetNodeId: string,
+    subtree: AbstractExpressionFactory
+  ): AbstractExpressionFactory {
+
+    const subtreeParentNodeId = targetTree.appendChildNodeWithContent(targetNodeId, subtree);
+
+    AbstractExpressionTree.reRootTreeAt(subtree, subtree.rootNodeId, subtreeParentNodeId);
+    subtree._rootNodeId = subtreeParentNodeId;
+    subtree._incrementor = targetTree._incrementor;
+
+    return subtree;
+  }
+
 }
 
 export { AbstractExpressionFactory };

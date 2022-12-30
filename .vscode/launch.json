@@ -8,26 +8,42 @@
       "type": "pwa-node",
       "request": "launch",
       "name": "current file 2",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "program": "${file}",
-      "outFiles": ["${workspaceFolder}/**/*.js"]
+      "outFiles": [
+        "${workspaceFolder}/**/*.js"
+      ]
     },
     {
       "name": "Current TS File",
       "type": "node",
       "request": "launch",
-      "args": ["${relativeFile}"],
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "args": [
+        "${relativeFile}"
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register"
+      ],
       "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "protocol": "inspector"
     },
     {
-      "name": "Example/predicate goof.ts",
+      "name": "Example/predicate index2.ts",
       "type": "node",
       "request": "launch",
-      "args": ["${workspaceFolder}/example-usage/predicate-tree/goof.ts"],
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "args": [
+        "${workspaceFolder}/example-usage/predicate-tree/index2.ts"
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register"
+      ],
       "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "protocol": "inspector"
@@ -36,8 +52,14 @@
       "name": "Example/predicate jsPredicate.js",
       "type": "node",
       "request": "launch",
-      "args": ["${workspaceFolder}/example-usage/predicate-tree/jsPredicateTreeSubtree.ts"],
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "args": [
+        "${workspaceFolder}/example-usage/predicate-tree/jsPredicateTreeSubtree.ts"
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register"
+      ],
       "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "protocol": "inspector"
@@ -46,8 +68,14 @@
       "name": "Example/predicate index.ts",
       "type": "node",
       "request": "launch",
-      "args": ["${workspaceFolder}/example-usage/predicate-tree/index.ts"],
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "args": [
+        "${workspaceFolder}/example-usage/predicate-tree/index.ts"
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register"
+      ],
       "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "protocol": "inspector"
