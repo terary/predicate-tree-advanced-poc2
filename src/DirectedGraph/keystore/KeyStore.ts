@@ -46,7 +46,7 @@ class KeyStore<T> {
     return true;
   }
 
-  // putValue(value: T, newKey = getNextChildNodeId()): string {
+  //putValue(value: T, newKey = getNextChildNodeId()): string {
   putValue(value: T, newKey = uuidv4()): string {
     if (this.keyExists(newKey)) {
       throw new KeyStoreError(

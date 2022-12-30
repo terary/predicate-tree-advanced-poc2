@@ -2,7 +2,7 @@ import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpres
 import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpressionTree";
 import { isUUIDv4 } from "../../common/utilities/isFunctions";
 import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
-import { ITreeVisitor } from "../ITree";
+import { IExpressionTree, ITreeVisitor } from "../ITree";
 import { TGenericNodeContent, TTreePojo } from "../types";
 import {
   filterPojoContent,
@@ -30,6 +30,7 @@ import type {
 import { ObfuscatedError } from "./ObfuscatedError";
 import { values } from "lodash";
 import { ChildB } from "../../../dev-debug/ChildB";
+import { AbstractExpressionFactory } from "../../../example-usage/predicate-tree/AbstractExpressionFactory";
 
 class TestWidget {
   private _name: string;
@@ -65,7 +66,18 @@ export class TestObfuscatedTree<P> extends AbstractObfuscatedExpressionTree<P> {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 }
-class TestClearTextTree<P> extends AbstractExpressionTree<P> {}
+
+class TestClearTextTree<P> extends AbstractExpressionTree<P> {
+
+  getNewInstance(rootSeed?: string | undefined, nodeContent?: P | undefined): IExpressionTree<P> {
+    return new TestClearTextTree(rootSeed, nodeContent)
+  }
+  createSubtreeAt(nodeId: string): IExpressionTree<P> {
+    const subtree = this.getNewInstance(nodeId)
+    // @ts-ignore null is not TPredicateTypes
+    return AbstractExpressionFactory.createSubtreeAt(this as unknown as AbstractExpressionFactory, nodeId, null)
+  }
+}
 
 describe("AbstractObfuscatedExpressionTree", () => {
   describe("constructor", () => {
@@ -156,7 +168,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(privateTree.getChildContentAt(toFromKeys[2].to)).toBe(appendPredicateChild_1);
       expect(privateTree.getChildContentAt(toFromKeys[3].to)).toBe(OO["child_0_0"]);
     });
-    it.skip("Should create branch at specified location, append original content and new  tree as child, if target is leaf", () => {});
+    it.skip("Should create branch at specified location, append original content and new  tree as child, if target is leaf", () => { });
   });
 
   describe(".appendContentWithJunction", () => {
@@ -452,7 +464,7 @@ describe("AbstractObfuscatedExpressionTree", () => {
       const oTree = TestObfuscatedTree.fromPojo<
         TestWidget,
         TestObfuscatedTree<TestWidget>
-        // @ts-ignore - pojo  type definition
+      // @ts-ignore - pojo  type definition
       >(pojo);
       expect(oTree.countTotalNodes()).toEqual(13);
     });
@@ -615,7 +627,17 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe("private/protected methods", () => {
     it(".fromPojoAppendChildNodeWithContent - will throw if key is not found.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {
+        getNewInstance(rootSeed?: string, nodeContent?: TPredicateNodeTypes): IExpressionTree<TPredicateNodeTypes> {
+          return new ExposedTree(rootSeed, nodeContent)
+        }
+
+        createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
+          const subtree = this.getNewInstance(nodeId)
+          // @ts-ignore null is not TPredicateTypes
+          return AbstractExpressionFactory.createSubtreeAt(this as unknown as AbstractExpressionFactory, nodeId, null)
+        }
+      }
       class ObfuscatedTree extends TestObfuscatedTree<TPredicateNodeTypes> {
         public appendChildNodeWithContentPojo(
           parentNodeKey: string,
@@ -639,7 +661,17 @@ describe("AbstractObfuscatedExpressionTree", () => {
     });
 
     it(".fromPojoAppendChildNodeWithContent - will append child node.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {
+        getNewInstance(rootSeed?: string, nodeContent?: TPredicateNodeTypes): IExpressionTree<TPredicateNodeTypes> {
+          return new ExposedTree(rootSeed, nodeContent)
+        }
+
+        createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
+          const subtree = this.getNewInstance(nodeId)
+          // @ts-ignore null is not TPredicateTypes
+          return AbstractExpressionFactory.createSubtreeAt(this as unknown as AbstractExpressionFactory, nodeId, null)
+        }
+      }
       class ObfuscatedTree extends TestObfuscatedTree<TPredicateNodeTypes> {
         public appendChildNodeWithContentPojo(
           parentNodeKey: string,
@@ -667,7 +699,17 @@ describe("AbstractObfuscatedExpressionTree", () => {
     });
 
     it(".getNodeIdOrThrow - will throw if key is not found.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {
+        getNewInstance(rootSeed?: string, nodeContent?: TPredicateNodeTypes): IExpressionTree<TPredicateNodeTypes> {
+          return new ExposedTree(rootSeed, nodeContent)
+        }
+
+        createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
+          const subtree = this.getNewInstance(nodeId)
+          // @ts-ignore null is not TPredicateTypes
+          return AbstractExpressionFactory.createSubtreeAt(this as unknown as AbstractExpressionFactory, nodeId, null)
+        }
+      }
       const exposedTree = new ExposedTree();
       const privateTree = new TestObfuscatedTree(exposedTree);
 

@@ -5,6 +5,7 @@ import treeUtils from "../AbstractDirectedGraph/treeUtilities";
 import { IExpressionTree } from "../ITree";
 import type { TFromToMap, TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
+import { AbstractExpressionFactory } from "../../../example-usage/predicate-tree/AbstractExpressionFactory";
 
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
@@ -41,6 +42,7 @@ abstract class AbstractExpressionTree<P>
   }
 
   abstract createSubtreeAt(nodeId: string): IExpressionTree<P>;
+
   abstract getNewInstance(
     rootSeed?: string | undefined,
     nodeContent?: P | undefined
@@ -360,6 +362,10 @@ class GenericExpressionTree extends AbstractExpressionTree<any> {
     return new GenericExpressionTree(rootSeed, nodeContent);
   }
   createSubtreeAt(nodeId: string): IExpressionTree<any> {
+    const subtree = this.getNewInstance();
+    return AbstractExpressionTree.createSubtreeAt_x(this, nodeId, subtree as AbstractExpressionTree<any>)
+    // return AbstractExpressionFactory.createSubtreeAt(this, nodeId, null);
+    //    return this.createSubtreeAt(nodeId)
     // *tmc* not an actual createSubtreeAt
     return new GenericExpressionTree(nodeId);
   }

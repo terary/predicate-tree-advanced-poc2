@@ -1,9 +1,19 @@
 import { AbstractExpressionTree } from "../../AbstractExpressionTree";
 import { IExpressionTree, ITree } from "../../ITree";
-import { TGenericNodeContent } from "../../types";
-//import { TestObfuscatedTree } from "../AbstractObfuscatedExpressionTree.test";
 import { TestObfuscatedTree } from "../AbstractObfuscatedExpressionTree.test";
-class ExtAbstractTestClass extends AbstractExpressionTree<WidgetType> {}
+class ExtAbstractTestClass extends AbstractExpressionTree<WidgetType> {
+  getNewInstance(rootSeed?: string | undefined, nodeContent?: WidgetType | undefined): IExpressionTree<WidgetType> {
+    return new ExtAbstractTestClass(rootSeed, nodeContent);
+  }
+
+  createSubtreeAt(nodeId: string): IExpressionTree<WidgetType> {
+    const subtree = this.getNewInstance(nodeId)
+    // @ts-ignore null is not TPredicateTypes
+    return AbstractExpressionFactory.createSubtreeAt(this as unknown as AbstractExpressionFactory, nodeId, null)
+  }
+
+}
+
 
 // const make3ChildrenSubtree2Children = (dTree: TestObfuscatedTree<WidgetType>) => {
 const make3ChildrenSubtree2Children = (dTree: AbstractExpressionTree<WidgetType>) => {

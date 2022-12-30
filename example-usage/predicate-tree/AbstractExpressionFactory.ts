@@ -77,11 +77,11 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     return AbstractExpressionFactory.createExpressionTree(rootSeedNodeId, nodeContent);
   }
 
-  static createSubtreeAt(
+  static createSubtreeAt<Q = GenericExpressionTree>(
     targetTree: AbstractExpressionFactory,
     targetNodeId: string,
     subtreeRootNodeContent: TPredicateTypes
-  ) {
+  ): Q {
     const subtree = AbstractExpressionFactory.getNewInstance_typed(
       targetNodeId,
       subtreeRootNodeContent
@@ -91,7 +91,7 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
       targetNodeId,
       subtree as AbstractExpressionTree<TPredicateTypes>
     );
-    return subtree;
+    return subtree as unknown as Q;
   }
 
   static getNewInstance_typed(
