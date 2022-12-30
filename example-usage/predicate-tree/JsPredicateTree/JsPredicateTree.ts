@@ -18,7 +18,9 @@ import {
   predicateOperatorToJsOperator,
 } from "./helperFunctions";
 import { SubtreeFactory } from "./SubtreeFactory";
-import { TJunction, TOperand, TPredicateTypes } from "../types";
+import {
+  TJunction, TOperand, TPredicateTypes, TPredicateNodeTypesOrNull,
+} from "../types";
 import { IExpressionTree } from "../../../src/DirectedGraph/ITree";
 
 const commentOutObject = (obj: Object): string => {
@@ -29,16 +31,17 @@ const commentOutObject = (obj: Object): string => {
 class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
   //  #_internalTree: IExpressionTree<TJsPredicate>;
 
-  constructor(rootSeedNodeId?: string, nodeContent?: TPredicateTypes) {
-    super(rootSeedNodeId, nodeContent);
+  constructor(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypesOrNull) {
+    super(rootSeedNodeId, nodeContent as TPredicateTypes);
   }
 
   getNewInstance(
-    rootSeed?: string | undefined,
-    nodeContent?: TPredicateTypes | undefined
+    rootSeed?: string,
+    nodeContent?: TPredicateNodeTypesOrNull
   ): IExpressionTree<TPredicateTypes> {
     return new JsPredicateTree(rootSeed, nodeContent);
   }
+
   toFunctionBody(rootNodeId: string = this.rootNodeId, subjects: TSubjectDictionary): string {
     if (this.isSubtree(rootNodeId)) {
       const subtree = this.getChildContentAt(rootNodeId);
@@ -68,7 +71,7 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
       return "Not a leaf, not a branch";
     }
   }
-  // commentedRecord
+
   commentedRecord(subjects: TSubjectDictionary): string {
     const leafVisitor = new UtilizedLeafVisitor();
     leafVisitor.includeSubtrees = true;
@@ -123,7 +126,7 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
 
   protected fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
-    nodeContent: TGenericNodeContent<TPredicateTypes>
+    nodeContent: TPredicateNodeTypesOrNull
   ): string {
     return super.fromPojoAppendChildNodeWithContent(parentNodeId, nodeContent);
   }
@@ -132,12 +135,11 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
     // *tmc* not a real subtree
     return this;
   }
-  // static getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateTypes) {
-  //   return new JsPredicateTree(rootSeedNodeId, nodeContent);
-  // }
 }
+
 export const dev_only_export = {
   predicateOperatorToJsOperator,
   predicateJunctionToJsOperator,
 };
+
 export { JsPredicateTree };

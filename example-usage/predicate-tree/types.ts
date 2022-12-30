@@ -1,4 +1,5 @@
-import type { ITree } from "../../src";
+import { IExpressionTree } from "../../src/DirectedGraph/ITree";
+
 type TOperandOperators = "$eq" | "$lte" | "$lt" | "$gt" | "$gte";
 type TJunctionOperators = "$or" | "$and" | "$addressTree";
 type TJunction = {
@@ -12,6 +13,7 @@ type TOperand = {
 };
 
 type TPredicateTypes = TJunction | TOperand;
-type TPredicateNodeTypes = TPredicateTypes | ITree<TPredicateTypes>; // does null belong here?
+type TPredicateNodeTypes = TPredicateTypes | IExpressionTree<TPredicateTypes>;
+type TPredicateNodeTypesOrNull = null | TPredicateNodeTypes;
 
-export type { TJunction, TOperand, TOperandOperators, TPredicateNodeTypes, TPredicateTypes };
+export type { TJunction, TOperand, TOperandOperators, TPredicateNodeTypes, TPredicateTypes, TPredicateNodeTypesOrNull };

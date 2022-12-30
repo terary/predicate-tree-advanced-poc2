@@ -1,11 +1,11 @@
 import { AbstractExpressionTree } from "../../../src";
-import { GenericExpressionTree } from "../../../src/DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
 import { TGenericNodeContent, TNodePojo, TTreePojo } from "../../../src/DirectedGraph/types";
-import { TOperand, TPredicateNodeTypes, TPredicateTypes } from "../types";
+import { TOperand, TPredicateNodeTypes, TPredicateNodeTypesOrNull, TPredicateTypes } from "../types";
 import { JsPredicateTree } from "./JsPredicateTree";
 import { TJsPredicate, TSubjectDictionary } from "./types";
 import { dev_only_export } from "./JsPredicateTree";
-import { IDirectedGraph, IExpressionTree, ITree } from "../../../src/DirectedGraph/ITree";
+import { IExpressionTree } from "../../../src/DirectedGraph/ITree";
+
 import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
 import {
   quoteValue,
@@ -20,13 +20,13 @@ const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeCon
   return nodeContent.nodeContent;
 };
 
-// class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
 class AddressTree extends JsPredicateTree {
-  // class AddressTree extends AbstractExpressionFactory {
   private _subjectId!: string;
+
   // private constructor(rootSendNodeId?: string, nodeContent?: TPredicateTypes) {
   //   // super(rootSendNodeId, nodeContent);
   // }
+
   toFunctionBody(rootNodeId: string = this.rootNodeId, subjects: TSubjectDictionary): string {
     const subSubject = subjects[this._subjectId];
     const subjectIds: { [subjectId: string]: any } = {};
@@ -51,8 +51,6 @@ class AddressTree extends JsPredicateTree {
         nodeContent.value
       )}`;
       logicTerms.push(term);
-      // subfields[this._rootNodeId + ":" + subjectId] = "x";
-      // subjectIds[this._subjectId + ":" + subjectId] = subject;
     });
     return `(${logicTerms.join(" && ")})`;
   }
@@ -63,17 +61,17 @@ class AddressTree extends JsPredicateTree {
 
   getNewInstance(
     rootSeed?: string,
-    nodeContent?: TPredicateTypes
+    nodeContent?: TPredicateNodeTypesOrNull
   ): IExpressionTree<TPredicateTypes> {
     return new AddressTree(rootSeed, nodeContent);
   }
 
-  static x_getNewInstance_typed(
-    rootSeedNodeId?: string,
-    nodeContent?: TPredicateTypes
-  ): IExpressionTree<TPredicateTypes> {
-    return new AddressTree(rootSeedNodeId, nodeContent) as unknown as AddressTree;
-  }
+  // static x_getNewInstance_typed(
+  //   rootSeedNodeId?: string,
+  //   nodeContent?: TPredicateTypes
+  // ): IExpressionTree<TPredicateTypes> {
+  //   return new AddressTree(rootSeedNodeId, nodeContent) as unknown as AddressTree;
+  // }
 
   createSubtreeAt(nodeId: string): IExpressionTree<TPredicateTypes> {
     // *tmc* not a real createSubgraphAt

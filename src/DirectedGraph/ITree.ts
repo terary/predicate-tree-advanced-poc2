@@ -95,6 +95,7 @@ interface IExpressionTree<P> extends ITree<P> {
   createSubtreeAt(nodeId: string): IExpressionTree<P>;
   getNewInstance(rootSeed?: string, nodeContent?: P): IExpressionTree<P>;
 }
+
 interface IDirectedGraph<T> extends ITree<T> {
   appendChildNodeWithContent: (
     treeParentId: string,
