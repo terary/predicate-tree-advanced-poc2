@@ -1,11 +1,9 @@
 import { AbstractExpressionTree } from "../../src";
-import { GenericExpressionTree } from "../../src/DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
-import { ExpressionTreeError } from "../../src/DirectedGraph/AbstractExpressionTree/ExpressionTreeError";
 import treeUtils from "../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
 import { DirectedGraphError } from "../../src/DirectedGraph";
 import { IExpressionTree } from "../../src/DirectedGraph/ITree";
 import { AddressTree } from "./JsPredicateTree/AddressTree";
-import { TPredicateNodeTypes, TPredicateTypes } from "./types";
+import { TPredicateTypes } from "./types";
 import type {
   TFromToMap,
   TGenericNodeContent,
@@ -87,7 +85,6 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     targetNodeId: string,
     subtreeRootNodeContent: AbstractExpressionFactory
   ): IExpressionTree<TPredicateTypes> {
-    // const subtree = targetTree.getNewInstance() as AbstractExpressionFactory
     const subtree = subtreeRootNodeContent ?? targetTree.getNewInstance() as AbstractExpressionFactory
     const subtreeParentNodeId = targetTree.appendChildNodeWithContent(targetNodeId, subtree);
 
@@ -96,19 +93,6 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     subtree._incrementor = targetTree._incrementor;
 
     return subtree as IExpressionTree<TPredicateTypes>;
-    // const subtree = AbstractExpressionFactory.getNewInstance(
-    //   targetNodeId,
-    //   subtreeRootNodeContent
-    // );
-
-    // AbstractExpressionFactory.createSubtreeAt_x(
-    // AbstractExpressionFactory.createSubtreeAt(
-    //   targetTree,
-    //   targetNodeId,
-    //   // @ts-ignore - type 'AbstractExpressionTree<TPredicateTypes>' is not assignable to parameter of type 'TPredicateTypes'
-    //   subtree as AbstractExpressionTree<TPredicateTypes>
-    // );
-    // return subtree as unknown as IExpressionTree<TPredicateTypes>;
   }
 
   static fromPojo<P, Q>(
@@ -132,9 +116,6 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     const rootNodePojo = pojoObject[rootNodeId];
     const dTree = AbstractExpressionFactory.getNewInstance("root");
 
-    // 'P' is not assignable to type 'TGenericNodeContent<TPredicateTypes>'
-    // 'P' is not assignable to type 'ITree<TPredicateTypes>'
-    // @ts-ignore
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
@@ -155,7 +136,6 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     return dTree as IExpressionTree<TPredicateTypes>;
   }
 
-  //TPredicateTypes
   static #fromPojoTraverseAndExtractChildren = <TPredicateTypes>(
     treeParentId: string,
     jsonParentId: string,
@@ -179,7 +159,6 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
           "_subtree_",
           transformer
         );
-        // AbstractExpressionFactory.createSubtreeAt_x(
         AbstractExpressionFactory.createSubtreeAt(
           // @ts-ignore - dTree not IExpressionTree
           dTree,
@@ -204,22 +183,6 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     });
     return fromToMap;
   };
-
-  // static createSubtreeAt_x(
-  static x__createSubtreeAt(
-    targetTree: AbstractExpressionFactory,
-    targetNodeId: string,
-    subtree: AbstractExpressionFactory
-  ): AbstractExpressionFactory {
-
-    const subtreeParentNodeId = targetTree.appendChildNodeWithContent(targetNodeId, subtree);
-
-    AbstractExpressionTree.reRootTreeAt(subtree, subtree.rootNodeId, subtreeParentNodeId);
-    subtree._rootNodeId = subtreeParentNodeId;
-    subtree._incrementor = targetTree._incrementor;
-
-    return subtree;
-  }
 
 }
 
