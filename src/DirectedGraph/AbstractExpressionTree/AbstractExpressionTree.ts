@@ -133,6 +133,7 @@ abstract class AbstractExpressionTree<P>
   // wanted to make the protected as it shouldn't be used from outside of subclasses
   appendChildNodeWithContent(
     parentNodeId: string,
+    // nodeContent: IExpressionTree<P>
     nodeContent: TGenericNodeContent<P>
   ): string {
     const nullValueSiblings = this.#getChildrenWithNullValues(parentNodeId);
@@ -337,19 +338,18 @@ abstract class AbstractExpressionTree<P>
 }
 
 class GenericExpressionTree<T> extends AbstractExpressionTree<T> {
-  getNewInstance(rootSeed?: string | undefined, nodeContent?: any): IExpressionTree<T> {
+  getNewInstance(rootSeed?: string, nodeContent?: T): IExpressionTree<T> {
     return new GenericExpressionTree(rootSeed, nodeContent);
   }
 
-  createSubtreeAt<Q>(
+  createSubtreeAt<Q extends T>(
     targetNodeId: string,
   ): IExpressionTree<Q> {
     const subtree = new GenericExpressionTree<Q>('_subtree_');
 
-    // @ts-ignore  Type 'T' is not assignable to type 'TGenericNodeContent<Q>'.
     const subtreeParentNodeId = this.appendChildNodeWithContent(targetNodeId, subtree);
 
-    AbstractExpressionTree.reRootTreeAt(subtree, subtree.rootNodeId, subtreeParentNodeId);
+    AbstractExpressionTree.reRootTreeAt<Q>(subtree, subtree.rootNodeId, subtreeParentNodeId);
     subtree._rootNodeId = subtreeParentNodeId;
     subtree._incrementor = this._incrementor;
 

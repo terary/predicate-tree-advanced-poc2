@@ -89,6 +89,7 @@ abstract class AbstractTree<T> implements ITree<T> {
 
     fromToMap.forEach(({ from, to }) => {
       if (to in targetTree._nodeDictionary) {
+        // this error has to be changed
         throw new Error(`ID COLLISION offending node: "${to}".`);
       }
       targetTree._nodeDictionary[to] = sourceTree._nodeDictionary[from]; //sourceTree.getChildContentAt(from);

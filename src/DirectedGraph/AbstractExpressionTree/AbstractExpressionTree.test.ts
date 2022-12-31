@@ -858,3 +858,16 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
     });
   });
 });
+describe("GenericExpressionTree", () => {
+  it("Should return GenericExpressionTree if method of subclass does not override.", () => {
+    const treeInstance = GenericExpressionTree.getNewInstance()
+    const genericTree = treeInstance.getNewInstance('_THE_ROOT_', null)
+    expect(genericTree.rootNodeId).toStrictEqual('_THE_ROOT_');
+    expect(genericTree.getChildContentAt(genericTree.rootNodeId)).toBeNull()
+    expect(genericTree).toBeInstanceOf(
+      GenericExpressionTree
+    );
+
+  });
+
+})
