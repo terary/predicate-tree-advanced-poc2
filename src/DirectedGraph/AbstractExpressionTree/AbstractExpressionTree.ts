@@ -41,18 +41,21 @@ abstract class AbstractExpressionTree<P>
     );
   }
 
+  /**
+ * The tricky bit here is that the  subtree._rootNodeId
+ * must be the same as parent's node.nodeId
+ * @param targetParentNodeId
+ * @returns
+ */
   abstract createSubtreeAt(nodeId: string): IExpressionTree<P>;
-
-  // abstract getNewInstance(
-  //   rootSeed?: string | undefined,
-  //   nodeContent?: P | undefined
-  // ): IExpressionTree<P>;
 
   protected defaultJunction(nodeId: string): P {
     // the leaf node at nodeId is being converted to a junction (branch)
     // need to return the best option for junction operator (&&, ||, '$or', ...)
 
-    // @ts-ignore - this needs to be abstract and defined in subclasses
+
+    // This needs to be abstract and defined in subclasses
+    // @ts-ignore
     return { operator: "$and" };
   }
 
@@ -156,32 +159,6 @@ abstract class AbstractExpressionTree<P>
     ) as unknown as IExpressionTree<P>;
   }
 
-  /**
-   * The tricky bit here is that the  subtree._rootNodeId
-   * must be the same as parent's node.nodeId
-   * @param targetParentNodeId
-   * @returns
-   */
-  // public x_createSubtreeAt(parentNodeId: string): IExpressionTree<P> {
-  //   // look at the Reflect built-in utility
-  //   // can we rethink this.  Is there a better way?
-
-  //   const subtree = super._getNewInstance<AbstractExpressionTree<P>>(parentNodeId);
-
-  //   const subtreeParentNodeId = super.appendChildNodeWithContent(
-  //     parentNodeId,
-  //     subtree as unknown as IExpressionTree<P>
-  //   );
-
-  //   subtree._rootNodeId = subtreeParentNodeId;
-  //   subtree._nodeDictionary = {};
-  //   subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
-  //   subtree._incrementor = this._incrementor;
-
-  //   // @ts-ignore AbstractExpression not the same as IExpression
-  //   return subtree;
-  // }
-
   // this should not be public
   public static reRootTreeAt<T>(
     tree: AbstractExpressionTree<T>,
@@ -219,7 +196,6 @@ abstract class AbstractExpressionTree<P>
     delete pojoObject[rootNodeId];
 
     AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
-      // @ts-ignore - IExpression not the same as Abstract
       (dTree as AbstractExpressionTree<P>)._rootNodeId,
       rootNodeId,
       dTree,

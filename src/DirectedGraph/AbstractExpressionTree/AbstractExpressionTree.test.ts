@@ -49,10 +49,6 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
     return new ClassTestAbstractExpressionTree(rootSeedNodeId, nodeContent as unknown as TPredicateNodeTypes) as unknown as IExpressionTree<P>;
   }
 
-  // static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypes): IExpressionTree<TPredicateNodeTypes> {
-  //   return new ClassTestAbstractExpressionTree(rootSeedNodeId, nodeContent) as IExpressionTree<TPredicateNodeTypes>
-  // }
-
   createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
     return AbstractExpressionFactory.createSubtreeAt(
       this as AbstractExpressionFactory,
@@ -61,17 +57,6 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
       null
     ) as IExpressionTree<TPredicateNodeTypes>;
   }
-
-  // @ts-ignore - property types
-  // public getNewInstance(
-  //   rootNodeId?: string,
-  //   nodeContent?: TPredicateNodeTypes
-  // ): ClassTestAbstractExpressionTree {
-  //   return this.getNewInstance(
-  //     rootNodeId,
-  //     nodeContent
-  //   ) as unknown as ClassTestAbstractExpressionTree;
-  // }
 
   public appendChildNodeWithContent(
     parentNodeId: string,

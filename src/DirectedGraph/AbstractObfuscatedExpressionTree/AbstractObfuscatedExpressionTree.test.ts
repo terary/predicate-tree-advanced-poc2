@@ -82,7 +82,6 @@ class TestClearTextTree<P> extends AbstractExpressionTree<P> {
 describe("AbstractObfuscatedExpressionTree", () => {
   describe("constructor", () => {
     it("Should obfuscate root nodeId.", () => {
-      // @ts-ignore
       const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
       expect(oTree.getChildContentAt(oTree.rootNodeId)).toBeNull();
 
@@ -106,10 +105,8 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
-      // @ts-ignore
       const privateTree = new TestObfuscatedTree(exposedTree);
       expect(privateTree.countTotalNodes(undefined, true)).toEqual(
         exposedTree.countTotalNodes(undefined, true)
@@ -195,7 +192,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -259,7 +255,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -309,7 +304,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -477,7 +471,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -550,7 +543,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -605,7 +597,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -732,7 +723,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -803,7 +793,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -911,13 +900,8 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
+        // @ts-ignore
       } = make3Children2Subtree3Children(privateTree);
-
-      // const reverseMap = privateTree.getIdKeyReverseMap();
-      // Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
-      //   dTreeIds[debugLabel] = reverseMap[debugLabel];
-      // });
 
       // exercise
       expect(privateTree.getChildContentAt(dTreeIds["root"])).toBe(OO["root"]);

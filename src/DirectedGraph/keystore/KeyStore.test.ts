@@ -67,7 +67,7 @@ describe("KeyStore", () => {
       const value = keyStore.getValue(key);
       expect(Object.is(myObject, value)).toStrictEqual(true);
 
-      // because the Object.is(...) above, I am pretty makes this pointless
+      // because the Object.is(...) above, I am pretty sure this pointless
       // @ts-ignore
       value["newKey"] = "newProperty";
       // @ts-ignore

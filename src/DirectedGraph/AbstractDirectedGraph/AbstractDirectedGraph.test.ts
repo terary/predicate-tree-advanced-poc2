@@ -289,7 +289,7 @@ describe("AbstractDirectedGraph", () => {
         };
 
         const willThrowNull = () => {
-          // @ts-ignore
+          // @ts-ignore - test case
           dTree.countDescendantsOf(null);
         };
 
@@ -1083,7 +1083,7 @@ describe("AbstractDirectedGraph", () => {
       const subtree = dGraph.createSubtreeAt(dGraph.rootNodeId);
 
       const willThrow = () => {
-        // @ts-ignore
+        // @ts-ignore - test case
         dGraph.replaceNodeContent(dGraph.rootNodeId, subtree);
       };
 
@@ -1342,7 +1342,7 @@ describe("AbstractDirectedGraph", () => {
       const dTree = new TestAbstractDirectedGraph();
       const subtree = dTree.createSubtreeAt(dTree.rootNodeId);
       const willThrow = () => {
-        // @ts-ignore - subtree not a WidgetType
+        // @ts-ignore - test case - subtree not a WidgetType
         dTree.replaceNodeContent(dTree.rootNodeId, subtree);
       };
 

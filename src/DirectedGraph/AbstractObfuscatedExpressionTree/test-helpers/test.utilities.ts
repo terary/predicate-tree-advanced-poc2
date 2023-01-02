@@ -179,12 +179,11 @@ const make3Children9GrandchildrenTreeAbstract = (dTree: TestObfuscatedTree<Widge
 };
 
 const make3Children9GrandchildrenTree = () => {
-  // @ts-ignore - missing ITree properties
+  // @ts-ignore
   return _make3Children9GrandchildrenTree(new ExtAbstractTestClass<WidgetType>());
 };
 
 const _make3Children9GrandchildrenTree = (dTree: TestObfuscatedTree<WidgetType>) => {
-  // const dTree = new ExtAbstractTestClass<WidgetType>();
   const dTreeIds: { [id: string]: string } = {};
   dTree.replaceNodeContent(dTree.rootNodeId, originalWidgets["root"]);
 

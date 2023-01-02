@@ -9,7 +9,6 @@ import type {
   TFromToMap,
 } from "../types";
 import { KeyStore } from "../keystore/KeyStore";
-import { sortBy } from "lodash";
 
 const defaultToPojoTransformer = <T>(nodeContent: T) => {
   return nodeContent as unknown as TNodePojo<T>;
