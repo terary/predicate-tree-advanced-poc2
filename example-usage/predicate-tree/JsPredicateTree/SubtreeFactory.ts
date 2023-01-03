@@ -1,13 +1,15 @@
-import { AbstractExpressionTree } from "../../../src";
-import { GenericExpressionTree } from "../../../src/DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
-import { IExpressionTree } from "../../../src/DirectedGraph/ITree";
+import {
+  AbstractExpressionTree,
+  GenericExpressionTree,
+  IExpressionTree,
+} from "../../../src";
 import { TPredicateTypes } from "../types";
 import { AddressTree } from "./AddressTree";
 class SubtreeFactory {
   private static _instance: SubtreeFactory;
   private constructor() {}
 
-  createSubtreeAt<T>(
+  createSubtreeAt<T extends object>(
     tree: IExpressionTree<T>,
     nodeId: string,
     operator: "$addressTree"

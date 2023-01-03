@@ -1,4 +1,4 @@
-import { IExpressionTree } from "../../src/DirectedGraph/ITree";
+import { IExpressionTree } from "../../src";
 
 type TOperandOperators = "$eq" | "$lte" | "$lt" | "$gt" | "$gte";
 type TJunctionOperators = "$or" | "$and" | "$addressTree";
@@ -63,7 +63,3 @@ export type {
   TSubjectDataTypes,
   TSubjectDictionary,
 };
-
-// import type {
-//   TSubjectDictionary, TJunctionOperators
-// } from "../types";

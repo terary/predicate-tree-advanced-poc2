@@ -1,8 +1,20 @@
+export {
+  AbstractExpressionTree,
+  GenericExpressionTree,
+} from "./DirectedGraph/AbstractExpressionTree";
 export { AbstractObfuscatedExpressionTree } from "./DirectedGraph/AbstractObfuscatedExpressionTree";
-export { AbstractExpressionTree } from "./DirectedGraph/AbstractExpressionTree";
-export type { ITree, ITreeVisitor } from "./DirectedGraph/ITree";
-export type { TGenericNodeContent, TTreePojo, TFromToMap } from "./DirectedGraph";
+export { AbstractTree } from "./DirectedGraph/AbstractTree";
+export { DirectedGraphError } from "./DirectedGraph/DirectedGraphError";
 
-// import { ITreeVisitor } from "../../src";
-// import { AbstractExpressionTree } from "../../src/DirectedGraph/AbstractExpressionTree";
-// import { TGenericNodeContent } from "../../src/DirectedGraph/types";
+export type {
+  ITree,
+  ITreeVisitor,
+  IExpressionTree,
+} from "./DirectedGraph/ITree";
+
+export type {
+  TFromToMap,
+  TGenericNodeContent,
+  TNodePojo,
+  TTreePojo,
+} from "./DirectedGraph";

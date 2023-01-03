@@ -1,15 +1,14 @@
-import { AbstractExpressionTree } from "../../../src";
 import {
   TGenericNodeContent,
   TNodePojo,
   TTreePojo,
-} from "../../../src/DirectedGraph/types";
+  IExpressionTree,
+} from "../../../src";
 import { TOperand, TPredicateNodeTypesOrNull, TPredicateTypes } from "../types";
 import { JsPredicateTree } from "./JsPredicateTree";
 import { TSubjectDictionary } from "../types";
-import { IExpressionTree } from "../../../src/DirectedGraph/ITree";
 
-import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
+import treeUtils from "../treeUtilities";
 import { quoteValue, predicateOperatorToJsOperator } from "./helperFunctions";
 
 type TTreeInitiator = <P, Q>(rootSeedNodeId: string, nodeContent: P) => Q;

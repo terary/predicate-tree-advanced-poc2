@@ -9,7 +9,7 @@ import type { TJsPredicate, TSubjectDictionary } from "./JsPredicateTree/types";
 import assert from "assert";
 import { AddressTree } from "./JsPredicateTree/AddressTree";
 import { SubtreeFactory } from "./JsPredicateTree/SubtreeFactory";
-import { AbstractTree } from "../../src/DirectedGraph/AbstractTree/AbstractTree";
+
 import { TPredicateTypes } from "./types";
 //import { UtilizedLeafVisitor } from "";
 const x = `
@@ -81,7 +81,9 @@ const Subjects: TSubjectDictionary = {
   // };
 };
 const t = AddressTree.getNewInstance("_subtreeRoot_");
-const t2 = AddressTree.fromPojo(AddressTree.defaultTreePojo("customer.address"));
+const t2 = AddressTree.fromPojo(
+  AddressTree.defaultTreePojo("customer.address")
+);
 
 const t3 = AddressTree.fromPojo({ ...addressTreePojo, ...{} });
 // "customer.address": {

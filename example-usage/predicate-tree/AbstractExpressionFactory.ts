@@ -1,16 +1,15 @@
-import { AbstractExpressionTree } from "../../src";
-import treeUtils from "../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
-import { DirectedGraphError } from "../../src/DirectedGraph";
-import { IExpressionTree } from "../../src/DirectedGraph/ITree";
+import type { TFromToMap, TNodePojo, TTreePojo } from "../../src";
+
+import {
+  AbstractExpressionTree,
+  AbstractTree,
+  DirectedGraphError,
+  IExpressionTree,
+} from "../../src";
+import treeUtils from "./treeUtilities";
 import { AddressTree } from "./JsPredicateTree/AddressTree";
 import { TPredicateTypes, TPredicateNodeTypesOrNull } from "./types";
-import type {
-  TFromToMap,
-  // TGenericNodeContent,
-  TNodePojo,
-  TTreePojo,
-} from "../../src/DirectedGraph/types";
-import { AbstractTree } from "../../src/DirectedGraph/AbstractTree/AbstractTree";
+
 import { JsPredicateTree } from "./JsPredicateTree/JsPredicateTree";
 
 const defaultFromPojoTransform = <P>(
