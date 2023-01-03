@@ -3,7 +3,6 @@ import { TGenericNodeContent, TNodePojo, TTreePojo } from "../../../src/Directed
 import { TOperand, TPredicateNodeTypes, TPredicateNodeTypesOrNull, TPredicateTypes } from "../types";
 import { JsPredicateTree } from "./JsPredicateTree";
 import { TJsPredicate, TSubjectDictionary } from "./types";
-import { dev_only_export } from "./JsPredicateTree";
 import { IExpressionTree } from "../../../src/DirectedGraph/ITree";
 
 import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
@@ -12,9 +11,6 @@ import {
   predicateJunctionToJsOperator,
   predicateOperatorToJsOperator,
 } from "./helperFunctions";
-import { AbstractExpressionFactory } from "../AbstractExpressionFactory";
-import { TSubject } from "../../../dev-debug/PredicateTreeJs/type";
-// class AddressTree extends AbstractExpressionTree<TPredicateTypes> {
 type TTreeInitiator = <P, Q>(rootSeedNodeId: string, nodeContent: P) => Q;
 const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
@@ -22,10 +18,6 @@ const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeCon
 
 class AddressTree extends JsPredicateTree {
   private _subjectId!: string;
-
-  // private constructor(rootSendNodeId?: string, nodeContent?: TPredicateTypes) {
-  //   // super(rootSendNodeId, nodeContent);
-  // }
 
   toFunctionBody(rootNodeId: string = this.rootNodeId, subjects: TSubjectDictionary): string {
     const subSubject = subjects[this._subjectId];

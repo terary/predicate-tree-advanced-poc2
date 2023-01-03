@@ -2,22 +2,13 @@ import { AbstractExpressionTree, TTreePojo } from "../../../src";
 import { TGenericNodeContent, TNodePojo } from "../../../src/DirectedGraph/types";
 import { UtilizedLeafVisitor } from "./UtilizedLeafVisitor";
 import type {
-  TJunctionOperators,
-  TJsJunctionOperators,
-  TOperandOperators,
-  TJsOperandOperators,
-  TSubjectDataTypes,
-  TJsPredicate,
-  TSubjectDictionary,
-  TJsLeafNode,
-  TJsBranchNode,
+  TSubjectDictionary, TJunctionOperators
 } from "./types";
 import {
   quoteValue,
   predicateJunctionToJsOperator,
   predicateOperatorToJsOperator,
 } from "./helperFunctions";
-import { SubtreeFactory } from "./SubtreeFactory";
 import {
   TJunction, TOperand, TPredicateTypes, TPredicateNodeTypesOrNull,
 } from "../types";
@@ -64,7 +55,7 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
           .map((childId) => {
             return this.toFunctionBody(childId, subjects);
           })
-          .join(` ${operator} `) +
+          .join(` ${predicateJunctionToJsOperator(operator as TJunctionOperators)} `) +
         ")"
       );
     } else {
@@ -120,10 +111,6 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
     return commentOutObject(recordShape);
   }
 
-  // getNewInstance() {
-  //   return new JsPredicateTree();
-  // }
-
   protected fromPojoAppendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TPredicateNodeTypesOrNull
@@ -137,9 +124,5 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
   }
 }
 
-export const dev_only_export = {
-  predicateOperatorToJsOperator,
-  predicateJunctionToJsOperator,
-};
 
 export { JsPredicateTree };
