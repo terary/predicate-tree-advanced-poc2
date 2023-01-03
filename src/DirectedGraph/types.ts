@@ -2,12 +2,16 @@ import { ITree } from "./ITree";
 
 // TGenericNode* differ from Pojo, in that T maybe instances of things
 // whereas pojo is plain objects
-type TGenericNodeContent<T> = null | T | ITree<T>;
-type TGenericNodeType<T> = {
+type TGenericNodeContent<T extends object> = null | T | ITree<T>;
+type TGenericNodeType<T extends object> = {
   nodeContent: TGenericNodeContent<T>;
 };
 
-function treeVisitor<T>(nodeId: string, nodeContent: T | null, parentId: string): void {}
+function treeVisitor<T>(
+  nodeId: string,
+  nodeContent: T | null,
+  parentId: string
+): void {}
 
 type TDirectedTreeVisitor<T> = typeof treeVisitor;
 

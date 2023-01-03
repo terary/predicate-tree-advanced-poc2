@@ -1,15 +1,13 @@
 import type {
   TJunctionOperators,
-  TJsJunctionOperators,
   TOperandOperators,
   TJsOperandOperators,
   TSubjectDataTypes,
-  TJsPredicate,
-  TSubjectDictionary,
-  TJsLeafNode,
-  TJsBranchNode,
-} from "./types";
-const predicateOperatorToJsOperator = (operator: TOperandOperators): TJsOperandOperators => {
+  TJsJunctionOperators,
+} from "../types";
+const predicateOperatorToJsOperator = (
+  operator: TOperandOperators
+): TJsOperandOperators => {
   switch (operator) {
     case "$eq":
       return "===";
@@ -26,13 +24,16 @@ const predicateOperatorToJsOperator = (operator: TOperandOperators): TJsOperandO
   }
 };
 
-const predicateJunctionToJsOperator = (operator: TJunctionOperators): TJsJunctionOperators => {
+const predicateJunctionToJsOperator = (
+  operator: TJunctionOperators
+): TJsJunctionOperators => {
   switch (operator) {
     case "$and":
       return "&&";
     case "$or":
       return "||";
     default:
+      // @ts-ignore - $addressTree not assignable to && or ||
       return operator;
   }
 };
@@ -50,4 +51,8 @@ const quoteValue = (datatype: TSubjectDataTypes, value: any) => {
   }
 };
 
-export { quoteValue, predicateJunctionToJsOperator, predicateOperatorToJsOperator };
+export {
+  quoteValue,
+  predicateJunctionToJsOperator,
+  predicateOperatorToJsOperator,
+};

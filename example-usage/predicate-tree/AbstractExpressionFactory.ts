@@ -13,8 +13,9 @@ import type {
 import { AbstractTree } from "../../src/DirectedGraph/AbstractTree/AbstractTree";
 import { JsPredicateTree } from "./JsPredicateTree/JsPredicateTree";
 
-
-const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TPredicateNodeTypesOrNull => {
+const defaultFromPojoTransform = <P>(
+  nodeContent: TNodePojo<P>
+): TPredicateNodeTypesOrNull => {
   return nodeContent.nodeContent as unknown as TPredicateNodeTypesOrNull;
 };
 
@@ -23,11 +24,17 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     rootSeedNodeId?: string,
     nodeContent?: TPredicateNodeTypesOrNull
   ): IExpressionTree<TPredicateTypes> {
-    const { operator } = (nodeContent && 'operator' in nodeContent) ? nodeContent : { operator: "_ANY_" };
+    const { operator } =
+      nodeContent && "operator" in nodeContent
+        ? nodeContent
+        : { operator: "_ANY_" };
     switch (operator) {
       case "$addressTree":
         // @ts-ignore - some how this is inherit ITree, ???
-        return AddressTree.getNewInstance<TPredicateNodeTypesOrNull>(rootSeedNodeId, nodeContent);
+        return AddressTree.getNewInstance<TPredicateNodeTypesOrNull>(
+          rootSeedNodeId,
+          nodeContent
+        );
 
       default:
         return new JsPredicateTree(rootSeedNodeId, nodeContent);
@@ -40,11 +47,12 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     parentNodePojo: TNodePojo<TPredicateTypes>,
     rootSeedNodeId?: string,
     transform?: (
-      nodeContent: TNodePojo<TPredicateTypes>  // is this Q necessary?
+      nodeContent: TNodePojo<TPredicateTypes> // is this Q necessary?
     ) => TPredicateNodeTypesOrNull
   ): IExpressionTree<TPredicateTypes> | null {
     const { nodeContent } = parentNodePojo as any; // transform
-    const operator = "operator" in nodeContent ? nodeContent.operator : "_NO_OP_";
+    const operator =
+      "operator" in nodeContent ? nodeContent.operator : "_NO_OP_";
 
     // this should be done by parent class?
     parentNodePojo.parentId = rootPojoKey;
@@ -52,52 +60,76 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     switch (operator) {
       case "$addressTree":
         // @ts-ignore - types just broken
-        return AddressTree.fromPojo<TPredicateTypes, AddressTree>(srcPojoTree, transform) as IExpressionTree<TPredicateTypes>;
+        return AddressTree.fromPojo<TPredicateTypes, AddressTree>(
+          srcPojoTree,
+          transform
+        ) as IExpressionTree<TPredicateTypes>;
 
       default:
-        return JsPredicateTree.fromPojo<TPredicateTypes, JsPredicateTree>(srcPojoTree);
+        return JsPredicateTree.fromPojo<TPredicateTypes, JsPredicateTree>(
+          srcPojoTree
+        );
     }
 
     return null;
   }
 
-  static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P>;
+  static getNewInstance<P extends object>(
+    rootSeedNodeId?: string,
+    nodeContent?: P
+  ): IExpressionTree<P>;
   static getNewInstance(
     rootSeedNodeId?: string,
     nodeContent?: TPredicateNodeTypesOrNull
   ): IExpressionTree<TPredicateTypes> {
     return AbstractExpressionFactory.createExpressionTree(
       rootSeedNodeId,
-      nodeContent, // as unknown as TPredicateTypes
+      nodeContent // as unknown as TPredicateTypes
     ) as unknown as IExpressionTree<TPredicateTypes>;
   }
 
   static createSubtreeAt(
     targetTree: AbstractExpressionFactory,
     targetNodeId: string,
-    subtreeRootNodeContent: AbstractExpressionFactory
+    subtreeRootNodeContent: AbstractExpressionFactory | null
   ): IExpressionTree<TPredicateTypes> {
-    const subtree = subtreeRootNodeContent ?? targetTree.getNewInstance() as AbstractExpressionFactory
-    const subtreeParentNodeId = targetTree.appendChildNodeWithContent(targetNodeId, subtree);
+    const subtree =
+      subtreeRootNodeContent ??
+      (targetTree.getNewInstance() as AbstractExpressionFactory);
+    const subtreeParentNodeId = targetTree.appendChildNodeWithContent(
+      targetNodeId,
+      subtree
+    );
 
-    AbstractExpressionTree.reRootTreeAt(subtree, subtree.rootNodeId, subtreeParentNodeId);
+    AbstractExpressionTree.reRootTreeAt(
+      subtree,
+      subtree.rootNodeId,
+      subtreeParentNodeId
+    );
     subtree._rootNodeId = subtreeParentNodeId;
     subtree._incrementor = targetTree._incrementor;
 
     return subtree as IExpressionTree<TPredicateTypes>;
   }
 
-  static fromPojo<P, Q>(srcPojoTree: TTreePojo<P>, transform?: (nodeContent: TNodePojo<P>) => P): IExpressionTree<P>;
+  static fromPojo<P extends object, Q>(
+    srcPojoTree: TTreePojo<P>,
+    transform?: (nodeContent: TNodePojo<P>) => P
+  ): IExpressionTree<P>;
   static fromPojo(
     srcPojoTree: TTreePojo<TPredicateTypes>,
-    transform?: (nodeContent: TNodePojo<TPredicateTypes>) => TPredicateNodeTypesOrNull
+    transform?: (
+      nodeContent: TNodePojo<TPredicateTypes>
+    ) => TPredicateNodeTypesOrNull
   ): IExpressionTree<TPredicateTypes> {
     return AbstractExpressionFactory.#fromPojo(srcPojoTree, transform);
   }
 
   static #fromPojo(
     srcPojoTree: TTreePojo<TPredicateTypes>,
-    transform: (nodeContent: TNodePojo<TPredicateTypes>) => TPredicateNodeTypesOrNull = defaultFromPojoTransform // branch coverage complains
+    transform: (
+      nodeContent: TNodePojo<TPredicateTypes>
+    ) => TPredicateNodeTypesOrNull = defaultFromPojoTransform // branch coverage complains
   ): IExpressionTree<TPredicateTypes> {
     const pojoObject = { ...srcPojoTree };
 
@@ -119,7 +151,9 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     );
 
     if (Object.keys(pojoObject).length > 0) {
-      throw new DirectedGraphError("Orphan nodes detected while parson pojo object.");
+      throw new DirectedGraphError(
+        "Orphan nodes detected while parson pojo object."
+      );
     }
 
     return dTree as IExpressionTree<TPredicateTypes>;
@@ -130,10 +164,11 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
     jsonParentId: string,
     dTree: IExpressionTree<TPredicateTypes>,
     treeObject: TTreePojo<TPredicateTypes>,
-    transformer: (nodePojo: TNodePojo<TPredicateTypes>) => TPredicateNodeTypesOrNull,
+    transformer: (
+      nodePojo: TNodePojo<TPredicateTypes>
+    ) => TPredicateNodeTypesOrNull,
     fromToMap: TFromToMap[] = []
   ): TFromToMap[] {
-
     const childrenNodes = treeUtils.extractChildrenNodes<TPredicateTypes>(
       jsonParentId,
       treeObject
@@ -157,7 +192,10 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
       } else {
         const childId = (dTree as unknown as AbstractExpressionFactory)
           // @ts-ignore - transformer
-          .fromPojoAppendChildNodeWithContent(treeParentId, transformer(nodePojo));
+          .fromPojoAppendChildNodeWithContent(
+            treeParentId,
+            transformer(nodePojo)
+          );
 
         fromToMap.push({ from: nodeId, to: childId });
         AbstractExpressionFactory.#fromPojoTraverseAndExtractChildren(
@@ -171,8 +209,7 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
       }
     });
     return fromToMap;
-  };
-
+  }
 }
 
 export { AbstractExpressionFactory };

@@ -1,16 +1,20 @@
 import { AbstractExpressionTree, TTreePojo } from "../../../src";
-import { TGenericNodeContent, TNodePojo } from "../../../src/DirectedGraph/types";
+import {
+  TGenericNodeContent,
+  TNodePojo,
+} from "../../../src/DirectedGraph/types";
 import { UtilizedLeafVisitor } from "./UtilizedLeafVisitor";
-import type {
-  TSubjectDictionary, TJunctionOperators
-} from "./types";
+import type { TSubjectDictionary, TJunctionOperators } from "../types";
 import {
   quoteValue,
   predicateJunctionToJsOperator,
   predicateOperatorToJsOperator,
 } from "./helperFunctions";
 import {
-  TJunction, TOperand, TPredicateTypes, TPredicateNodeTypesOrNull,
+  TJunction,
+  TOperand,
+  TPredicateTypes,
+  TPredicateNodeTypesOrNull,
 } from "../types";
 import { IExpressionTree } from "../../../src/DirectedGraph/ITree";
 
@@ -22,7 +26,10 @@ const commentOutObject = (obj: Object): string => {
 class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
   //  #_internalTree: IExpressionTree<TJsPredicate>;
 
-  constructor(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypesOrNull) {
+  constructor(
+    rootSeedNodeId?: string,
+    nodeContent?: TPredicateNodeTypesOrNull
+  ) {
     super(rootSeedNodeId, nodeContent as TPredicateTypes);
   }
 
@@ -33,7 +40,10 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
     return new JsPredicateTree(rootSeed, nodeContent);
   }
 
-  toFunctionBody(rootNodeId: string = this.rootNodeId, subjects: TSubjectDictionary): string {
+  toFunctionBody(
+    rootNodeId: string = this.rootNodeId,
+    subjects: TSubjectDictionary
+  ): string {
     if (this.isSubtree(rootNodeId)) {
       const subtree = this.getChildContentAt(rootNodeId);
       if (subtree instanceof JsPredicateTree) {
@@ -42,9 +52,14 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
         return "_MISSING_BRANCH_STRUCTURE_";
       }
     } else if (this.isLeaf(rootNodeId)) {
-      const { subjectId, operator, value } = this.getChildContentAt(rootNodeId) as TOperand;
+      const { subjectId, operator, value } = this.getChildContentAt(
+        rootNodeId
+      ) as TOperand;
       const { datatype } = subjects[subjectId];
-      return ` (record['${subjectId}'] ${operator} ${quoteValue(datatype, value)}) `;
+      return ` (record['${subjectId}'] ${operator} ${quoteValue(
+        datatype,
+        value
+      )}) `;
     } else if (this.isBranch(rootNodeId)) {
       const { operator } = this.getChildContentAt(rootNodeId) as TJunction;
 
@@ -55,7 +70,9 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
           .map((childId) => {
             return this.toFunctionBody(childId, subjects);
           })
-          .join(` ${predicateJunctionToJsOperator(operator as TJunctionOperators)} `) +
+          .join(
+            ` ${predicateJunctionToJsOperator(operator as TJunctionOperators)} `
+          ) +
         ")"
       );
     } else {
@@ -97,13 +114,15 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
 
 
     `;
-    const recordProperties = leafVisitor.utilizedSubjectIds.sort().map((subjectId) => {
-      if (!(subjectId in subjects) || !("datatype" in subjects[subjectId])) {
-        console.log("Found it");
-      }
-      const { datatype } = subjects[subjectId];
-      return `${subjectId}: ${datatype}`;
-    });
+    const recordProperties = leafVisitor.utilizedSubjectIds
+      .sort()
+      .map((subjectId) => {
+        if (!(subjectId in subjects) || !("datatype" in subjects[subjectId])) {
+          console.log("Found it");
+        }
+        const { datatype } = subjects[subjectId];
+        return `${subjectId}: ${datatype}`;
+      });
     const recordShape = {
       record: recordProperties,
     };
@@ -123,6 +142,5 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
     return this;
   }
 }
-
 
 export { JsPredicateTree };

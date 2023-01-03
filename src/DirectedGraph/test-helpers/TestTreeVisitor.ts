@@ -1,7 +1,7 @@
 import { ITreeVisitor } from "../ITree";
 import { TGenericNodeContent } from "../types";
 
-class TestTreeVisitor<T> implements ITreeVisitor<T> {
+class TestTreeVisitor<T extends object> implements ITreeVisitor<T> {
   public includeSubtrees = true;
   public contentItems: any[] = [];
   public contentItemsExt: any[] = [];

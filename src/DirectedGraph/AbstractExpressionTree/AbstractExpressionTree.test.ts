@@ -1,5 +1,13 @@
-import { AbstractExpressionTree, GenericExpressionTree } from "./AbstractExpressionTree";
-import type { TNodePojo, TTreePojo, TGenericNodeContent, TGenericNodeType } from "../types";
+import {
+  AbstractExpressionTree,
+  GenericExpressionTree,
+} from "./AbstractExpressionTree";
+import type {
+  TNodePojo,
+  TTreePojo,
+  TGenericNodeContent,
+  TGenericNodeType,
+} from "../types";
 
 import {
   make3Children2Subtree3Children,
@@ -41,12 +49,24 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
     return Reflect.construct(this.constructor, []);
   }
 
-  public getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypes): IExpressionTree<TPredicateNodeTypes> {
-    return ClassTestAbstractExpressionTree.getNewInstance(rootSeedNodeId, nodeContent) as IExpressionTree<TPredicateNodeTypes>;
+  public getNewInstance(
+    rootSeedNodeId?: string,
+    nodeContent?: TPredicateNodeTypes
+  ): IExpressionTree<TPredicateNodeTypes> {
+    return ClassTestAbstractExpressionTree.getNewInstance(
+      rootSeedNodeId,
+      nodeContent
+    ) as IExpressionTree<TPredicateNodeTypes>;
   }
 
-  static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
-    return new ClassTestAbstractExpressionTree(rootSeedNodeId, nodeContent as unknown as TPredicateNodeTypes) as unknown as IExpressionTree<P>;
+  static getNewInstance<P extends object>(
+    rootSeedNodeId?: string,
+    nodeContent?: P
+  ): IExpressionTree<P> {
+    return new ClassTestAbstractExpressionTree(
+      rootSeedNodeId,
+      nodeContent as unknown as TPredicateNodeTypes
+    ) as unknown as IExpressionTree<P>;
   }
 
   createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
@@ -115,8 +135,12 @@ describe("AbstractExpressionTree", () => {
         )
       );
       expect(
-        sourceTree.getTreeContentAt(sourceTree.rootNodeId).sort(SortPredicateTest)
-      ).toStrictEqual([sourceChild0, sourceChild1, sourceRoot].sort(SortPredicateTest));
+        sourceTree
+          .getTreeContentAt(sourceTree.rootNodeId)
+          .sort(SortPredicateTest)
+      ).toStrictEqual(
+        [sourceChild0, sourceChild1, sourceRoot].sort(SortPredicateTest)
+      );
 
       expect(
         dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
@@ -127,7 +151,9 @@ describe("AbstractExpressionTree", () => {
       );
 
       expect(dTree.getChildContentAt(dTreeIds["child_0"])).toBe(OO["child_0"]);
-      expect(dTree.getChildContentAt(dTreeIds["child_0"])).toStrictEqual({ operator: "$or" });
+      expect(dTree.getChildContentAt(dTreeIds["child_0"])).toStrictEqual({
+        operator: "$or",
+      });
       expect(dTree.isBranch(dTreeIds["child_0"])).toEqual(true);
       expect(dTree.isLeaf(dTreeIds["child_0"])).toEqual(false);
       expect(dTree.countTotalNodes()).toBe(21);
@@ -214,8 +240,12 @@ describe("AbstractExpressionTree", () => {
         )
       );
       expect(
-        sourceTree.getTreeContentAt(sourceTree.rootNodeId).sort(SortPredicateTest)
-      ).toStrictEqual([sourceChild0, sourceChild1, sourceRoot].sort(SortPredicateTest));
+        sourceTree
+          .getTreeContentAt(sourceTree.rootNodeId)
+          .sort(SortPredicateTest)
+      ).toStrictEqual(
+        [sourceChild0, sourceChild1, sourceRoot].sort(SortPredicateTest)
+      );
 
       expect(
         dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
@@ -226,7 +256,9 @@ describe("AbstractExpressionTree", () => {
       );
 
       expect(dTree.getChildContentAt(dTreeIds["child_0"])).toBe(OO["child_0"]);
-      expect(dTree.getChildContentAt(dTreeIds["child_0"])).toStrictEqual({ operator: "$or" });
+      expect(dTree.getChildContentAt(dTreeIds["child_0"])).toStrictEqual({
+        operator: "$or",
+      });
       expect(dTree.isBranch(dTreeIds["child_0"])).toEqual(true);
       expect(dTree.isLeaf(dTreeIds["child_0"])).toEqual(false);
       expect(dTree.countTotalNodes()).toBe(21);
@@ -296,8 +328,12 @@ describe("AbstractExpressionTree", () => {
       dTree.appendChildNodeWithContent(dTree.rootNodeId, childPredicate0);
       dTree.appendChildNodeWithContent(dTree.rootNodeId, childPredicate1);
       //appendContentWithOr
-      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
-        [rootPredicate, childPredicate0, childPredicate1].sort(SortPredicateTest)
+      expect(
+        dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [rootPredicate, childPredicate0, childPredicate1].sort(
+          SortPredicateTest
+        )
       );
 
       expect(dTree.getCountTotalNodes()).toBe(3);
@@ -331,18 +367,27 @@ describe("AbstractExpressionTree", () => {
       dTree.appendChildNodeWithContent(dTree.rootNodeId, null);
 
       //pre conditions
-      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
-        [rootPredicate, childPredicate0, childPredicate1, null].sort(SortPredicateTest)
+      expect(
+        dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [rootPredicate, childPredicate0, childPredicate1, null].sort(
+          SortPredicateTest
+        )
       );
 
       // exercise
       dTree.appendChildNodeWithContent(dTree.rootNodeId, nullReplacePredicate);
 
       //post conditions
-      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
-        [rootPredicate, childPredicate0, childPredicate1, nullReplacePredicate].sort(
-          SortPredicateTest
-        )
+      expect(
+        dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)
+      ).toStrictEqual(
+        [
+          rootPredicate,
+          childPredicate0,
+          childPredicate1,
+          nullReplacePredicate,
+        ].sort(SortPredicateTest)
       );
     });
   });
@@ -456,10 +501,12 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       dTree.appendContentWithOr(dTree.rootNodeId, null);
 
       // pre-conditions -- null valued node
-      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
-        ([{ operator: "$or" }, null, rootPredicate] as TPredicateNodeTypes[]).sort(
-          SortPredicateTest
-        )
+      expect(
+        dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)
+      ).toStrictEqual(
+        (
+          [{ operator: "$or" }, null, rootPredicate] as TPredicateNodeTypes[]
+        ).sort(SortPredicateTest)
       );
 
       // exercise
@@ -467,10 +514,16 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
 
       //post condition -- replace null valued node
       const x = dTree.getTreeContentAt(dTree.rootNodeId);
-      expect(dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)).toStrictEqual(
-        ([{ operator: "$or" }, childPredicate0, rootPredicate] as TPredicateNodeTypes[]).sort(
-          SortPredicateTest
-        )
+      expect(
+        dTree.getTreeContentAt(dTree.rootNodeId).sort(SortPredicateTest)
+      ).toStrictEqual(
+        (
+          [
+            { operator: "$or" },
+            childPredicate0,
+            rootPredicate,
+          ] as TPredicateNodeTypes[]
+        ).sort(SortPredicateTest)
       );
 
       dTree.appendContentWithOr(dTree.rootNodeId, childPredicate1);
@@ -500,7 +553,9 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
 
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate1);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({ operator: "$and" });
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({
+        operator: "$and",
+      });
       //appendContentWithOr
       expect(dTree.getCountTotalNodes()).toBe(4);
 
@@ -535,17 +590,25 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       expect(dTree.getChildContentAt(dTree.rootNodeId)).toBeNull();
 
       dTree.replaceNodeContent(dTree.rootNodeId, rootPredicate);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toStrictEqual(rootPredicate);
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toStrictEqual(
+        rootPredicate
+      );
 
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({ operator: "$and" });
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({
+        operator: "$and",
+      });
 
       dTree.appendContentWithOr(dTree.rootNodeId, childPredicate1);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({ operator: "$or" });
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({
+        operator: "$or",
+      });
 
       // and back-again
       dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate0);
-      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({ operator: "$and" });
+      expect(dTree.getChildContentAt(dTree.rootNodeId)).toEqual({
+        operator: "$and",
+      });
 
       expect(dTree.getCountTotalNodes()).toBe(5);
     });
@@ -589,12 +652,30 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       //      appendContentWithOr
       const dTree = new ClassTestAbstractExpressionTree();
       dTree.replaceNodeContent(dTree.rootNodeId, rootPredicate);
-      const childId_0 = dTree.appendContentWithAnd(dTree.rootNodeId, childPredicate_0);
-      const childId_1 = dTree.appendContentWithOr(dTree.rootNodeId, childPredicate_1);
-      const childId_2 = dTree.appendContentWithOr(dTree.rootNodeId, childPredicate_2);
-      const childId_1_0 = dTree.appendContentWithOr(childId_1.newNodeId, childPredicate_1_0);
-      const childId_1_1 = dTree.appendContentWithOr(childId_1.newNodeId, childPredicate_1_1);
-      const childId_1_2 = dTree.appendContentWithOr(childId_1.newNodeId, childPredicate_1_2);
+      const childId_0 = dTree.appendContentWithAnd(
+        dTree.rootNodeId,
+        childPredicate_0
+      );
+      const childId_1 = dTree.appendContentWithOr(
+        dTree.rootNodeId,
+        childPredicate_1
+      );
+      const childId_2 = dTree.appendContentWithOr(
+        dTree.rootNodeId,
+        childPredicate_2
+      );
+      const childId_1_0 = dTree.appendContentWithOr(
+        childId_1.newNodeId,
+        childPredicate_1_0
+      );
+      const childId_1_1 = dTree.appendContentWithOr(
+        childId_1.newNodeId,
+        childPredicate_1_1
+      );
+      const childId_1_2 = dTree.appendContentWithOr(
+        childId_1.newNodeId,
+        childPredicate_1_2
+      );
 
       // and back-again
 
@@ -616,7 +697,9 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
 
       const x = dTree.getNewInstance();
       expect(
-        dTree.getTreeContentAt(dTree.rootNodeId, shouldIncludeSubtree).sort(SortPredicateTest)
+        dTree
+          .getTreeContentAt(dTree.rootNodeId, shouldIncludeSubtree)
+          .sort(SortPredicateTest)
       ).toStrictEqual(
         [
           OO["root"],
@@ -648,7 +731,9 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
 
       // post conditions
       expect(
-        clone.getTreeContentAt(clone.rootNodeId, shouldIncludeSubtree).sort(SortPredicateTest)
+        clone
+          .getTreeContentAt(clone.rootNodeId, shouldIncludeSubtree)
+          .sort(SortPredicateTest)
       ).toStrictEqual(
         [
           OO["root"],
@@ -686,19 +771,24 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
     it("Should return class provided by override.", () => {
       // @ts-ignore - no getNewInstance
       class ClassTestGetNewInstance extends AbstractExpressionTree<TPredicateNodeTypes> {
-        test_getNewInstance(rootSeedNodeId?: string, nodeContent?: TPredicateNodeTypes) {
+        test_getNewInstance(
+          rootSeedNodeId?: string,
+          nodeContent?: TPredicateNodeTypes
+        ) {
           return this.getNewInstance(rootSeedNodeId, nodeContent);
         }
       }
       const instanceClass = new ClassTestGetNewInstance();
-      expect(instanceClass.test_getNewInstance()).toBeInstanceOf(ClassTestGetNewInstance);
+      expect(instanceClass.test_getNewInstance()).toBeInstanceOf(
+        ClassTestGetNewInstance
+      );
     });
   });
 
   describe(".fromPojo", () => {
-
     it("Should create a tree from Plain Ole Javascript Object.", () => {
-      const pojo = makePojo3Children9Grandchildren() as TTreePojo<TPredicateTypes>;
+      const pojo =
+        makePojo3Children9Grandchildren() as TTreePojo<TPredicateTypes>;
 
       const dTree = ClassTestAbstractExpressionTree.fromPojo<
         TPredicateTypes,
@@ -713,22 +803,26 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       const dTree = ClassTestAbstractExpressionTree.fromPojo<
         TPredicateTypes,
         AbstractExpressionTree<TPredicateTypes>
-      // @ts-ignore - pojo  type definition
+        // @ts-ignore - pojo  type definition
       >(pojo);
       const childrenIds = dTree.getChildrenNodeIdsOf(dTree.rootNodeId);
-      expect(dTree.getChildContentAt(childrenIds[0])).toStrictEqual({ operator: "$or" });
+      expect(dTree.getChildContentAt(childrenIds[0])).toStrictEqual({
+        operator: "$or",
+      });
 
       const subtreeIds = dTree.getSubtreeIdsAt(dTree.rootNodeId);
       const subtree = dTree.getChildContentAt(
         subtreeIds[0]
       ) as unknown as ClassTestAbstractExpressionTree;
 
-      const x = (dTree.getTreeContentAt(dTree.rootNodeId) as TPredicateTypes[]).sort(
-        SortPredicateTest
-      );
+      const x = (
+        dTree.getTreeContentAt(dTree.rootNodeId) as TPredicateTypes[]
+      ).sort(SortPredicateTest);
 
       expect(
-        (dTree.getTreeContentAt(dTree.rootNodeId) as TPredicateTypes[]).sort(SortPredicateTest)
+        (dTree.getTreeContentAt(dTree.rootNodeId) as TPredicateTypes[]).sort(
+          SortPredicateTest
+        )
       ).toStrictEqual(
         (
           [
@@ -746,9 +840,9 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       );
 
       expect(
-        (subtree.getTreeContentAt(subtree.rootNodeId) as TPredicateTypes[]).sort(
-          SortPredicateTest
-        )
+        (
+          subtree.getTreeContentAt(subtree.rootNodeId) as TPredicateTypes[]
+        ).sort(SortPredicateTest)
       ).toStrictEqual(
         (
           [
@@ -795,7 +889,9 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
         );
       };
       expect(willThrow).toThrow(
-        new DirectedGraphError("Orphan nodes detected while parsing pojo object.")
+        new DirectedGraphError(
+          "Orphan nodes detected while parsing pojo object."
+        )
       );
     });
   });
@@ -829,7 +925,9 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
       expect(
         dTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
       ).toStrictEqual(
-        [OO["child_0"], OO["child_0_1"], OO["child_0_2"]].sort(SortPredicateTest)
+        [OO["child_0"], OO["child_0_1"], OO["child_0_2"]].sort(
+          SortPredicateTest
+        )
       );
 
       // exercise 2 - only 1 sibling
@@ -845,14 +943,10 @@ tree<TTypeA>fromPojo,,,, (transform<TTypeA,TTypeB>()=>TTypeC)
 });
 describe("GenericExpressionTree", () => {
   it("Should return GenericExpressionTree if method of subclass does not override.", () => {
-    const treeInstance = GenericExpressionTree.getNewInstance()
-    const genericTree = treeInstance.getNewInstance('_THE_ROOT_', null)
-    expect(genericTree.rootNodeId).toStrictEqual('_THE_ROOT_');
-    expect(genericTree.getChildContentAt(genericTree.rootNodeId)).toBeNull()
-    expect(genericTree).toBeInstanceOf(
-      GenericExpressionTree
-    );
-
+    const treeInstance = GenericExpressionTree.getNewInstance();
+    const genericTree = treeInstance.getNewInstance("_THE_ROOT_", null);
+    expect(genericTree.rootNodeId).toStrictEqual("_THE_ROOT_");
+    expect(genericTree.getChildContentAt(genericTree.rootNodeId)).toBeNull();
+    expect(genericTree).toBeInstanceOf(GenericExpressionTree);
   });
-
-})
+});

@@ -1,3 +1,4 @@
+
 type TJsPredicate = {};
 type TJunctionOperators = "$and" | "$or";
 type TJsJunctionOperators = "&&" | "||";

@@ -1,4 +1,4 @@
-import type { TJsPredicate, TSubjectDictionary } from "./JsPredicateTree/types";
+import type { TSubjectDictionary } from "./types";
 
 const SubjectsSimple: TSubjectDictionary = {
   "customer.firstname": {

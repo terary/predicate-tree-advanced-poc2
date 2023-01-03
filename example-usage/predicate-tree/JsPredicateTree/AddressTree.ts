@@ -1,25 +1,32 @@
 import { AbstractExpressionTree } from "../../../src";
-import { TGenericNodeContent, TNodePojo, TTreePojo } from "../../../src/DirectedGraph/types";
-import { TOperand, TPredicateNodeTypes, TPredicateNodeTypesOrNull, TPredicateTypes } from "../types";
+import {
+  TGenericNodeContent,
+  TNodePojo,
+  TTreePojo,
+} from "../../../src/DirectedGraph/types";
+import { TOperand, TPredicateNodeTypesOrNull, TPredicateTypes } from "../types";
 import { JsPredicateTree } from "./JsPredicateTree";
-import { TJsPredicate, TSubjectDictionary } from "./types";
+import { TSubjectDictionary } from "../types";
 import { IExpressionTree } from "../../../src/DirectedGraph/ITree";
 
 import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
-import {
-  quoteValue,
-  predicateJunctionToJsOperator,
-  predicateOperatorToJsOperator,
-} from "./helperFunctions";
+import { quoteValue, predicateOperatorToJsOperator } from "./helperFunctions";
+
 type TTreeInitiator = <P, Q>(rootSeedNodeId: string, nodeContent: P) => Q;
-const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
+
+const defaultFromPojoTransform = <P extends object>(
+  nodeContent: TNodePojo<P>
+): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
 
 class AddressTree extends JsPredicateTree {
   private _subjectId!: string;
 
-  toFunctionBody(rootNodeId: string = this.rootNodeId, subjects: TSubjectDictionary): string {
+  toFunctionBody(
+    rootNodeId: string = this.rootNodeId,
+    subjects: TSubjectDictionary
+  ): string {
     const subSubject = subjects[this._subjectId];
     const subjectIds: { [subjectId: string]: any } = {};
     const subfields: { [subjectId: string]: any } = {};
@@ -35,9 +42,9 @@ class AddressTree extends JsPredicateTree {
       if (!nodeContent.subjectId) {
         console.log("Found it");
       }
-      const term = ` record['${nodeContent.subjectId}'] ${predicateOperatorToJsOperator(
-        nodeContent.operator
-      )} ${quoteValue(
+      const term = ` record['${
+        nodeContent.subjectId
+      }'] ${predicateOperatorToJsOperator(nodeContent.operator)} ${quoteValue(
         // @ts-ignore - .datatype not member of subject
         subject.datatype,
         nodeContent.value
@@ -70,11 +77,14 @@ class AddressTree extends JsPredicateTree {
     return this;
   }
 
-  static getNewInstance<P>(
+  static getNewInstance<P extends object>(
     rootSeedNodeId = "address",
     nodeContent?: P
   ): IExpressionTree<P> {
-    const tree = new AddressTree(rootSeedNodeId, nodeContent as unknown as TPredicateTypes);
+    const tree = new AddressTree(
+      rootSeedNodeId,
+      nodeContent as unknown as TPredicateTypes
+    );
 
     tree._nodeDictionary = {
       [`${rootSeedNodeId}`]: { nodeContent: null },
@@ -118,12 +128,16 @@ class AddressTree extends JsPredicateTree {
       "specialInstructions",
     ];
   }
-  static fromPojo<P, Q>(
+
+  static fromPojo<P extends object, Q>(
     srcPojoTree: TTreePojo<P>,
     transform: (
       nodeContent: TNodePojo<P>
     ) => TGenericNodeContent<P> = defaultFromPojoTransform,
-    instanceBuilder: TTreeInitiator = <P, Q>(nodeId?: string, nodeContent?: P) => {
+    instanceBuilder: TTreeInitiator = <P, Q>(
+      nodeId?: string,
+      nodeContent?: P
+    ) => {
       return new AddressTree(
         nodeId,
         nodeContent as unknown as TPredicateTypes
@@ -134,12 +148,18 @@ class AddressTree extends JsPredicateTree {
     // should we be cloning the pojo, as to not be destructive
     const pojoRootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(srcPojoTree);
     tree._subjectId = pojoRootNodeId;
-    if (!srcPojoTree[pojoRootNodeId] || !srcPojoTree[pojoRootNodeId].nodeContent) {
+    if (
+      !srcPojoTree[pojoRootNodeId] ||
+      !srcPojoTree[pojoRootNodeId].nodeContent
+    ) {
       throw new Error("No Node Content at root.");
     }
     const { nodeContent } = srcPojoTree[pojoRootNodeId];
-    // @ts-ignore - operator not property
-    if (!("operator" in nodeContent) || nodeContent!.operator !== "$addressTree") {
+    if (
+      !("operator" in nodeContent) ||
+      // @ts-ignore - operator not memember of NonNull<P>
+      nodeContent!.operator !== "$addressTree"
+    ) {
       throw new Error(
         "AddressTree requires root node content contain operator=='$addressTree', none found."
       );
@@ -171,74 +191,9 @@ class AddressTree extends JsPredicateTree {
     return tree as unknown as Q;
   }
 
-  static x2_fromPojo<P, Q>(
-    srcPojoTree: TTreePojo<P>,
-    transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>,
-
-    instanceBuilder?: <P, Q>(nodeId?: string, nodeContent?: P) => AbstractExpressionTree<P>
-  ): Q {
-    const tree = AddressTree.getNewInstance("subtreeRoot");
-    // should we be cloning the pojo, as to not be destructive
-    const pojoRootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(srcPojoTree);
-    if (!srcPojoTree[pojoRootNodeId] || !srcPojoTree[pojoRootNodeId].nodeContent) {
-      throw new Error("No Node Content at root.");
-    }
-    const { nodeContent } = srcPojoTree[pojoRootNodeId];
-    // @ts-ignore - operator not property
-    if (!("operator" in nodeContent) || nodeContent!.operator !== "$addressTree") {
-      throw new Error(
-        "AddressTree requires root node content contain operator=='$addressTree', none found."
-      );
-    }
-    //@ts-ignore
-    tree.replaceNodeContent(tree.rootNodeId, nodeContent);
-
-    AddressTree.subfieldNames().forEach((subfieldId) => {
-      // consider the key/object structure.  If the key is known, no need to filter for it.
-      const regExp = new RegExp("$" + `${pojoRootNodeId}.${subfieldId}^`);
-      const pojoNodeIds = Object.keys(srcPojoTree).filter((pojoKey) => {
-        return pojoKey === `${pojoRootNodeId}.${subfieldId}`; // regExp.test(pojoKey);
-        // return pojoKey.match(regExp);
-      });
-
-      // we expect 1 and only 1
-      const pojoNodeId = pojoNodeIds.pop();
-      if (pojoNodeId) {
-        tree.replaceNodeContent(
-          `${tree.rootNodeId}:${subfieldId}`,
-          //@ts-ignore
-          srcPojoTree[pojoNodeId].nodeContent
-        );
-      }
-    });
-
-    return tree as unknown as Q;
-  }
-
-  static x_buildTree(rootSeedId: string) {
-    const pojo = {
-      [rootSeedId]: { parentId: `${rootSeedId}`, nodeContent: { operator: "$addressTree" } },
-      [`${rootSeedId}:address1`]: {
-        parentId: `${rootSeedId}`,
-        nodeContent: {
-          subjectId: "customer.address1",
-          operator: "$eq",
-          value: "addr1",
-        },
-      },
-      [`${rootSeedId}:address2`]: {
-        parentId: `${rootSeedId}`,
-        nodeContent: {
-          subjectId: "customer.address2",
-          operator: "$eq",
-          value: "addr1",
-        },
-      },
-    } as TTreePojo<TJsPredicate>;
-    return AddressTree.fromPojo(pojo);
-  }
-
-  static defaultTreePojo(rootSeedNodeId = "address"): TTreePojo<TPredicateTypes> {
+  static defaultTreePojo(
+    rootSeedNodeId = "address"
+  ): TTreePojo<TPredicateTypes> {
     return {
       [`${rootSeedNodeId}`]: {
         parentId: `${rootSeedNodeId}`,
@@ -270,7 +225,11 @@ class AddressTree extends JsPredicateTree {
       },
       [`${rootSeedNodeId}.city`]: {
         parentId: `${rootSeedNodeId}`,
-        nodeContent: { operator: "$eq", subjectId: "customer.address.city", value: "city" },
+        nodeContent: {
+          operator: "$eq",
+          subjectId: "customer.address.city",
+          value: "city",
+        },
       },
       [`${rootSeedNodeId}.stateOrProvince`]: {
         parentId: `${rootSeedNodeId}`,

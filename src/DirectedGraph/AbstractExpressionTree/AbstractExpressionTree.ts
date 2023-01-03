@@ -3,26 +3,33 @@ import { DirectedGraphError } from "../DirectedGraphError";
 import { IAppendChildNodeIds } from "./IAppendChildNodeIds";
 import treeUtils from "../AbstractDirectedGraph/treeUtilities";
 import { IExpressionTree } from "../ITree";
-import type { TFromToMap, TGenericNodeContent, TNodePojo, TTreePojo } from "../types";
+import type {
+  TFromToMap,
+  TGenericNodeContent,
+  TNodePojo,
+  TTreePojo,
+} from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
 import { AbstractExpressionFactory } from "../../../example-usage/predicate-tree/AbstractExpressionFactory";
 
-const defaultFromPojoTransform = <P>(nodeContent: TNodePojo<P>): TGenericNodeContent<P> => {
+const defaultFromPojoTransform = <P extends object>(
+  nodeContent: TNodePojo<P>
+): TGenericNodeContent<P> => {
   return nodeContent.nodeContent;
 };
 
-type TAppendedNode<T> = {
+type TAppendedNode<T extends object> = {
   nodeId: string;
   nodeContent: TGenericNodeContent<T>;
 };
 
-type AppendNodeResponseType<T> = {
-  appendedNodes: TAppendedNode<T>[];
-  junctionNode: TAppendedNode<T>;
-  invisibleChild: TAppendedNode<T> | null; // if we move convert leaf to branch, this child becomes leaf
-};
+// type AppendNodeResponseType<T> = {
+//   appendedNodes: TAppendedNode<T>[];
+//   junctionNode: TAppendedNode<T>;
+//   invisibleChild: TAppendedNode<T> | null; // if we move convert leaf to branch, this child becomes leaf
+// };
 
-abstract class AbstractExpressionTree<P>
+abstract class AbstractExpressionTree<P extends object>
   extends AbstractTree<P>
   implements IExpressionTree<P>
 {
@@ -42,17 +49,16 @@ abstract class AbstractExpressionTree<P>
   }
 
   /**
- * The tricky bit here is that the  subtree._rootNodeId
- * must be the same as parent's node.nodeId
- * @param targetParentNodeId
- * @returns
- */
+   * The tricky bit here is that the  subtree._rootNodeId
+   * must be the same as parent's node.nodeId
+   * @param targetParentNodeId
+   * @returns
+   */
   abstract createSubtreeAt(nodeId: string): IExpressionTree<P>;
 
   protected defaultJunction(nodeId: string): P {
     // the leaf node at nodeId is being converted to a junction (branch)
     // need to return the best option for junction operator (&&, ||, '$or', ...)
-
 
     // This needs to be abstract and defined in subclasses
     // @ts-ignore
@@ -71,7 +77,10 @@ abstract class AbstractExpressionTree<P>
     if (this.isLeaf(targetNodeId)) {
       const originalContent = this.getChildContentAt(targetNodeId);
       this.replaceNodeContent(targetNodeId, this.defaultJunction(targetNodeId));
-      effectiveTargetNodeId = this.appendChildNodeWithContent(targetNodeId, originalContent);
+      effectiveTargetNodeId = this.appendChildNodeWithContent(
+        targetNodeId,
+        originalContent
+      );
     }
 
     const fromToMap = super.appendTreeAt(
@@ -104,7 +113,10 @@ abstract class AbstractExpressionTree<P>
   ): IAppendChildNodeIds {
     //
     if (this.isBranch(parentNodeId)) {
-      super.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
+      super.replaceNodeContent(
+        parentNodeId,
+        junctionContent as TGenericNodeContent<P>
+      );
       const nullValueChildren = this.#getChildrenWithNullValues(parentNodeId);
       let newNodeId;
       if (nullValueChildren.length > 0) {
@@ -122,8 +134,14 @@ abstract class AbstractExpressionTree<P>
     }
 
     const originalContent = this.getChildContentAt(parentNodeId);
-    const originalContentId = super.appendChildNodeWithContent(parentNodeId, originalContent);
-    this.replaceNodeContent(parentNodeId, junctionContent as TGenericNodeContent<P>);
+    const originalContentId = super.appendChildNodeWithContent(
+      parentNodeId,
+      originalContent
+    );
+    this.replaceNodeContent(
+      parentNodeId,
+      junctionContent as TGenericNodeContent<P>
+    );
 
     return {
       newNodeId: super.appendChildNodeWithContent(parentNodeId, nodeContent),
@@ -160,7 +178,7 @@ abstract class AbstractExpressionTree<P>
   }
 
   // this should not be public
-  public static reRootTreeAt<T>(
+  public static reRootTreeAt<T extends object>(
     tree: AbstractExpressionTree<T>,
     from: string,
     to: string
@@ -183,9 +201,11 @@ abstract class AbstractExpressionTree<P>
     });
   }
 
-  static #fromPojo<P, Q>(
+  static #fromPojo<P extends object, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform // branch coverage complains
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform // branch coverage complains
   ): IExpressionTree<P> {
     const pojoObject = { ...srcPojoTree };
 
@@ -204,13 +224,15 @@ abstract class AbstractExpressionTree<P>
     );
 
     if (Object.keys(pojoObject).length > 0) {
-      throw new DirectedGraphError("Orphan nodes detected while parsing pojo object.");
+      throw new DirectedGraphError(
+        "Orphan nodes detected while parsing pojo object."
+      );
     }
 
     return dTree;
   }
 
-  static #fromPojoTraverseAndExtractChildren = <T>(
+  static #fromPojoTraverseAndExtractChildren = <T extends object>(
     treeParentId: string,
     jsonParentId: string,
     dTree: IExpressionTree<T>,
@@ -218,7 +240,6 @@ abstract class AbstractExpressionTree<P>
     transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>,
     fromToMap: TFromToMap[] = []
   ): TFromToMap[] => {
-    // ): void => {
     const childrenNodes = treeUtils.extractChildrenNodes<T>(
       jsonParentId,
       treeObject
@@ -241,7 +262,10 @@ abstract class AbstractExpressionTree<P>
       } else {
         const childId = (
           dTree as unknown as AbstractExpressionTree<T>
-        ).fromPojoAppendChildNodeWithContent(treeParentId, transformer(nodePojo));
+        ).fromPojoAppendChildNodeWithContent(
+          treeParentId,
+          transformer(nodePojo)
+        );
         fromToMap.push({ from: nodeId, to: childId });
         AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
           childId,
@@ -258,16 +282,26 @@ abstract class AbstractExpressionTree<P>
 
   //  static getNewInstance(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P>;
 
-  static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P): IExpressionTree<P> {
-    return new GenericExpressionTree(rootSeedNodeId, nodeContent) as IExpressionTree<P>;
+  static getNewInstance<P extends object>(
+    rootSeedNodeId?: string,
+    nodeContent?: P
+  ): IExpressionTree<P> {
+    return new GenericExpressionTree(
+      rootSeedNodeId,
+      nodeContent
+    ) as IExpressionTree<P>;
   }
 
-  static fromPojo<P, Q>(
+  static fromPojo<P extends object, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform
   ): IExpressionTree<P> {
     const tree = AbstractExpressionTree.#fromPojo<P, Q>(srcPojoTree, transform);
-    AbstractExpressionTree.validateTree(tree as unknown as AbstractExpressionTree<P>);
+    AbstractExpressionTree.validateTree(
+      tree as unknown as AbstractExpressionTree<P>
+    );
     return tree;
   }
 
@@ -298,14 +332,18 @@ abstract class AbstractExpressionTree<P>
   }
 
   // *tmc* I don't think generics are necessary or even useful?
-  protected static validateTree<T>(tree: AbstractExpressionTree<T>) {
+  protected static validateTree<T extends object>(
+    tree: AbstractExpressionTree<T>
+  ) {
     const allNodeIds = tree.getTreeNodeIdsAt(tree.rootNodeId);
     allNodeIds.forEach((nodeId) => {
       if (tree.isBranch(nodeId)) {
         const childrenIds = tree.getChildrenNodeIdsOf(nodeId);
         if (childrenIds.length < 2) {
           throw new ExpressionTreeError(
-            `Tree fails no-single-child rule. childIds: '${childrenIds.join("', '")}'.`
+            `Tree fails no-single-child rule. childIds: '${childrenIds.join(
+              "', '"
+            )}'.`
           );
         }
       }
@@ -313,19 +351,26 @@ abstract class AbstractExpressionTree<P>
   }
 }
 
-class GenericExpressionTree<T> extends AbstractExpressionTree<T> {
+class GenericExpressionTree<
+  T extends object
+> extends AbstractExpressionTree<T> {
   getNewInstance(rootSeed?: string, nodeContent?: T): IExpressionTree<T> {
     return new GenericExpressionTree(rootSeed, nodeContent);
   }
 
-  createSubtreeAt<Q extends T>(
-    targetNodeId: string,
-  ): IExpressionTree<Q> {
-    const subtree = new GenericExpressionTree<Q>('_subtree_');
+  createSubtreeAt<Q extends T>(targetNodeId: string): IExpressionTree<Q> {
+    const subtree = new GenericExpressionTree<Q>("_subtree_");
 
-    const subtreeParentNodeId = this.appendChildNodeWithContent(targetNodeId, subtree);
+    const subtreeParentNodeId = this.appendChildNodeWithContent(
+      targetNodeId,
+      subtree
+    );
 
-    AbstractExpressionTree.reRootTreeAt<Q>(subtree, subtree.rootNodeId, subtreeParentNodeId);
+    AbstractExpressionTree.reRootTreeAt<Q>(
+      subtree,
+      subtree.rootNodeId,
+      subtreeParentNodeId
+    );
     subtree._rootNodeId = subtreeParentNodeId;
     subtree._incrementor = this._incrementor;
 

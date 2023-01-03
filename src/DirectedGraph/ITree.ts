@@ -1,8 +1,12 @@
 import { TGenericNodeContent, TTreePojo, TGenericNodeType } from "./types";
 import { IAppendChildNodeIds } from "../DirectedGraph/AbstractExpressionTree/IAppendChildNodeIds";
 import type { TFromToMap } from "./types";
-interface ITreeVisitor<T> {
-  visit: (nodeId: string, nodeContent: TGenericNodeContent<T>, parentId: string) => void;
+interface ITreeVisitor<T extends object> {
+  visit: (
+    nodeId: string,
+    nodeContent: TGenericNodeContent<T>,
+    parentId: string
+  ) => void;
   includeSubtrees: boolean;
 }
 /*
@@ -18,7 +22,7 @@ getChild[At] take the top dot.
 getChildren[Of] takes the 2 bottom dots
 */
 
-interface ITree<T> {
+interface ITree<T extends object> {
   rootNodeId: string;
 
   appendChildNodeWithContent(
@@ -52,17 +56,26 @@ interface ITree<T> {
     nodeId: string,
     shouldIncludeSubtrees?: boolean
   ): TGenericNodeContent<T>[];
-  getChildrenNodeIdsOf(parentNodeId: string, shouldIncludeSubtrees?: boolean): string[];
+  getChildrenNodeIdsOf(
+    parentNodeId: string,
+    shouldIncludeSubtrees?: boolean
+  ): string[];
   getDescendantContentOf(
     nodeId: string,
     shouldIncludeSubtrees?: boolean
   ): TGenericNodeContent<T>[];
-  getDescendantNodeIds(parentNodeKey: string, shouldIncludeSubtrees?: boolean): string[];
+  getDescendantNodeIds(
+    parentNodeKey: string,
+    shouldIncludeSubtrees?: boolean
+  ): string[];
 
   getParentNodeId(nodeId: string): string;
   getSiblingIds(nodeId: string): string[];
   getSubtreeIdsAt(nodeId?: string): string[];
-  getTreeContentAt(nodeId?: string, shouldIncludeSubtrees?: boolean): TGenericNodeContent<T>[];
+  getTreeContentAt(
+    nodeId?: string,
+    shouldIncludeSubtrees?: boolean
+  ): TGenericNodeContent<T>[];
 
   // nodeIds of subtrees doesn't make sense.  Internally the tree is different so
   // subtree nodeIds won't be accessible to parent tree
@@ -81,11 +94,19 @@ interface ITree<T> {
   removeNodeAt(nodeId: string): void;
   // toPojo(): TTreePojo<T>;
   toPojoAt(nodeId?: string): TTreePojo<T>;
-  visitAllAt(visitor: ITreeVisitor<T>, nodeId?: string, parentNodeId?: string): void;
-  visitLeavesOf(visitor: ITreeVisitor<T>, nodeId?: string, parentNodeId?: string): void;
+  visitAllAt(
+    visitor: ITreeVisitor<T>,
+    nodeId?: string,
+    parentNodeId?: string
+  ): void;
+  visitLeavesOf(
+    visitor: ITreeVisitor<T>,
+    nodeId?: string,
+    parentNodeId?: string
+  ): void;
 }
 
-interface IExpressionTree<P> extends ITree<P> {
+interface IExpressionTree<P extends object> extends ITree<P> {
   appendContentWithJunction: (
     parentNodeId: string,
     junctionContent: TGenericNodeContent<P>,
@@ -93,10 +114,10 @@ interface IExpressionTree<P> extends ITree<P> {
   ) => IAppendChildNodeIds;
   cloneAt(nodeId: string): IExpressionTree<P>;
   createSubtreeAt(nodeId: string): IExpressionTree<P>;
-  getNewInstance(rootSeed?: string, nodeContent?: P): IExpressionTree<P>;
+  getNewInstance(rootSeed?: string, nodeContent?: P | null): IExpressionTree<P>;
 }
 
-interface IDirectedGraph<T> extends ITree<T> {
+interface IDirectedGraph<T extends object> extends ITree<T> {
   appendChildNodeWithContent: (
     treeParentId: string,
     nodeContent: TGenericNodeContent<T>
