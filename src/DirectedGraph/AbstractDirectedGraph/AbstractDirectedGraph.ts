@@ -3,12 +3,23 @@ import treeUtils from "./treeUtilities";
 import { DirectedGraphError } from "../DirectedGraphError";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
 import { ITree, IDirectedGraph, ITreeVisitor } from "../ITree";
-import type { TNodePojo, TTreePojo, TGenericNodeContent, TFromToMap } from "../types";
+import type {
+  TNodePojo,
+  TTreePojo,
+  TGenericNodeContent,
+  TFromToMap,
+} from "../types";
 
-const defaultFromPojoTransform = <T>(nodeContent: TNodePojo<T>): TGenericNodeContent<T> => {
+const defaultFromPojoTransform = <T extends object>(
+  nodeContent: TNodePojo<T>
+): TGenericNodeContent<T> => {
   return nodeContent.nodeContent;
 };
-abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDirectedGraph<T> {
+
+abstract class AbstractDirectedGraph<T extends object>
+  extends AbstractTree<T>
+  implements IDirectedGraph<T>
+{
   public appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>
@@ -52,7 +63,7 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     return this.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 
-  static #fromPojoTraverseAndExtractChildren = <T>(
+  static #fromPojoTraverseAndExtractChildren = <T extends object>(
     treeParentId: string,
     jsonParentId: string,
     dTree: IDirectedGraph<T>,
@@ -81,7 +92,10 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
       } else {
         const childId = (
           dTree as unknown as AbstractDirectedGraph<T>
-        ).fromPojoAppendChildNodeWithContent(treeParentId, transformer(nodePojo));
+        ).fromPojoAppendChildNodeWithContent(
+          treeParentId,
+          transformer(nodePojo)
+        );
         fromToMap.push({ from: nodeId, to: childId });
         AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
           childId,
@@ -96,23 +110,30 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     return fromToMap;
   };
 
-  protected static getNewInstance<P>(rootSeedNodeId?: string, nodeContent?: P) {
+  protected static getNewInstance<P extends object>(
+    rootSeedNodeId?: string,
+    nodeContent?: P
+  ) {
     class GenericDirectedGraph extends AbstractDirectedGraph<P> {}
 
     return new GenericDirectedGraph(rootSeedNodeId, nodeContent);
   }
 
-  public static fromPojo<P, Q>(
+  public static fromPojo<P extends object, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform
     //    TreeClassBuilder?: (rootNodeId?: string, nodeContent?: P) => IDirectedGraph<P>
   ): IDirectedGraph<P> {
     return AbstractDirectedGraph.#fromPojo<P, Q>(srcPojoTree, transform);
   }
 
-  static #fromPojo<P, Q>(
+  static #fromPojo<P extends object, Q>(
     srcPojoTree: TTreePojo<P>,
-    transform: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P> = defaultFromPojoTransform // branch coverage complains
+    transform: (
+      nodeContent: TNodePojo<P>
+    ) => TGenericNodeContent<P> = defaultFromPojoTransform // branch coverage complains
   ): IDirectedGraph<P> {
     const pojoObject = { ...srcPojoTree };
 
@@ -134,11 +155,15 @@ abstract class AbstractDirectedGraph<T> extends AbstractTree<T> implements IDire
     );
 
     if (Object.keys(pojoObject).length > 0) {
-      throw new DirectedGraphError("Orphan nodes detected while parson pojo object.");
+      throw new DirectedGraphError(
+        "Orphan nodes detected while parsing pojo object."
+      );
     }
     return dTree;
   }
 }
-class GenericDirectedGraph<P> extends AbstractDirectedGraph<P> implements IDirectedGraph<P> {}
+class GenericDirectedGraph<P extends object>
+  extends AbstractDirectedGraph<P>
+  implements IDirectedGraph<P> {}
 
 export { AbstractDirectedGraph };

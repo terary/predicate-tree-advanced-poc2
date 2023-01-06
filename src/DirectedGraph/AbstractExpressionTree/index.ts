@@ -1,1 +1,4 @@
-export { AbstractExpressionTree } from "./AbstractExpressionTree";
+export {
+  AbstractExpressionTree,
+  GenericExpressionTree,
+} from "./AbstractExpressionTree";

@@ -2,7 +2,7 @@ import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpres
 import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpressionTree";
 import { isUUIDv4 } from "../../common/utilities/isFunctions";
 import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
-import { ITreeVisitor } from "../ITree";
+import { IExpressionTree, ITreeVisitor } from "../ITree";
 import { TGenericNodeContent, TTreePojo } from "../types";
 import {
   filterPojoContent,
@@ -30,6 +30,7 @@ import type {
 import { ObfuscatedError } from "./ObfuscatedError";
 import { values } from "lodash";
 import { ChildB } from "../../../dev-debug/ChildB";
+import { AbstractExpressionFactory } from "../../../example-usage/predicate-tree/AbstractExpressionFactory";
 
 class TestWidget {
   private _name: string;
@@ -42,7 +43,9 @@ class TestWidget {
   }
 }
 
-export class TestObfuscatedTree<P> extends AbstractObfuscatedExpressionTree<P> {
+export class TestObfuscatedTree<
+  P extends object
+> extends AbstractObfuscatedExpressionTree<P> {
   public getIdKeyReverseMap() {
     return this.buildReverseMap();
   }
@@ -65,13 +68,31 @@ export class TestObfuscatedTree<P> extends AbstractObfuscatedExpressionTree<P> {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
 }
-class TestClearTextTree<P> extends AbstractExpressionTree<P> {}
+
+class TestClearTextTree<P extends object> extends AbstractExpressionTree<P> {
+  getNewInstance(
+    rootSeed?: string | undefined,
+    nodeContent?: P | undefined
+  ): IExpressionTree<P> {
+    return new TestClearTextTree(rootSeed, nodeContent);
+  }
+  createSubtreeAt(nodeId: string): IExpressionTree<P> {
+    const subtree = this.getNewInstance(nodeId);
+    // @ts-ignore null is not TPredicateTypes
+    return AbstractExpressionFactory.createSubtreeAt(
+      this as unknown as AbstractExpressionFactory,
+      nodeId,
+      null
+    );
+  }
+}
 
 describe("AbstractObfuscatedExpressionTree", () => {
   describe("constructor", () => {
     it("Should obfuscate root nodeId.", () => {
-      // @ts-ignore
-      const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
+      const oTree = new TestObfuscatedTree<TestWidget>(
+        new TestClearTextTree() as IExpressionTree<TestWidget>
+      );
       expect(oTree.getChildContentAt(oTree.rootNodeId)).toBeNull();
 
       expect(isUUIDv4(oTree.rootNodeId)).toBe(true);
@@ -94,10 +115,8 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
-      // @ts-ignore
       const privateTree = new TestObfuscatedTree(exposedTree);
       expect(privateTree.countTotalNodes(undefined, true)).toEqual(
         exposedTree.countTotalNodes(undefined, true)
@@ -135,7 +154,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
       >(appendTreePojo);
 
       expect(
-        sourceTree.getTreeContentAt(sourceTree.rootNodeId).sort(SortPredicateTest)
+        sourceTree
+          .getTreeContentAt(sourceTree.rootNodeId)
+          .sort(SortPredicateTest)
       ).toStrictEqual(
         (
           [
@@ -147,21 +168,33 @@ describe("AbstractObfuscatedExpressionTree", () => {
       );
 
       // exercise
-      const toFromKeys = privateTree.appendTreeAt(dTreeIds["child_0_0"], sourceTree);
+      const toFromKeys = privateTree.appendTreeAt(
+        dTreeIds["child_0_0"],
+        sourceTree
+      );
 
       // post conditions
       expect(toFromKeys.length).toEqual(4);
-      expect(privateTree.getChildContentAt(toFromKeys[0].to)).toBe(appendPredicateRoot);
-      expect(privateTree.getChildContentAt(toFromKeys[1].to)).toBe(appendPredicateChild_0);
-      expect(privateTree.getChildContentAt(toFromKeys[2].to)).toBe(appendPredicateChild_1);
-      expect(privateTree.getChildContentAt(toFromKeys[3].to)).toBe(OO["child_0_0"]);
+      expect(privateTree.getChildContentAt(toFromKeys[0].to)).toBe(
+        appendPredicateRoot
+      );
+      expect(privateTree.getChildContentAt(toFromKeys[1].to)).toBe(
+        appendPredicateChild_0
+      );
+      expect(privateTree.getChildContentAt(toFromKeys[2].to)).toBe(
+        appendPredicateChild_1
+      );
+      expect(privateTree.getChildContentAt(toFromKeys[3].to)).toBe(
+        OO["child_0_0"]
+      );
     });
-    it.skip("Should create branch at specified location, append original content and new  tree as child, if target is leaf", () => {});
   });
 
   describe(".appendContentWithJunction", () => {
     it("Should obfuscate junction ids", () => {
-      const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
+      const oTree = new TestObfuscatedTree<TestWidget>(
+        new TestClearTextTree() as IExpressionTree<TestWidget>
+      );
       const widgetRoot = new TestWidget("root");
       const widgetChild_0 = new TestWidget("child_0");
 
@@ -174,7 +207,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(junctionNodeIds.junctionNodeId).toBe(oTree.rootNodeId);
       expect(isUUIDv4(junctionNodeIds.originalContentNodeId)).toBe(true);
       expect(isUUIDv4(junctionNodeIds.newNodeId)).toBe(true);
-      expect(oTree.getChildContentAt(junctionNodeIds.newNodeId)).toBe(widgetChild_0);
+      expect(oTree.getChildContentAt(junctionNodeIds.newNodeId)).toBe(
+        widgetChild_0
+      );
     });
     it("Should append node and change branch junction.", () => {
       const exposedTree = new ClassTestAbstractExpressionTree();
@@ -184,7 +219,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -201,7 +235,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // preCondition
       expect(privateTree.isBranch(dTreeIds["child_0"])).toBe(true);
       expect(
-        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+        privateTree
+          .getTreeContentAt(dTreeIds["child_0"])
+          .sort(SortPredicateTest)
       ).toStrictEqual(
         (
           [
@@ -222,7 +258,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
       //post conditions
       expect(
-        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+        privateTree
+          .getTreeContentAt(dTreeIds["child_0"])
+          .sort(SortPredicateTest)
       ).toStrictEqual(
         (
           [
@@ -231,12 +269,18 @@ describe("AbstractObfuscatedExpressionTree", () => {
             OO["child_0_0"],
             OO["child_0_1"],
             OO["child_0_2"],
-            { value: "append", operator: "$eq", subjectId: "customer.firstname" },
+            {
+              value: "append",
+              operator: "$eq",
+              subjectId: "customer.firstname",
+            },
           ] as TPredicateNodeTypes[]
         ).sort(SortPredicateTest)
       );
 
-      const treePojo = AbstractExpressionTree.obfuscatePojo(privateTree.toPojoAt());
+      const treePojo = AbstractExpressionTree.obfuscatePojo(
+        privateTree.toPojoAt()
+      );
     });
   });
   describe(".cloneAt([nodeId])", () => {
@@ -248,7 +292,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -259,7 +302,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
       // pre conditions
       expect(
-        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+        privateTree
+          .getTreeContentAt(dTreeIds["child_0"])
+          .sort(SortPredicateTest)
       ).toStrictEqual(
         (
           [
@@ -298,7 +343,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -314,7 +358,10 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
       // exercise
       const treeContent = privateTree.getTreeContentAt();
-      const treeContentWithSubtrees = privateTree.getTreeContentAt(undefined, true);
+      const treeContentWithSubtrees = privateTree.getTreeContentAt(
+        undefined,
+        true
+      );
 
       expect(treeContent.sort(SortPredicateTest)).toStrictEqual(
         [
@@ -363,7 +410,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
   });
   describe("getChildrenNodeIdsOf", () => {
     it("Should return obfuscated nodeIds (keys).", () => {
-      const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
+      const oTree = new TestObfuscatedTree<TestWidget>(
+        new TestClearTextTree() as IExpressionTree<TestWidget>
+      );
       const widgetRoot = new TestWidget("root");
       const widgetChild_0 = new TestWidget("child_0");
       const junctionNodeIds = oTree.appendContentWithJunction(
@@ -381,7 +430,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe(".get[child|children|descendant|tree][content|nodeIds]()", () => {
     it("Should return obfuscated nodeIds (keys).", () => {
-      const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
+      const oTree = new TestObfuscatedTree<TestWidget>(
+        new TestClearTextTree() as IExpressionTree<TestWidget>
+      );
       const widgetRoot = new TestWidget("root");
       const widgetChild_0 = new TestWidget("child_0");
       const junctionNodeIds = oTree.appendContentWithJunction(
@@ -414,7 +465,11 @@ describe("AbstractObfuscatedExpressionTree", () => {
         oTree.rootNodeId,
         shouldIncludeSubtrees
       );
-      expect(treeContentWithSubtrees).toStrictEqual([null, widgetChild_0, widgetRoot]);
+      expect(treeContentWithSubtrees).toStrictEqual([
+        null,
+        widgetChild_0,
+        widgetRoot,
+      ]);
 
       // getTreeNodeIdsAt
       const treeKeys = oTree.getTreeNodeIdsAt(oTree.rootNodeId);
@@ -426,7 +481,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe(".is[Branch|Tree|Leaf]", () => {
     it("Should return accurate values.", () => {
-      const oTree = new TestObfuscatedTree<TestWidget>(new TestClearTextTree());
+      const oTree = new TestObfuscatedTree<TestWidget>(
+        new TestClearTextTree() as IExpressionTree<TestWidget>
+      );
       const widgetRoot = new TestWidget("root");
       const widgetChild_0 = new TestWidget("child_0");
       const junctionNodeIds = oTree.appendContentWithJunction(
@@ -457,7 +514,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
       expect(oTree.countTotalNodes()).toEqual(13);
     });
   });
-
   describe(".toPojo", () => {
     it.skip("Should produce pojo for whole tree.", () => {
       const exposedTree = new ClassTestAbstractExpressionTree();
@@ -467,7 +523,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -481,7 +536,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
         dTreeIds[debugLabel] = reverseMap[nodeId];
       });
 
-      const treePojo = AbstractExpressionTree.obfuscatePojo(privateTree.toPojoAt());
+      const treePojo = AbstractExpressionTree.obfuscatePojo(
+        privateTree.toPojoAt()
+      );
       const subtree0Pojo = AbstractExpressionTree.obfuscatePojo(
         subtree0.toPojoAt(subtree0.rootNodeId)
       );
@@ -540,11 +597,12 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
-      expect(privateTree.countTotalNodes()).toEqual(exposedTree.countTotalNodes());
+      expect(privateTree.countTotalNodes()).toEqual(
+        exposedTree.countTotalNodes()
+      );
 
       const reverseMap = privateTree.getIdKeyReverseMap();
       Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
@@ -553,7 +611,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
       // pre conditions
       expect(
-        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+        privateTree
+          .getTreeContentAt(dTreeIds["child_0"])
+          .sort(SortPredicateTest)
       ).toStrictEqual(
         [OO["child_0"], OO["child_0_0"], OO["child_0_1"], OO["child_0_2"]].sort(
           SortPredicateTest
@@ -567,9 +627,13 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // post conditions 1
       expect(privateTree.countTotalNodes()).toBe(20);
       expect(
-        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+        privateTree
+          .getTreeContentAt(dTreeIds["child_0"])
+          .sort(SortPredicateTest)
       ).toStrictEqual(
-        [OO["child_0"], OO["child_0_1"], OO["child_0_2"]].sort(SortPredicateTest)
+        [OO["child_0"], OO["child_0_1"], OO["child_0_2"]].sort(
+          SortPredicateTest
+        )
       );
 
       // exercise 2 - only 1 sibling
@@ -578,7 +642,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
       // post conditions 2
       expect(privateTree.countTotalNodes()).toBe(18);
       expect(
-        privateTree.getTreeContentAt(dTreeIds["child_0"]).sort(SortPredicateTest)
+        privateTree
+          .getTreeContentAt(dTreeIds["child_0"])
+          .sort(SortPredicateTest)
       ).toStrictEqual([OO["child_0_2"]].sort(SortPredicateTest));
     });
   });
@@ -595,7 +661,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -605,7 +670,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
         dTreeIds[debugLabel] = reverseMap[nodeId];
       });
 
-      expect(privateTree.getSiblingIds(privateTree.rootNodeId)).toStrictEqual([]);
+      expect(privateTree.getSiblingIds(privateTree.rootNodeId)).toStrictEqual(
+        []
+      );
       expect(privateTree.getSiblingIds(dTreeIds["child_0"])).toStrictEqual([
         dTreeIds["child_1"],
         dTreeIds["child_2"],
@@ -615,20 +682,42 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
   describe("private/protected methods", () => {
     it(".fromPojoAppendChildNodeWithContent - will throw if key is not found.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {
+        getNewInstance(
+          rootSeed?: string,
+          nodeContent?: TPredicateNodeTypes
+        ): IExpressionTree<TPredicateNodeTypes> {
+          return new ExposedTree(rootSeed, nodeContent);
+        }
+
+        createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
+          const subtree = this.getNewInstance(nodeId);
+          // @ts-ignore null is not TPredicateTypes
+          return AbstractExpressionFactory.createSubtreeAt(
+            this as unknown as AbstractExpressionFactory,
+            nodeId,
+            null
+          );
+        }
+      }
       class ObfuscatedTree extends TestObfuscatedTree<TPredicateNodeTypes> {
         public appendChildNodeWithContentPojo(
           parentNodeKey: string,
           nodeContent: TGenericNodeContent<TPredicateNodeTypes>
         ): string {
-          return this.fromPojoAppendChildNodeWithContent(parentNodeKey, nodeContent);
+          return this.fromPojoAppendChildNodeWithContent(
+            parentNodeKey,
+            nodeContent
+          );
         }
       }
       const exposedTree = new ExposedTree();
       const privateTree = new ObfuscatedTree(exposedTree);
 
       const willThrow = () => {
-        privateTree.appendChildNodeWithContentPojo("_DOES_NOT_EXIST_", { operator: "$or" });
+        privateTree.appendChildNodeWithContentPojo("_DOES_NOT_EXIST_", {
+          operator: "$or",
+        });
       };
 
       expect(willThrow).toThrow(
@@ -639,13 +728,33 @@ describe("AbstractObfuscatedExpressionTree", () => {
     });
 
     it(".fromPojoAppendChildNodeWithContent - will append child node.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {
+        getNewInstance(
+          rootSeed?: string,
+          nodeContent?: TPredicateNodeTypes
+        ): IExpressionTree<TPredicateNodeTypes> {
+          return new ExposedTree(rootSeed, nodeContent);
+        }
+
+        createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
+          const subtree = this.getNewInstance(nodeId);
+          // @ts-ignore null is not TPredicateTypes
+          return AbstractExpressionFactory.createSubtreeAt(
+            this as unknown as AbstractExpressionFactory,
+            nodeId,
+            null
+          );
+        }
+      }
       class ObfuscatedTree extends TestObfuscatedTree<TPredicateNodeTypes> {
         public appendChildNodeWithContentPojo(
           parentNodeKey: string,
           nodeContent: TGenericNodeContent<TPredicateNodeTypes>
         ): string {
-          return this.fromPojoAppendChildNodeWithContent(parentNodeKey, nodeContent);
+          return this.fromPojoAppendChildNodeWithContent(
+            parentNodeKey,
+            nodeContent
+          );
         }
 
         nodeKeyToNodeId(key: string) {
@@ -659,15 +768,37 @@ describe("AbstractObfuscatedExpressionTree", () => {
       const obfusTree = new ObfuscatedTree(exposedTree);
       const nodeContent = { operator: "$or" } as TPredicateNodeTypes;
 
-      const rootNodeId = obfusTree.nodeKeyToNodeId(obfusTree.rootNodeId) as string;
+      const rootNodeId = obfusTree.nodeKeyToNodeId(
+        obfusTree.rootNodeId
+      ) as string;
 
-      const nodeId = obfusTree.appendChildNodeWithContentPojo(rootNodeId, nodeContent);
+      const nodeId = obfusTree.appendChildNodeWithContentPojo(
+        rootNodeId,
+        nodeContent
+      );
       const nodeKey = obfusTree.nodeIdToNodeKey(nodeId) as string;
       expect(obfusTree.getChildContentAt(nodeKey)).toBe(nodeContent);
     });
 
     it(".getNodeIdOrThrow - will throw if key is not found.", () => {
-      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {}
+      class ExposedTree extends AbstractExpressionTree<TPredicateNodeTypes> {
+        getNewInstance(
+          rootSeed?: string,
+          nodeContent?: TPredicateNodeTypes
+        ): IExpressionTree<TPredicateNodeTypes> {
+          return new ExposedTree(rootSeed, nodeContent);
+        }
+
+        createSubtreeAt(nodeId: string): IExpressionTree<TPredicateNodeTypes> {
+          const subtree = this.getNewInstance(nodeId);
+          // @ts-ignore null is not TPredicateTypes
+          return AbstractExpressionFactory.createSubtreeAt(
+            this as unknown as AbstractExpressionFactory,
+            nodeId,
+            null
+          );
+        }
+      }
       const exposedTree = new ExposedTree();
       const privateTree = new TestObfuscatedTree(exposedTree);
 
@@ -676,7 +807,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
       };
 
       expect(willThrow).toThrow(
-        new ObfuscatedError("Failed to find nodeId with key: '_DOES_NOT_EXIST_'.")
+        new ObfuscatedError(
+          "Failed to find nodeId with key: '_DOES_NOT_EXIST_'."
+        )
       );
     });
   });
@@ -692,7 +825,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -763,7 +895,6 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
       } = make3Children2Subtree3Children(exposedTree);
 
       const privateTree = new TestObfuscatedTree(exposedTree);
@@ -788,7 +919,9 @@ describe("AbstractObfuscatedExpressionTree", () => {
 
       // const x = parentVisitor.contentItems.sort(SortPredicateTest);
       // post conditions
-      expect(parentVisitorWithSubtree.contentItems.sort(SortPredicateTest)).toStrictEqual(
+      expect(
+        parentVisitorWithSubtree.contentItems.sort(SortPredicateTest)
+      ).toStrictEqual(
         [
           // OO["root"],
           // OO["child_0"],
@@ -871,30 +1004,49 @@ describe("AbstractObfuscatedExpressionTree", () => {
         subtree0,
         subtree1,
         originalWidgets: OO,
-        //@ts-ignore - not ITree
+        // @ts-ignore
       } = make3Children2Subtree3Children(privateTree);
-
-      // const reverseMap = privateTree.getIdKeyReverseMap();
-      // Object.entries(dTreeIds).forEach(([debugLabel, nodeId]) => {
-      //   dTreeIds[debugLabel] = reverseMap[debugLabel];
-      // });
 
       // exercise
       expect(privateTree.getChildContentAt(dTreeIds["root"])).toBe(OO["root"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_0"])).toBe(OO["child_0"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_0_0"])).toBe(OO["child_0_0"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_0_1"])).toBe(OO["child_0_1"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_0_2"])).toBe(OO["child_0_2"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_0"])).toBe(
+        OO["child_0"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_0_0"])).toBe(
+        OO["child_0_0"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_0_1"])).toBe(
+        OO["child_0_1"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_0_2"])).toBe(
+        OO["child_0_2"]
+      );
 
-      expect(privateTree.getChildContentAt(dTreeIds["child_1"])).toBe(OO["child_1"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_1_0"])).toBe(OO["child_1_0"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_1_1"])).toBe(OO["child_1_1"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_1_2"])).toBe(OO["child_1_2"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_1"])).toBe(
+        OO["child_1"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_1_0"])).toBe(
+        OO["child_1_0"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_1_1"])).toBe(
+        OO["child_1_1"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_1_2"])).toBe(
+        OO["child_1_2"]
+      );
 
-      expect(privateTree.getChildContentAt(dTreeIds["child_2"])).toBe(OO["child_2"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_2_0"])).toBe(OO["child_2_0"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_2_1"])).toBe(OO["child_2_1"]);
-      expect(privateTree.getChildContentAt(dTreeIds["child_2_2"])).toBe(OO["child_2_2"]);
+      expect(privateTree.getChildContentAt(dTreeIds["child_2"])).toBe(
+        OO["child_2"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_2_0"])).toBe(
+        OO["child_2_0"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_2_1"])).toBe(
+        OO["child_2_1"]
+      );
+      expect(privateTree.getChildContentAt(dTreeIds["child_2_2"])).toBe(
+        OO["child_2_2"]
+      );
 
       const xr = subtree0.rootNodeId;
       const x = privateTree.getChildContentAt(subtree0.rootNodeId);
