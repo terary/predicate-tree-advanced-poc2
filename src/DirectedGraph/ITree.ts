@@ -24,16 +24,7 @@ interface ITreeVisitor<T extends object> {
   includeSubtrees: boolean;
 }
 /*
-At/Of convention
-Basically At includes
-but dTree.getChildContent(dTreeIds["subtree0:root"])
-returns the subtree 
-is the different here - 
-getChildContent[Of] vs  getChildrenContent[At]
-
-if you think of a triangle of 3 dots 
-getChild[At] take the top dot.
-getChildren[Of] takes the 2 bottom dots
+  Write up somewhere about the difference of 'Of' and 'At'
 */
 
 interface ITree<T extends object> {

@@ -27,6 +27,7 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
       nodeContent && "operator" in nodeContent
         ? nodeContent
         : { operator: "_ANY_" };
+
     switch (operator) {
       case "$addressTree":
         // @ts-ignore - some how this is inherit ITree, ???
