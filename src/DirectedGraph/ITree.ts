@@ -65,6 +65,11 @@ interface ITree<T extends object> {
     parentNodeId: string,
     shouldIncludeSubtrees?: boolean
   ): string[];
+  getNodeIdsWithNodeContent(
+    matcherFn: (nodeContent: T) => boolean,
+    shouldIncludeSubtrees?: boolean //*tmc* what about subtrees ?
+  ): string[];
+
   getDescendantContentOf(
     nodeId: string,
     shouldIncludeSubtrees?: boolean

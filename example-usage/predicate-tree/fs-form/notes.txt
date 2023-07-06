@@ -1,0 +1,10 @@
+Conditional Logic can only be used when a quantifiable field 
+    select list, 
+    checkbox, 
+    radio, 
+    number, 
+    event, 
+    date/time 
+    
+    
+    is present on the form. If you want to add logic to a quantifiable field, another quantifiable field must be present.

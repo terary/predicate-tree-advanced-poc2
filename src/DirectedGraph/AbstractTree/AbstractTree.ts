@@ -223,6 +223,21 @@ abstract class AbstractTree<T extends object> implements ITree<T> {
     return this._nodeDictionary[nodeId].nodeContent;
   }
 
+  getNodeIdsWithNodeContent(
+    matcherFn: (nodeContent: T) => boolean,
+    shouldIncludeSubtrees?: boolean //*tmc* what about subtrees ?
+  ): string[] {
+    const allNodeIds = this.getTreeNodeIdsAt(this.rootNodeId);
+
+    return allNodeIds.filter((nodeId) => {
+      if (this.isSubtree(nodeId) || this.getChildContentAt(nodeId) === null) {
+        return false; // *tmc* for the time being, we look only at natural tree elements (no subtree).
+      }
+      const content = this.getChildContentAt(nodeId);
+      return matcherFn(content as T);
+    });
+  }
+
   public getChildrenNodeIdsOf(
     parentNodeId: string,
     shouldIncludeSubtrees = false

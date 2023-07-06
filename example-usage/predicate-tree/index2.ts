@@ -32,7 +32,8 @@ const treeFromPojo = AbstractExpressionFactory.fromPojo({
 }) as JsPredicateTree;
 
 const fnBody = treeFromPojo.toFunctionBody(treeFromPojo.rootNodeId, SubjectsSimple);
-if (require.main === module) {
+// 
+if (require && require.main === module) {
   console.log('called directly');
   console.log({
     genericTree,

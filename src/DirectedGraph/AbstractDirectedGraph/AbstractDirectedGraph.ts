@@ -38,7 +38,7 @@ abstract class AbstractDirectedGraph<T extends object>
    * @param targetParentNodeId
    * @returns
    */
-  public createSubtreeAt<Q>(parentNodeId: string): IDirectedGraph<T> {
+  public createSubtreeAt<Q extends IDirectedGraph<T>>(parentNodeId: string): Q {
     // can we rethink this.  Is there a better way?
     // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
     const subtree = new this.constructor(parentNodeId) as typeof this;
@@ -53,7 +53,7 @@ abstract class AbstractDirectedGraph<T extends object>
     subtree._nodeDictionary[subtree._rootNodeId] = { nodeContent: null };
     subtree._incrementor = this._incrementor;
 
-    return subtree;
+    return subtree as unknown as Q;
   }
 
   protected fromPojoAppendChildNodeWithContent(

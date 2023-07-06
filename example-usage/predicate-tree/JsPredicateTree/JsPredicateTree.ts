@@ -51,7 +51,14 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
       const { subjectId, operator, value } = this.getChildContentAt(
         rootNodeId
       ) as TOperand;
+      try {
+        subjects[subjectId];
+      } catch (e) {
+        throw e;
+      }
+
       const { datatype } = subjects[subjectId];
+
       return ` (record['${subjectId}'] ${operator} ${quoteValue(
         datatype,
         value
