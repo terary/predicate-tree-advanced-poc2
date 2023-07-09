@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <script>
+
+            const processFormJson = (formAsJson)=>{
+                console.log({formAsJson})
+                const formHtmlDiv = document.getElementById('formHtml');
+                formHtmlDiv.innerHTML = formAsJson.html;
+            }
+
+            async function getFormFromApi(){
+                // - This will have CORS issues. To get this to work, install the extension
+                // referenced in the document body
+                const apiKey = document.getElementById('apiKey').value;
+                const fetchFormId = document.getElementById('fetchFormId').value;
+                const formGetUrl = `https://www.formstack.com/api/v2/form/${fetchFormId}`
+
+
+                // ----
+                var myHeaders = new Headers();
+                myHeaders.append("Authorization", `Bearer ${apiKey}`);
+                myHeaders.append("Content-Type", "application/json");
+
+                var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+                };
+
+                fetch(formGetUrl, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    processFormJson(JSON.parse(result))   
+                    console.log(JSON.parse(result))
+                    } 
+                )
+                .catch(error => console.log('error', error));
+
+            }
+
+        </script>
+
+
+    </head>
+    <body>
+        <div>
+            Will need to use extension: https://webextension.org/listing/access-control.html
+            to get around API/CORS issues
+
+        </div>
+        <form>
+            <label for="apiKey">Api Key</label>
+            <input id="apiKey" value="cc17435f8800943cc1abd3063a8fe44f" />
+            <label for="fetchFormId">Form Id</label>
+            <input id="fetchFormId" value="5358471" />
+            <button type="button" onclick="getFormFromApi()" >Get Form</button>
+        </form>
+        <hr />
+        <div id="formHtml" />
+    </body>
+
+</html>

@@ -1,0 +1,85 @@
+{
+  propName: 'id',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'label',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'hide_label',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'description',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'name',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'type',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'options',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'required',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'uniq',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'hidden',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'readonly',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'colspan',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'sort',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'logic',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'calculation',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'workflow_access',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
+{
+  propName: 'default',
+  fieldIdCount: 22,
+  fieldIds: '["text","textarea","name","address","email","phone","number","select","select","radio","checkbox","creditcard","datetime","file","matrix","richtext","embed","product","signature","rating","section","text"]'
+}
