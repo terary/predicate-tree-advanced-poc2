@@ -5,6 +5,7 @@ export {
 export { AbstractObfuscatedExpressionTree } from "./DirectedGraph/AbstractObfuscatedExpressionTree";
 export { AbstractTree } from "./DirectedGraph/AbstractTree";
 export { DirectedGraphError } from "./DirectedGraph/DirectedGraphError";
+export { AbstractDirectedGraph } from "./DirectedGraph/AbstractDirectedGraph";
 
 export type {
   ITree,
