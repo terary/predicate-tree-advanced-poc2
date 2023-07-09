@@ -7,3 +7,7 @@ export type {
   TNodePojo,
   TTreePojo,
 } from "./types";
+export {
+  AbstractDirectedGraph,
+  GenericDirectedGraph,
+} from "./AbstractDirectedGraph";

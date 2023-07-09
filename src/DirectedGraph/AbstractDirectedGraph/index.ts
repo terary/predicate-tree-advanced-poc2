@@ -1,2 +1,4 @@
-// export { AbstractDirectedGraph } from "./AbstractDirectedGraph";
-export {};
+export {
+  AbstractDirectedGraph,
+  GenericDirectedGraph,
+} from "./AbstractDirectedGraph";

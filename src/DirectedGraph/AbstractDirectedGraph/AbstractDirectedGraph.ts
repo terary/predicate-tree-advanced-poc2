@@ -114,7 +114,7 @@ abstract class AbstractDirectedGraph<T extends object>
     rootSeedNodeId?: string,
     nodeContent?: P
   ) {
-    class GenericDirectedGraph extends AbstractDirectedGraph<P> {}
+    // class GenericDirectedGraph extends AbstractDirectedGraph<P> {}
 
     return new GenericDirectedGraph(rootSeedNodeId, nodeContent);
   }
@@ -166,4 +166,4 @@ class GenericDirectedGraph<P extends object>
   extends AbstractDirectedGraph<P>
   implements IDirectedGraph<P> {}
 
-export { AbstractDirectedGraph };
+export { AbstractDirectedGraph, GenericDirectedGraph };
