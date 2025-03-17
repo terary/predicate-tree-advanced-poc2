@@ -9,16 +9,17 @@
       "dom.iterable",
       "esnext"
     ],
+    "module": "CommonJS",
     "moduleResolution": "node",
     "outDir": "./dist",
     "resolveJsonModule": true,
     "strict": true,
     "skipLibCheck": true,
-    "target": "es6",
+    "target": "ES2016",
     "sourceMap": true,
 
   },
   "include": [
     "src/index.ts"
-  ]
+  ],
 }

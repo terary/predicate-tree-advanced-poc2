@@ -5,8 +5,8 @@ import {
 } from "./fs-form/form-logic/form5350841Pojo";
 
 import { JsPredicateTree } from "./JsPredicateTree/JsPredicateTree";
-// import { SubjectsSimple } from "./SubjectsExamples";
-import { SubjectsSimple } from "./fs-form/form-logic/SubjectsForms";
+import { SubjectsSimple } from "./SubjectsExamples";
+// import { SubjectsSimple } from "./fs-form/form-logic/SubjectsForms";
 import { AbstractExpressionFactory } from "./AbstractExpressionFactory";
 const treeFromPojo = AbstractExpressionFactory.fromPojo({
   ...formPojoCircular,

@@ -19,3 +19,6 @@ export type {
   TNodePojo,
   TTreePojo,
 } from "./DirectedGraph";
+
+// export { IDirectedGraph } from "../../src/DirectedGraph/ITree";
+export { IDirectedGraph } from "./DirectedGraph/ITree";

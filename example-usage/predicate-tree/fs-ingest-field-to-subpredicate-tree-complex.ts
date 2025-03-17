@@ -1,11 +1,9 @@
 import form5350841 from "./fs-form/form5350841.json";
 import form5353031 from "./fs-form/form5353031.json";
-import { checksToPojo } from "./fs-form/util";
 
-import type { TPojoDocument } from "./fs-form/types";
-import { AbstractExpressionTree, TGenericNodeContent } from "../../src";
-import { AbstractDirectedGraph } from "../../src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph";
-import { IDirectedGraph, ITreeVisitor } from "../../src/DirectedGraph/ITree";
+import { TGenericNodeContent, AbstractDirectedGraph } from "../../dist/src";
+// import { IDirectedGraph } from "../../src/DirectedGraph/ITree";
+
 type TFieldLogic = {
   isRoot: boolean;
   rootFieldId?: string;
@@ -149,11 +147,13 @@ form5350841.fields[1].logic.checks.forEach((logicTerm) => {
   );
 });
 
-const subFieldTrees: { [fieldId: string]: TestAbstractDirectedGraph } = {};
+const subFieldTrees: {
+  [fieldId: string]: TestAbstractDirectedGraph;
+} = {};
 form5353031.fields.forEach((field) => {
   subFieldTrees[field.id] = formTree.createSubtreeAt<TestAbstractDirectedGraph>(
     formTree.rootNodeId
-  );
+  ) as TestAbstractDirectedGraph;
   subFieldTrees[field.id].replaceNodeContent(
     subFieldTrees[field.id].rootNodeId,
     convertFieldRootNode(field)
