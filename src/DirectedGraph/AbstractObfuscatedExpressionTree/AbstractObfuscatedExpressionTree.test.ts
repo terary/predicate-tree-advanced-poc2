@@ -30,7 +30,7 @@ import type {
 import { ObfuscatedError } from "./ObfuscatedError";
 import { values } from "lodash";
 import { ChildB } from "../../../dev-debug/ChildB";
-import { AbstractExpressionFactory } from "../../../example-usage/predicate-tree/AbstractExpressionFactory";
+import { AbstractExpressionFactory } from "../../test-resources/predicate-tree/AbstractExpressionFactory";
 
 class TestWidget {
   private _name: string;

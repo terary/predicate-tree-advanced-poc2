@@ -3,7 +3,7 @@ import {
   TNodePojo,
   TTreePojo,
   IExpressionTree,
-} from "../../../src";
+} from "../../../../src";
 import { TOperand, TPredicateNodeTypesOrNull, TPredicateTypes } from "../types";
 import { JsPredicateTree } from "./JsPredicateTree";
 import { TSubjectDictionary } from "../types";

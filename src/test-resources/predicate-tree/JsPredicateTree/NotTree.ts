@@ -1,5 +1,5 @@
-import { AbstractTree, TGenericNodeContent } from "../../../src";
-import { AbstractDirectedGraph } from "../../../src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph";
+import { AbstractTree, TGenericNodeContent } from "../../../../src";
+import { AbstractDirectedGraph } from "../../../../src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph";
 // import { TPredicateNodeTypes } from "../types";
 import {
   TJunction,

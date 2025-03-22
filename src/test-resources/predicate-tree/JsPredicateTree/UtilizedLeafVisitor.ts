@@ -1,8 +1,8 @@
-import type { TPredicateNodeTypes, TOperand } from "./types";
-import { ITreeVisitor } from "../../src";
-import type { TGenericNodeContent } from "../../src";
+import type { TPredicateNodeTypes, TOperand } from "../types";
+import { ITreeVisitor } from "../../../../src";
+import type { TGenericNodeContent } from "../../../../src";
 
-class LeafVisitor implements ITreeVisitor<TPredicateNodeTypes> {
+class UtilizedLeafVisitor implements ITreeVisitor<TPredicateNodeTypes> {
   includeSubtrees: boolean = false;
   private _utilizedSubjectIds: { [subjectId: string]: string } = {};
   public visit(
@@ -20,4 +20,4 @@ class LeafVisitor implements ITreeVisitor<TPredicateNodeTypes> {
     return Object.keys(this._utilizedSubjectIds).sort();
   }
 }
-export { LeafVisitor };
+export { UtilizedLeafVisitor };

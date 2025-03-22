@@ -6,7 +6,7 @@ import {
   TPredicateNodeTypesOrNull,
 } from "../types";
 import { AddressTree } from "./AddressTree";
-import { GenericExpressionTree } from "../../../src";
+import { GenericExpressionTree } from "../../../../src";
 
 describe("NotTree", () => {
   describe("appendChildNodeWithContent/removeNodeAt", () => {

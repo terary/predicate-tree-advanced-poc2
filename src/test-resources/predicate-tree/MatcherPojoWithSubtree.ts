@@ -1,89 +1,5 @@
-import type { TTreePojo } from "../../../../src";
-import type { TPredicateNodeTypes } from "../../types";
-
-const formPojo = {
-  field147366613: {
-    parentId: "field147366613",
-    nodeContent: { operator: "$and" },
-  },
-  predicateOne: {
-    parentId: "field147366613",
-    nodeContent: {
-      fieldLabel: "predicateOne",
-      fieldId: "147366617",
-      value: "True",
-      operator: "$eq",
-      subjectId: "field.147366617",
-    },
-  },
-  predicateTwo: {
-    parentId: "field147366613",
-    nodeContent: {
-      fieldLabel: "predicateTwo",
-      fieldId: "147366619",
-      value: "True",
-      operator: "$eq",
-      subjectId: "field.147366619",
-    },
-  },
-};
-
-const formPojoCircular = {
-  field147366613: {
-    parentId: "field147366613",
-    nodeContent: { operator: "$and" },
-  },
-  predicateOne: {
-    parentId: "field147366613",
-    nodeContent: {
-      fieldLabel: "predicateOne",
-      fieldId: "147366617",
-      value: "True",
-      operator: "$eq",
-      subjectId: "field.147366617",
-    },
-  },
-  predicateTwo: {
-    parentId: "field147366613",
-    nodeContent: {
-      fieldLabel: "predicateTwo",
-      fieldId: "147366619",
-      value: "True",
-      operator: "$eq",
-      subjectId: "field.147366619",
-    },
-  },
-  predicate3: {
-    parentId: "predicateTwo",
-    nodeContent: {
-      fieldLabel: "predicateTwo",
-      fieldId: "147366619",
-      value: "True",
-      operator: "$eq",
-      subjectId: "field.147366619",
-    },
-  },
-  "predicate3.0": {
-    parentId: "predicate3.1",
-    nodeContent: {
-      fieldLabel: "predicateTwo",
-      fieldId: "147366619",
-      value: "True",
-      operator: "$eq",
-      subjectId: "field.147366619",
-    },
-  },
-  "predicate3.1": {
-    parentId: "predicate3.0",
-    nodeContent: {
-      fieldLabel: "predicateTwo",
-      fieldId: "147366619",
-      value: "True",
-      operator: "$eq",
-      subjectId: "field.147366619",
-    },
-  },
-};
+import type { TTreePojo } from "../../../src";
+import type { TPredicateNodeTypes } from "./types";
 
 const rubblePojo = {
   rubble: { parentId: "root", nodeContent: { operator: "$and" } },
@@ -232,11 +148,9 @@ const matcherPojo = {
 } as TTreePojo<TPredicateNodeTypes>;
 
 export {
-  formPojo,
-  formPojoCircular,
-  // matcherPojo,
-  // // notTree as notTreePojo,
-  // // agePojo,
-  // rubblePojo,
-  // addressTreePojo,
+  matcherPojo,
+  // notTree as notTreePojo,
+  // agePojo,
+  rubblePojo,
+  addressTreePojo,
 };

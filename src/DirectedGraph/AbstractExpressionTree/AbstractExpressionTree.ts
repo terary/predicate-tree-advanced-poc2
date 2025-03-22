@@ -10,7 +10,6 @@ import type {
   TTreePojo,
 } from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
-import { AbstractExpressionFactory } from "../../../example-usage/predicate-tree/AbstractExpressionFactory";
 
 const defaultFromPojoTransform = <P extends object>(
   nodeContent: TNodePojo<P>

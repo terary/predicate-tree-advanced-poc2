@@ -1,11 +1,11 @@
-import type { TFromToMap, TNodePojo, TTreePojo } from "../../src";
+import type { TFromToMap, TNodePojo, TTreePojo } from "../../../src";
 
 import {
   AbstractExpressionTree,
   AbstractTree,
   DirectedGraphError,
   IExpressionTree,
-} from "../../src";
+} from "../../../src";
 import treeUtils from "./treeUtilities";
 import { AddressTree } from "./JsPredicateTree/AddressTree";
 import { TPredicateTypes, TPredicateNodeTypesOrNull } from "./types";

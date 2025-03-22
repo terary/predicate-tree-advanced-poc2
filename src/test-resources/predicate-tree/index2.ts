@@ -1,4 +1,4 @@
-import { AbstractExpressionTree } from "../../src";
+import { AbstractExpressionTree } from "../../../src";
 import { AbstractExpressionFactory } from "./AbstractExpressionFactory";
 import { TPredicateTypes } from "./types";
 import { SubjectsSimple } from "./SubjectsExamples";
@@ -31,10 +31,13 @@ const treeFromPojo = AbstractExpressionFactory.fromPojo({
   ...addressTreePojo,
 }) as JsPredicateTree;
 
-const fnBody = treeFromPojo.toFunctionBody(treeFromPojo.rootNodeId, SubjectsSimple);
-// 
+const fnBody = treeFromPojo.toFunctionBody(
+  treeFromPojo.rootNodeId,
+  SubjectsSimple
+);
+//
 if (require && require.main === module) {
-  console.log('called directly');
+  console.log("called directly");
   console.log({
     genericTree,
     addressTree,
@@ -42,10 +45,9 @@ if (require && require.main === module) {
     treeFromPojo,
   });
   console.log({ fnBody });
-
 } else {
   // Likely being called from tests
   // console.log('required as a module');
 }
 
-export { fnBody }
+export { fnBody };

@@ -1,4 +1,4 @@
-import { AbstractExpressionTree, TTreePojo } from "../../../src";
+import { AbstractExpressionTree, TTreePojo } from "../../../../src";
 import { UtilizedLeafVisitor } from "./UtilizedLeafVisitor";
 import type { TSubjectDictionary, TJunctionOperators } from "../types";
 import {
@@ -12,7 +12,7 @@ import {
   TPredicateTypes,
   TPredicateNodeTypesOrNull,
 } from "../types";
-import { IExpressionTree } from "../../../src";
+import { IExpressionTree } from "../../../../src";
 
 const commentOutObject = (obj: Object): string => {
   const json = JSON.stringify(obj, null, 2);
