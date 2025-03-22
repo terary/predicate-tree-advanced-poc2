@@ -1,0 +1,87 @@
+Running predicate tree WITH multilingual labels...
+
+===============================================
+  PREDICATE TREE WITH MULTILINGUAL LABELS
+===============================================
+Building a predicate tree with labelled subject dictionary...
+✅ Root node created with $and operator
+✅ Added customer.name predicate
+✅ Added customer.age predicate
+✅ Added $or junction node
+✅ Added product.price predicate
+✅ Added product.category predicate
+
+===============================================
+  EXPORTED POJO STRUCTURE
+===============================================
+{
+  "_root_": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "_root_:0": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.name",
+      "operator": "contains",
+      "value": "Smith"
+    }
+  },
+  "_root_:1": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.age",
+      "operator": "greaterThan",
+      "value": 30
+    }
+  },
+  "_root_:2": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$or"
+    }
+  },
+  "_root_:2:3": {
+    "parentId": "_root_:2",
+    "nodeContent": {
+      "subject": "product.price",
+      "operator": "lessThan",
+      "value": 100
+    }
+  },
+  "_root_:2:4": {
+    "parentId": "_root_:2",
+    "nodeContent": {
+      "subject": "product.category",
+      "operator": "equals",
+      "value": "Electronics"
+    }
+  }
+}
+
+===============================================
+  VALIDATING TREE STRUCTURE
+===============================================
+✅ Verified root node has $and operator
+✅ Verified root node has 3 children as expected
+✅ Verified all root children have correct content
+✅ Verified OR junction has 2 children as expected
+✅ Verified all OR junction children have correct content
+
+✅ VALIDATION SUCCESSFUL: Tree structure matches expected format
+
+===============================================
+  HUMAN-READABLE DESCRIPTIONS
+===============================================
+
+English Description:
+➡️ Customer Name contains "Smith" AND Age is greater than 30 AND (Price is less than 100 OR Category equals "Electronics")
+
+Spanish Description:
+➡️ Nombre del Cliente contiene "Smith" Y Edad es mayor que 30 Y (Precio es menor que 100 O Categoría es igual a "Electronics")
+
+===============================================
+  EXAMPLE COMPLETED SUCCESSFULLY
+===============================================
