@@ -1,0 +1,146 @@
+===============================================
+  PREDICATE TREE WITH NOT SUBTREE EXAMPLE
+===============================================
+
+=== Building Inner Not Tree (Subtree) ===
+✅ Created Not Tree with negated $and root
+✅ Added negated predicate: C equals true (will be negated to C not equals true)
+✅ Added negated predicate: A equals 'test' (will be negated to A not equals 'test')
+
+=== Building Outer Logic Expression Tree ===
+✅ Created Logic Expression Tree with $and root
+✅ Added predicate: A equals 'example'
+✅ Added predicate: B greater than 10
+
+=== Attaching Not Tree as Subtree ===
+  - Creating subtree attachment point...
+  - Transferring content from source subtree...
+  - Subtree attached at node _root_:2
+✅ Attached Not Tree as subtree of Logic Tree
+
+=== Testing Subtree Transportability ===
+✅ Created a Not Tree with one predicate
+✅ Exported Not Tree to POJO
+  - Creating subtree attachment point...
+  - Transferring content from source subtree...
+  - Subtree attached at node _root_:0
+✅ Attached Not Tree as subtree to first Logic Tree
+  - Creating subtree attachment point...
+  - Transferring content from source subtree...
+  - Subtree attached at node _root_:0
+✅ Attached Not Tree as subtree to second Logic Tree
+✅ Successfully demonstrated subtree transportability
+
+
+===============================================
+  KEY INFORMATION AND RESULTS
+===============================================
+
+=== Combined Tree Structure (POJO) ===
+{
+  "_root_": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "_root_:0": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "A",
+      "operator": "$eq",
+      "value": "example"
+    }
+  },
+  "_root_:1": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "B",
+      "operator": "$gt",
+      "value": 10
+    }
+  },
+  "_root_:2": {
+    "nodeType": "subtree",
+    "nodeContent": {
+      "operator": "$and",
+      "_meta": {
+        "negated": true,
+        "description": "NOT group (all predicates inside are negated)"
+      }
+    },
+    "parentId": "_root_"
+  },
+  "_root_:2:3": {
+    "parentId": "_root_:2",
+    "nodeContent": {
+      "subject": "C",
+      "operator": "$eq",
+      "value": true,
+      "_meta": {
+        "negated": true
+      }
+    }
+  },
+  "_root_:2:4": {
+    "parentId": "_root_:2",
+    "nodeContent": {
+      "subject": "A",
+      "operator": "$eq",
+      "value": "test",
+      "_meta": {
+        "negated": true
+      }
+    }
+  }
+}
+
+=== Validating Combined Tree Structure ===
+✅ Verified root node has $and operator
+✅ Root node has 2 direct children
+✅ Found predicate: A = 'example'
+✅ Found predicate: B > 10
+❌ Missing NOT subtree
+
+=== Subject Dictionary ===
+Our example uses a simple subject dictionary with three fields:
+- A (string): A simple string field
+- B (number): A simple number field
+- C (boolean): A simple boolean field
+
+=== NotTree Human-Readable Representation ===
+(C != true OR A != 'test')
+✅ NotTree matches hardcoded structure
+
+=== Parent Tree without Subtree ===
+(A = 'example' AND B > 10)
+✅ Parent Tree without Subtree matches hardcoded structure
+
+=== Combined Tree with Subtree ===
+(A = 'example' AND B > 10 AND (C != true OR A != 'test'))
+✅ Combined Tree with Subtree matches expected structure
+
+=== JavaScript Expression ===
+JS: (A === "example" && B > 10 && (C !== true || A !== "test"))
+
+=== SQL Expression (NOT on entire subtree) ===
+SQL: (A = 'example' AND B > 10 AND NOT (C = true OR A = 'test'))
+
+=== SQL Expression (individual predicate negation) ===
+SQL: (A = 'example' AND B > 10 AND (C != true OR A != 'test'))
+
+=== Expression Format Comparison ===
+The examples above demonstrate different ways to represent the same logical structure:
+1. Human-Readable: Uses natural language-like formatting
+2. JavaScript: Uses JavaScript syntax with && and || operators
+3. SQL with NOT: Applies NOT to entire expressions/subqueries
+4. SQL with individual negation: Applies negation to individual predicates
+
+These different representations show how the same logical structure can be
+expressed differently based on the target language or system requirements.
+
+* Notice that in SQL there is a NOT function but in JavaScript there is not. Using NOT trees allows us to get the whole expression in original form or reformat it as necessary depending on the use-case.
+
+===============================================
+  EXAMPLE COMPLETED WITH VALIDATION ERRORS
+===============================================
