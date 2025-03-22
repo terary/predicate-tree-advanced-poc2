@@ -1,26 +1,21 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
     "declaration": true,
     "declarationMap": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "outDir": "./dist",
-    "resolveJsonModule": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "target": "ES2016",
     "sourceMap": true,
-
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
   "include": [
     "src/index.ts"
   ],
+  "exclude": [
+    "src/example-tests",
+    "src/example-usage",
+    "src/test-resources",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "node_modules"
+  ]
 }

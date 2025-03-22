@@ -4,9 +4,11 @@
   "description": "Proof of concept predicate tree advanced options",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "homepage": "https://terary.github.io/gabby-query-protocol-lib/",
   "repository": {
     "type": "git",
@@ -16,8 +18,9 @@
     "test": "jest",
     "test:verbose": "npm run test -- --watchAll=false --verbose",
     "test:coverage": "npm run test -- --watchAll=false --verbose --coverage  --collectCoverageFrom=src/**/*.ts* ",
-    "gabby:build": "rm -rf dist && NODE_ENV=production  tsc -p tsconfig.dist.json",
-    "gabby:pack": "npm run gabby:build && npm pack",
+    "build": "rm -rf dist && NODE_ENV=production  tsc -p tsconfig.dist.json",
+    "gabby:build": "npm run build",
+    "gabby:pack": "npm run build && npm pack",
     "audit:high": "npm audit | grep -E 'Severity: (high|critical)' -A5 -B1"
   },
   "keywords": [
