@@ -171,7 +171,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L38">src/DirectedGraph/AbstractTree/AbstractTree.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L38">src/DirectedGraph/AbstractTree/AbstractTree.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -203,7 +203,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#EmptyNode">EmptyNode</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L27">src/DirectedGraph/AbstractTree/AbstractTree.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L27">src/DirectedGraph/AbstractTree/AbstractTree.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -214,7 +214,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#SHOULD_INCLUDE_SUBTREES">SHOULD_INCLUDE_SUBTREES</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L29">src/DirectedGraph/AbstractTree/AbstractTree.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L29">src/DirectedGraph/AbstractTree/AbstractTree.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -225,7 +225,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#SubtreeNodeTypeName">SubtreeNodeTypeName</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L28">src/DirectedGraph/AbstractTree/AbstractTree.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L28">src/DirectedGraph/AbstractTree/AbstractTree.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -243,7 +243,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#rootNodeId">rootNodeId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L548">src/DirectedGraph/AbstractTree/AbstractTree.ts:548</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L559">src/DirectedGraph/AbstractTree/AbstractTree.ts:559</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -265,9 +265,17 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#appendChildNodeWithContent">appendChildNodeWithContent</a></p>
 								<p>Overrides <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#appendChildNodeWithContent">appendChildNodeWithContent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts#L23">src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts#L23">src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts:23</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Appends a new child node with the provided content to a specified parent node.</p>
+								</div>
+								<p>This method creates a new node in the tree, assigns it the given content,
+									and makes it a child of the specified parent node. The node ID is automatically
+								generated using the parent node ID and an incrementing counter.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -278,6 +286,7 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>The ID of the newly created child node</p>
 						</li>
 					</ul>
 				</section>
@@ -293,7 +302,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#appendTreeAt">appendTreeAt</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#appendTreeAt">appendTreeAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L63">src/DirectedGraph/AbstractTree/AbstractTree.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L74">src/DirectedGraph/AbstractTree/AbstractTree.ts:74</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -324,7 +333,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#cloneAt">cloneAt</a></p>
 								<p>Overrides <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#cloneAt">cloneAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts#L30">src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts#L30">src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts:30</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -349,7 +358,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#countDescendantsOf">countDescendantsOf</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#countDescendantsOf">countDescendantsOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L110">src/DirectedGraph/AbstractTree/AbstractTree.ts:110</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L121">src/DirectedGraph/AbstractTree/AbstractTree.ts:121</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -374,7 +383,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#countGreatestDepthOf">countGreatestDepthOf</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#countGreatestDepthOf">countGreatestDepthOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L125">src/DirectedGraph/AbstractTree/AbstractTree.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L136">src/DirectedGraph/AbstractTree/AbstractTree.ts:136</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -412,7 +421,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#countLeavesOf">countLeavesOf</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#countLeavesOf">countLeavesOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L145">src/DirectedGraph/AbstractTree/AbstractTree.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L156">src/DirectedGraph/AbstractTree/AbstractTree.ts:156</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -437,7 +446,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#countTotalNodes">countTotalNodes</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#countTotalNodes">countTotalNodes</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L152">src/DirectedGraph/AbstractTree/AbstractTree.ts:152</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L163">src/DirectedGraph/AbstractTree/AbstractTree.ts:163</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -464,7 +473,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#createSubtreeAt">createSubtreeAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts#L41">src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts#L41">src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -501,7 +510,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getChildContentAt">getChildContentAt</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getChildContentAt">getChildContentAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L210">src/DirectedGraph/AbstractTree/AbstractTree.ts:210</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L221">src/DirectedGraph/AbstractTree/AbstractTree.ts:221</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -526,7 +535,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getChildrenContentOf">getChildrenContentOf</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getChildrenContentOf">getChildrenContentOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L282">src/DirectedGraph/AbstractTree/AbstractTree.ts:282</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L293">src/DirectedGraph/AbstractTree/AbstractTree.ts:293</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -554,7 +563,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getChildrenNodeIdsOf">getChildrenNodeIdsOf</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getChildrenNodeIdsOf">getChildrenNodeIdsOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L241">src/DirectedGraph/AbstractTree/AbstractTree.ts:241</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L252">src/DirectedGraph/AbstractTree/AbstractTree.ts:252</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -581,7 +590,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getCountTotalNodes">getCountTotalNodes</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L265">src/DirectedGraph/AbstractTree/AbstractTree.ts:265</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L276">src/DirectedGraph/AbstractTree/AbstractTree.ts:276</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -600,7 +609,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getDescendantContentOf">getDescendantContentOf</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getDescendantContentOf">getDescendantContentOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L293">src/DirectedGraph/AbstractTree/AbstractTree.ts:293</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L304">src/DirectedGraph/AbstractTree/AbstractTree.ts:304</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -628,7 +637,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getDescendantNodeIds">getDescendantNodeIds</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getDescendantNodeIds">getDescendantNodeIds</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L325">src/DirectedGraph/AbstractTree/AbstractTree.ts:325</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L336">src/DirectedGraph/AbstractTree/AbstractTree.ts:336</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -656,7 +665,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getNodeIdsWithNodeContent">getNodeIdsWithNodeContent</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getNodeIdsWithNodeContent">getNodeIdsWithNodeContent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L226">src/DirectedGraph/AbstractTree/AbstractTree.ts:226</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L237">src/DirectedGraph/AbstractTree/AbstractTree.ts:237</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -702,7 +711,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getParentNodeId">getParentNodeId</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getParentNodeId">getParentNodeId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L358">src/DirectedGraph/AbstractTree/AbstractTree.ts:358</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L369">src/DirectedGraph/AbstractTree/AbstractTree.ts:369</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -727,7 +736,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getSiblingIds">getSiblingIds</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getSiblingIds">getSiblingIds</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L388">src/DirectedGraph/AbstractTree/AbstractTree.ts:388</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L399">src/DirectedGraph/AbstractTree/AbstractTree.ts:399</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -752,7 +761,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getSubtreeIdsAt">getSubtreeIdsAt</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getSubtreeIdsAt">getSubtreeIdsAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L407">src/DirectedGraph/AbstractTree/AbstractTree.ts:407</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L418">src/DirectedGraph/AbstractTree/AbstractTree.ts:418</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -777,7 +786,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getTreeContentAt">getTreeContentAt</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getTreeContentAt">getTreeContentAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L415">src/DirectedGraph/AbstractTree/AbstractTree.ts:415</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L426">src/DirectedGraph/AbstractTree/AbstractTree.ts:426</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -805,7 +814,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#getTreeNodeIdsAt">getTreeNodeIdsAt</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#getTreeNodeIdsAt">getTreeNodeIdsAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L430">src/DirectedGraph/AbstractTree/AbstractTree.ts:430</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L441">src/DirectedGraph/AbstractTree/AbstractTree.ts:441</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -830,7 +839,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#isBranch">isBranch</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#isBranch">isBranch</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L441">src/DirectedGraph/AbstractTree/AbstractTree.ts:441</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L452">src/DirectedGraph/AbstractTree/AbstractTree.ts:452</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -855,7 +864,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#isLeaf">isLeaf</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#isLeaf">isLeaf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L445">src/DirectedGraph/AbstractTree/AbstractTree.ts:445</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L456">src/DirectedGraph/AbstractTree/AbstractTree.ts:456</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -880,7 +889,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#isRoot">isRoot</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#isRoot">isRoot</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L453">src/DirectedGraph/AbstractTree/AbstractTree.ts:453</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L464">src/DirectedGraph/AbstractTree/AbstractTree.ts:464</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -905,7 +914,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#isSubtree">isSubtree</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#isSubtree">isSubtree</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L457">src/DirectedGraph/AbstractTree/AbstractTree.ts:457</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L468">src/DirectedGraph/AbstractTree/AbstractTree.ts:468</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -930,7 +939,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#move">move</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#move">move</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L467">src/DirectedGraph/AbstractTree/AbstractTree.ts:467</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L478">src/DirectedGraph/AbstractTree/AbstractTree.ts:478</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -966,7 +975,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#moveChildren">moveChildren</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#moveChildren">moveChildren</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L492">src/DirectedGraph/AbstractTree/AbstractTree.ts:492</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L503">src/DirectedGraph/AbstractTree/AbstractTree.ts:503</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1002,7 +1011,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#removeNodeAt">removeNodeAt</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#removeNodeAt">removeNodeAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L516">src/DirectedGraph/AbstractTree/AbstractTree.ts:516</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L527">src/DirectedGraph/AbstractTree/AbstractTree.ts:527</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1026,7 +1035,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#removeSingleNode">removeSingleNode</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L526">src/DirectedGraph/AbstractTree/AbstractTree.ts:526</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L537">src/DirectedGraph/AbstractTree/AbstractTree.ts:537</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1051,7 +1060,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#replaceNodeContent">replaceNodeContent</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#replaceNodeContent">replaceNodeContent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L530">src/DirectedGraph/AbstractTree/AbstractTree.ts:530</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L541">src/DirectedGraph/AbstractTree/AbstractTree.ts:541</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1079,7 +1088,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#toPojoAt">toPojoAt</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#toPojoAt">toPojoAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L637">src/DirectedGraph/AbstractTree/AbstractTree.ts:637</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L648">src/DirectedGraph/AbstractTree/AbstractTree.ts:648</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1131,7 +1140,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#visitAllAt">visitAllAt</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#visitAllAt">visitAllAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L556">src/DirectedGraph/AbstractTree/AbstractTree.ts:556</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L567">src/DirectedGraph/AbstractTree/AbstractTree.ts:567</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1159,7 +1168,7 @@
 								<p>Implementation of <a href="../interfaces/IDirectedGraph.html">IDirectedGraph</a>.<a href="../interfaces/IDirectedGraph.html#visitLeavesOf">visitLeavesOf</a></p>
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#visitLeavesOf">visitLeavesOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L587">src/DirectedGraph/AbstractTree/AbstractTree.ts:587</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L598">src/DirectedGraph/AbstractTree/AbstractTree.ts:598</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1185,7 +1194,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts#L122">src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts#L122">src/DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph.ts:122</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1239,7 +1248,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="AbstractTree.html">AbstractTree</a>.<a href="AbstractTree.html#obfuscatePojo">obfuscatePojo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/3b01d11/src/DirectedGraph/AbstractTree/AbstractTree.ts#L617">src/DirectedGraph/AbstractTree/AbstractTree.ts:617</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L628">src/DirectedGraph/AbstractTree/AbstractTree.ts:628</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>

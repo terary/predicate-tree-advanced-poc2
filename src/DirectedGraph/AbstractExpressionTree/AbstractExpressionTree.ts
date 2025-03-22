@@ -10,6 +10,12 @@ import type {
   TTreePojo,
 } from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
+import {
+  createAndJunction,
+  createOrJunction,
+  IJunctionOperator,
+  JunctionOperatorType,
+} from "./types";
 
 const defaultFromPojoTransform = <P extends object>(
   nodeContent: TNodePojo<P>
@@ -42,7 +48,7 @@ abstract class AbstractExpressionTree<P extends object>
   ): IAppendChildNodeIds {
     return this.appendContentWithJunction(
       parentNodeId,
-      { operator: "$and" } as unknown as P,
+      createAndJunction() as unknown as P,
       nodeContent
     );
   }
@@ -56,12 +62,9 @@ abstract class AbstractExpressionTree<P extends object>
   abstract createSubtreeAt(nodeId: string): IExpressionTree<P>;
 
   protected defaultJunction(nodeId: string): P {
-    // the leaf node at nodeId is being converted to a junction (branch)
-    // need to return the best option for junction operator (&&, ||, '$or', ...)
-
-    // This needs to be abstract and defined in subclasses
-    // @ts-ignore
-    return { operator: "$and" };
+    // Create a default junction operator with $and
+    // This should be properly typed in subclasses that extend this class
+    return createAndJunction() as unknown as P;
   }
 
   appendTreeAt(
@@ -100,7 +103,7 @@ abstract class AbstractExpressionTree<P extends object>
   ): IAppendChildNodeIds {
     return this.appendContentWithJunction(
       parentNodeId,
-      { operator: "$or" } as unknown as P,
+      createOrJunction() as unknown as P,
       nodeContent
     );
   }
