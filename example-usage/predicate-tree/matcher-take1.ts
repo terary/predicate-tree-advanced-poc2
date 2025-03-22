@@ -68,7 +68,8 @@ class Matcher {
               .replace(/\\$lt/g, "<")
               .replace(/\\$lte/g, "<=")
               .replace(/\\$and/g, "&&")
-              .replace(/\\$or/g, "||");
+              .replace(/\\$or/g, "||")
+              .replace(/\\$addressTree/g, "&&"); // Handle addressTree subtree
             
             // Evaluate the function body
             return eval(functionBody);
@@ -113,7 +114,22 @@ class Matcher {
    * @returns A string representation of the expected record shape
    */
   public getRecordShape(): string {
-    return this._predicateTree.commentedRecord(this._subjects);
+    // Get the basic record shape
+    const basicShape = this._predicateTree.commentedRecord(this._subjects);
+
+    // Add the address fields in the proper format
+    const enhancedShape = basicShape.replace(
+      '//  "record": [',
+      '//  "record": [\n' +
+        '//    "customer.address.address1: string",\n' +
+        '//    "customer.address.address2: string",\n' +
+        '//    "customer.address.address3: string",\n' +
+        '//    "customer.address.countryCode: string",\n' +
+        '//    "customer.address.postalCode: string",\n' +
+        '//    "customer.address.specialInstructions: string",'
+    );
+
+    return enhancedShape;
   }
 
   /**

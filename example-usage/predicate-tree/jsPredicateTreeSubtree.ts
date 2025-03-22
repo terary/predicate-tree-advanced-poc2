@@ -5,7 +5,8 @@ import {
   addressTreePojo,
 } from "./MatcherPojoWithSubtree";
 import { JsPredicateTree } from "./JsPredicateTree/JsPredicateTree";
-import type { TJsPredicate, TSubjectDictionary } from "./JsPredicateTree/types";
+// import type { TJsPredicate, TSubjectDictionary } from "./JsPredicateTree/types";
+import type { TSubjectDictionary } from "./types";
 import assert from "assert";
 import { AddressTree } from "./JsPredicateTree/AddressTree";
 import { SubtreeFactory } from "./JsPredicateTree/SubtreeFactory";
@@ -85,7 +86,7 @@ const t2 = AddressTree.fromPojo(
   AddressTree.defaultTreePojo("customer.address")
 );
 
-const t3 = AddressTree.fromPojo({ ...addressTreePojo, ...{} });
+// const t3 = AddressTree.fromPojo({ ...addressTreePojo, ...{} });
 // "customer.address": {
 //   nodeType: "subtree",
 //   parentId: "customer.address",
@@ -94,13 +95,13 @@ const t3 = AddressTree.fromPojo({ ...addressTreePojo, ...{} });
 
 const reRootedPojo = {
   ...addressTreePojo,
-  ...{
-    "customer.address": {
-      parentId: "root",
-      nodeType: "subtree",
-      nodeContent: { operator: "$addressTree" },
-    },
-  },
+  // ...{
+  //   "customer.address": {
+  //     parentId: "root",
+  //     nodeType: "subtree",
+  //     nodeContent: { operator: "$addressTree" },
+  //   },
+  // },
 };
 
 // @ts-ignore

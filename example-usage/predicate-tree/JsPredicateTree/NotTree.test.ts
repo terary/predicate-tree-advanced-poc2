@@ -41,10 +41,9 @@ describe("NotTree", () => {
       ]);
     });
     it("Should append/remove child nodes (complex).", () => {
-
-      One issue here is - what if client code does appendNodeId(...) on one of the children (it ruin the structure)?
-      I think we have to override all of parents?
-
+      // *tmc*
+      // One issue here is - what if client code does appendNodeId(...) on one of the children (it ruin the structure)?
+      // I think we have to override all of parents?
 
       const linkedList = new NotTree();
       const child_0 = new AddressTree();

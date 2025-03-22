@@ -114,16 +114,32 @@ class JsPredicateTree extends AbstractExpressionTree<TPredicateTypes> {
         ...
       }
 
-
-
     `;
+
     const recordProperties = leafVisitor.utilizedSubjectIds
       .sort()
       .map((subjectId) => {
         if (!(subjectId in subjects) || !("datatype" in subjects[subjectId])) {
-          console.log("Found it");
+          let message = `"datatype" in subjects[subjectId]\n\n`;
+          message += `subjectId: ${subjectId}\n\n`;
+          message += `subjects: ${JSON.stringify(subjects)}\n\n`;
+          message += `leafVisitor.utilizedSubjectIds: ${JSON.stringify(
+            leafVisitor.utilizedSubjectIds
+          )}\n\n`;
+
+          console.log("\n\n" + message + "\n\n");
+          return "";
         }
         const { datatype } = subjects[subjectId];
+
+        let message = `datatype: ${datatype}, subjectId: ${subjectId}\n\n`;
+        message += `subjects: ${JSON.stringify(subjects)}\n\n`;
+        message += `leafVisitor.utilizedSubjectIds: ${JSON.stringify(
+          leafVisitor.utilizedSubjectIds
+        )}\n\n`;
+
+        console.log("\n\n" + message + "\n\n");
+
         return `${subjectId}: ${datatype}`;
       });
     const recordShape = {
