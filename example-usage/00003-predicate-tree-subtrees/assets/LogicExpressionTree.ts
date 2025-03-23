@@ -249,13 +249,9 @@ export class LogicExpressionTree extends GenericExpressionTree<PredicateContent>
     parentNodeId: string,
     subtree: GenericExpressionTree<PredicateContent>
   ): string {
-    console.log("  - Creating subtree attachment point...");
-
     // Use the core createSubtreeAt method to properly attach the subtree
     const newSubtree = this.createSubtreeAt(parentNodeId);
     const subtreeNodeId = newSubtree.rootNodeId;
-
-    console.log("  - Transferring content from source subtree...");
 
     // Copy the root node content from the source subtree
     const rootContent = subtree.getChildContentAt(subtree.rootNodeId);
@@ -274,8 +270,6 @@ export class LogicExpressionTree extends GenericExpressionTree<PredicateContent>
         );
       }
     }
-
-    console.log(`  - Subtree attached at node ${subtreeNodeId}`);
 
     return subtreeNodeId;
   }

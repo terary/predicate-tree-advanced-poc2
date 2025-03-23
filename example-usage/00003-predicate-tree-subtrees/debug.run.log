@@ -2,25 +2,6 @@
   PREDICATE TREE WITH NOT SUBTREE EXAMPLE
 ===============================================
 
-=== Building Outer Logic Expression Tree ===
-✅ Created Logic Expression Tree with $and root
-✅ Added predicate: A equals 'example'
-✅ Added predicate: B greater than 10
-
-=== Attaching Not Tree as Subtree ===
-  - Creating subtree attachment point...
-  - Transferring content from source subtree...
-  - Subtree attached at node _root_:2
-✅ Attached Not Tree as subtree of Logic Tree
-  - Creating subtree attachment point...
-  - Transferring content from source subtree...
-  - Subtree attached at node _root_:0
-  - Creating subtree attachment point...
-  - Transferring content from source subtree...
-  - Subtree attached at node _root_:0
-✅ Built subtree externally then 'attached' to parent.
-
-
 ===============================================
   KEY INFORMATION AND RESULTS
 ===============================================
@@ -87,26 +68,18 @@ Our example uses a simple subject dictionary with three fields:
 - B (number): A simple number field
 - C (boolean): A simple boolean field
 
-=== NotTree Human-Readable Representation ===
-(C != true OR A != 'test')
-✅ NotTree matches hardcoded structure
+=== Smoke Tests ===
+(C != true OR A != 'test')  ✅ NotTree matches hardcoded structure
+(A = 'example' AND B > 10)  ✅ Parent Tree with Subtree matches hardcoded structure
+'Subtree/Parent tree nodeId relationship'  ✅ Subtree and the thing parent points to are the same thing.
+(A = 'example' AND B > 10 AND (C != true OR A != 'test'))  ✅ Parent Tree with Subtree matches hardcoded structure
 
-=== Parent Tree without Subtree ===
-(A = 'example' AND B > 10)
-✅ Parent Tree without Subtree matches hardcoded structure
-
-=== Combined Tree with Subtree ===
-(A = 'example' AND B > 10 AND (C != true OR A != 'test'))
-✅ Combined Tree with Subtree matches expected structure
-
-=== JavaScript Expression ===
+=== Output Formats ===
 JS: (A === "example" && B > 10 && (C !== true || A !== "test"))
-
-=== SQL Expression (NOT on entire subtree) ===
 SQL: (A = 'example' AND B > 10 AND NOT (C = true OR A = 'test'))
-
-=== SQL Expression (individual predicate negation) ===
 SQL: (A = 'example' AND B > 10 AND (C != true OR A != 'test'))
+
+* Notice that in SQL there is a NOT function but in JavaScript there is not. Using NOT trees allows us to get the whole expression in original form or reformat it as necessary depending on the use-case.
 
 === Expression Format Comparison ===
 The examples above demonstrate different ways to represent the same logical structure:
@@ -117,8 +90,6 @@ The examples above demonstrate different ways to represent the same logical stru
 
 These different representations show how the same logical structure can be
 expressed differently based on the target language or system requirements.
-
-* Notice that in SQL there is a NOT function but in JavaScript there is not. Using NOT trees allows us to get the whole expression in original form or reformat it as necessary depending on the use-case.
 
 ===============================================
   EXAMPLE COMPLETED WITH VALIDATION ERRORS
