@@ -1,0 +1,53 @@
+{
+  "_root_": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "_root_:0": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "A",
+      "operator": "$eq",
+      "value": "example"
+    }
+  },
+  "_root_:1": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "B",
+      "operator": "$gt",
+      "value": 10
+    }
+  },
+  "_root_:2": {
+    "nodeType": "subtree",
+    "nodeContent": {
+      "operator": "$or"
+    },
+    "parentId": "_root_"
+  },
+  "_root_:2:3": {
+    "parentId": "_root_:2",
+    "nodeContent": {
+      "subject": "C",
+      "operator": "$eq",
+      "value": true,
+      "_meta": {
+        "negated": true
+      }
+    }
+  },
+  "_root_:2:4": {
+    "parentId": "_root_:2",
+    "nodeContent": {
+      "subject": "A",
+      "operator": "$eq",
+      "value": "test",
+      "_meta": {
+        "negated": true
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+Running Predicate Tree with Identity Subtree Example
+
+=== Demonstrating Object Identity with Predicate Trees ===
+
+=== Object Identity Check ===
+Checking if the parent content of the subtree is the subtree itself...
+✓ PASS: The parent content is not the subtree itself. Object identity is preserved correctly.
+✓ PASS: Would expect to get an empty nodeContent from parent using subtreeNodeId.
+✓ PASS: Retrieved original value from subtree using subtreeNodeId.
+
+Parent Tree Structure:
+(name = 'John' AND age > 18)
+
+Identity Tree Structure:
+(objectId = '123' AND type = 'Person')
+
+Demonstrating parsing not-tree.pojo.json:
+Successfully created tree from not-tree.pojo.json!
+Not Tree Structure:
+(A = 'example' AND B > 10 AND C = true AND A = 'test')
+
+Attaching Identity Tree as a subtree...
+All Good
+
+Identity Subtree Example Completed

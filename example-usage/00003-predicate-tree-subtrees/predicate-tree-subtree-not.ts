@@ -82,14 +82,91 @@ function validateCombinedTree(tree: LogicExpressionTree): boolean {
     JSON.stringify(tree.toPojoAt())
   ).toString("base64");
 
-  if (
-    actualPojoJsonStringBase64 !== notTreePojo.actuals.fullTreeJsonStringBase64
-  ) {
-    console.log("❌ Actual POJO does not match expected POJO");
-    return false;
-  }
-  console.log("✅ Actual POJO matches expected POJO");
-  return true;
+  return (
+    actualPojoJsonStringBase64 == notTreePojo.actuals.fullTreeJsonStringBase64
+  );
+}
+
+/**
+ * Run smoke tests on the trees and report results
+ */
+function smokeTest(
+  notTree: NotTree,
+  logicTree: LogicExpressionTree,
+  subtreeNodeId: string,
+  combinedPojo: any
+): boolean {
+  console.log("\n=== Smoke Tests ===");
+
+  // Test 1: Check if the POJO structure matches expected
+  const isValidPojo = validateCombinedTree(logicTree);
+  console.log(
+    `POJO Structure  ${
+      isValidPojo
+        ? "✅ Actual POJO matches expected POJO"
+        : "❌ Actual POJO does not match expected POJO"
+    }`
+  );
+
+  // Test 2: Validate NotTree
+  const notTreeString = notTree.toHumanReadableString();
+  const expectedNotTree = "(C != true OR A != 'test')";
+  const isValidNotTree = notTreeString === expectedNotTree;
+  console.log(
+    `${notTreeString}  ${
+      isValidNotTree
+        ? "✅ NotTree matches hardcoded structure"
+        : "❌ NotTree does not match hardcoded structure"
+    }`
+  );
+
+  const logicPojo = logicTree.toPojoAt();
+  console.log({ logicPojo: JSON.stringify(logicPojo, null, 2) });
+
+  // Test 3: Validate Parent Tree
+  const parentTreeString = logicTree.toHumanReadableString();
+  const expectedParentTree = "(A = 'example' AND B > 10)";
+  const isValidParentTree = parentTreeString === expectedParentTree;
+  console.log(
+    `${parentTreeString}  ${
+      isValidParentTree
+        ? "✅ Parent Tree with Subtree matches hardcoded structure"
+        : "❌ Parent Tree with Subtree matches hardcoded structure"
+    }`
+  );
+
+  // Test 4: Validate subtree/parent tree nodeId relationship
+  const subtree = logicTree.getChildContentAt(subtreeNodeId) as any;
+  const isValidSubtreeRelation = subtreeNodeId === subtree.rootNodeId;
+  console.log(
+    `'Subtree/Parent tree nodeId relationship'  ${
+      isValidSubtreeRelation
+        ? "✅ Subtree and the thing parent points to are the same thing."
+        : "❌ Subtree and the thing parent points to are DIFFERENT."
+    }`
+  );
+
+  // Test 5: Validate Combined Tree
+  const fullTreeString = createFullTreeRepresentation(logicTree, combinedPojo);
+  const expectedFullTree =
+    "(A = 'example' AND B > 10 AND (C != true OR A != 'test'))";
+  const isValidFullTree = fullTreeString === expectedFullTree;
+  console.log(
+    `${fullTreeString}  ${
+      isValidFullTree
+        ? "✅ Parent Tree with Subtree matches hardcoded structure"
+        : "❌ Parent Tree with Subtree matches hardcoded structure"
+    }`
+  );
+
+  // Return overall test status - true if all tests passed
+  return (
+    isValidPojo &&
+    isValidNotTree &&
+    isValidParentTree &&
+    isValidSubtreeRelation &&
+    isValidFullTree
+  );
 }
 
 /**
@@ -226,6 +303,10 @@ export function runPredicateTreeWithNotSubtreeExample() {
   // Attach the NotTree as a subtree - using local variable to avoid console output
   const subtreeNodeId = logicTree.attachSubtree(logicTree.rootNodeId, notTree);
 
+  const parentTreePojo = logicTree.toPojoAt();
+
+  console.log({ parentTreePojo });
+
   // Test subtree transportability (more technical setup)
   demonstrateSubtreeTransportability();
 
@@ -239,9 +320,6 @@ export function runPredicateTreeWithNotSubtreeExample() {
   const combinedPojo = logicTree.exportWithSubtrees();
   console.log(JSON.stringify(combinedPojo, null, 2));
 
-  // Validate the tree structure
-  const isValid = validateCombinedTree(logicTree);
-
   // Display subject dictionary (only once)
   console.log("\n=== Subject Dictionary ===");
   console.log(
@@ -251,59 +329,12 @@ export function runPredicateTreeWithNotSubtreeExample() {
     console.log(`- ${subject} (${info.dataType}): ${info.description}`);
   }
 
-  // Show human-readable representations
-  console.log("\n=== Smoke Tests ===");
-
-  // NotTree
-  const notTreeString = notTree.toHumanReadableString();
-  const expectedNotTree = "(C != true OR A != 'test')";
-  console.log(
-    `${notTreeString}  ${
-      notTreeString === expectedNotTree
-        ? "✅ NotTree matches hardcoded structure"
-        : "❌ NotTree does not match hardcoded structure"
-    }`
-  );
-
-  // Parent Tree with Subtree
-  const parentTreeString = logicTree.toHumanReadableString();
-  const expectedParentTree = "(A = 'example' AND B > 10)";
-  console.log(
-    `${parentTreeString}  ${
-      parentTreeString === expectedParentTree
-        ? "✅ Parent Tree with Subtree matches hardcoded structure"
-        : "❌ Parent Tree with Subtree matches hardcoded structure"
-    }`
-  );
-
-  // parent tree, subtree nodeId relationship
-  // this raises an interesting question with this implementation.
-  // I have not looked into it but I believe when when 'attach' (either that method or one of its dependencies)
-  // is 'copy' / 'clone' the tree being passed in.
-
-  // This is ok if it meets our purpose.
-  //  An alternative is create the subtree from parent and build it.
-  // In those cases we should be able to Object.is(subtree, notTree)
-  const subtree = logicTree.getChildContentAt(subtreeNodeId) as any;
-  console.log(
-    `'Subtree/Parent tree nodeId relationship'  ${
-      subtreeNodeId === subtree.rootNodeId
-        ? "✅ Subtree and the thing parent points to are the same thing."
-        : "❌ Subtree and the thing parent points to are DIFFERENT."
-    }`
-  );
-
-  // Combined Tree with Subtree
-  // Show the combined tree representation
-  const fullTreeString = createFullTreeRepresentation(logicTree, combinedPojo);
-  const expectedFullTree =
-    "(A = 'example' AND B > 10 AND (C != true OR A != 'test'))";
-  console.log(
-    `${fullTreeString}  ${
-      fullTreeString === expectedFullTree
-        ? "✅ Parent Tree with Subtree matches hardcoded structure"
-        : "❌ Parent Tree with Subtree matches hardcoded structure"
-    }`
+  // Run smoke tests
+  const allTestsPassed = smokeTest(
+    notTree,
+    logicTree,
+    subtreeNodeId,
+    combinedPojo
   );
 
   // JavaScript Expression format
@@ -346,7 +377,7 @@ export function runPredicateTreeWithNotSubtreeExample() {
 
   console.log("\n===============================================");
   console.log(
-    isValid
+    allTestsPassed
       ? "  EXAMPLE COMPLETED SUCCESSFULLY"
       : "  EXAMPLE COMPLETED WITH VALIDATION ERRORS"
   );

@@ -60,7 +60,6 @@
     }
   }
 }
-❌ Actual POJO does not match expected POJO
 
 === Subject Dictionary ===
 Our example uses a simple subject dictionary with three fields:
@@ -69,6 +68,7 @@ Our example uses a simple subject dictionary with three fields:
 - C (boolean): A simple boolean field
 
 === Smoke Tests ===
+POJO Structure  ✅ Actual POJO matches expected POJO
 (C != true OR A != 'test')  ✅ NotTree matches hardcoded structure
 (A = 'example' AND B > 10)  ✅ Parent Tree with Subtree matches hardcoded structure
 'Subtree/Parent tree nodeId relationship'  ✅ Subtree and the thing parent points to are the same thing.
@@ -92,6 +92,6 @@ These different representations show how the same logical structure can be
 expressed differently based on the target language or system requirements.
 
 ===============================================
-  EXAMPLE COMPLETED WITH VALIDATION ERRORS
+  EXAMPLE COMPLETED SUCCESSFULLY
 ===============================================
 END OF EXAMPLE
