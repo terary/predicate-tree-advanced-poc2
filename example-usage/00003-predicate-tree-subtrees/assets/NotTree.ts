@@ -20,7 +20,6 @@ export interface PredicateContent {
     isSubtree?: boolean;
     [key: string]: any;
   };
-  [key: string]: any;
 }
 
 /**
@@ -33,17 +32,19 @@ export class NotTree extends GenericExpressionTree<PredicateContent> {
   /**
    * Create a new NotTree with a negated AND root
    */
-  constructor() {
-    super();
+  constructor(rootNodeId: string = "not-root", nodeContent?: PredicateContent) {
+    super(rootNodeId, nodeContent);
 
     // Initialize with a root node that has $and operator (which will be negated)
-    this.replaceNodeContent(this.rootNodeId, {
-      operator: "$and",
-      _meta: {
-        negated: true,
-        description: "NOT group (all predicates inside are negated)",
-      },
-    });
+    // this.replaceNodeContent(this.rootNodeId, nodeContent);
+    // Initialize with a root node that has $and operator (which will be negated)
+    // this.replaceNodeContent(this.rootNodeId, {
+    //   operator: "$and",
+    //   _meta: {
+    //     negated: true,
+    //     description: "NOT group (all predicates inside are negated)",
+    //   },
+    // });
   }
 
   /**

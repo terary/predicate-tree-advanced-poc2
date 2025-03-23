@@ -1,5 +1,5 @@
 #!/bin/bash
-
+clear
 # Pass all arguments from this script to the TypeScript script
 npx ts-node index.ts "$@" 2>&1 | tee debug.run.log
 

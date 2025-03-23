@@ -1,0 +1,137 @@
+{
+  "blueSkyDemo": {
+    "parentId": null,
+    "payload": {
+      "operator": "$or"
+    }
+  },
+  "blueSkyDemo:0": {
+    "parentId": "blueSkyDemo",
+    "payload": {
+      "operator": "$and"
+    }
+  },
+  "blueSkyDemo:0:1": {
+    "parentId": "blueSkyDemo:0",
+    "payload": {
+      "subjectId": "lastName",
+      "operator": "$eq",
+      "value": "Flintstone"
+    }
+  },
+  "blueSkyDemo:0:2": {
+    "parentId": "blueSkyDemo:0",
+    "payload": {
+      "operator": "$or"
+    }
+  },
+  "blueSkyDemo:0:2:3": {
+    "parentId": "blueSkyDemo:0:2",
+    "payload": {
+      "subjectId": "firstName",
+      "operator": "$eq",
+      "value": "Fred"
+    }
+  },
+  "blueSkyDemo:0:2:4": {
+    "parentId": "blueSkyDemo:0:2",
+    "payload": {
+      "subjectId": "firstName",
+      "operator": "$eq",
+      "value": "Wilma"
+    }
+  },
+  "blueSkyDemo:5": {
+    "parentId": "blueSkyDemo",
+    "payload": {
+      "operator": "$and"
+    }
+  },
+  "blueSkyDemo:5:6": {
+    "parentId": "blueSkyDemo:5",
+    "payload": {
+      "operator": "$or"
+    }
+  },
+  "blueSkyDemo:5:6:7": {
+    "parentId": "blueSkyDemo:5:6",
+    "payload": {
+      "subjectId": "firstName",
+      "operator": "$eq",
+      "value": "Barney"
+    }
+  },
+  "blueSkyDemo:5:6:8": {
+    "parentId": "blueSkyDemo:5:6",
+    "payload": {
+      "subjectId": "firstName",
+      "operator": "$eq",
+      "value": "Betty"
+    }
+  },
+  "blueSkyDemo:5:9": {
+    "parentId": "blueSkyDemo:5",
+    "payload": {
+      "subjectId": "lastName",
+      "operator": "$eq",
+      "value": "Rubble"
+    }
+  },
+  "blueSkyDemo:10": {
+    "parentId": "blueSkyDemo",
+    "payload": {
+      "operator": "$and"
+    }
+  },
+  "blueSkyDemo:10:11": {
+    "parentId": "blueSkyDemo:10",
+    "payload": {
+      "subjectId": "postalCode",
+      "operator": "$like",
+      "value": "04"
+    }
+  },
+  "blueSkyDemo:10:12": {
+    "parentId": "blueSkyDemo:10",
+    "payload": {
+      "subjectId": "region",
+      "operator": "$anyOf",
+      "value": [
+        "US-WEST",
+        "US-NORTH"
+      ]
+    }
+  },
+  "blueSkyDemo:10:13": {
+    "parentId": "blueSkyDemo:10",
+    "payload": {
+      "subjectId": "startDate",
+      "operator": "$gte",
+      "value": "2020-06-29T23:03:23-07:00"
+    }
+  },
+  "blueSkyDemo:10:14": {
+    "parentId": "blueSkyDemo:10",
+    "payload": {
+      "subjectId": "favoriteFruit",
+      "operator": "$oneOf",
+      "value": "GRAPE001"
+    }
+  },
+  "blueSkyDemo:10:15": {
+    "parentId": "blueSkyDemo:10",
+    "payload": {
+      "value": 5000.01,
+      "subjectId": "annualIncome",
+      "operator": "$gt"
+    }
+  },
+  "blueSkyDemo:10:16": {
+    "parentId": "blueSkyDemo:10",
+    "payload": {
+      "value": 2,
+      "subjectId": "numberOfChildren",
+      "operator": "$gt"
+    }
+  }
+}

@@ -2,11 +2,6 @@
   PREDICATE TREE WITH NOT SUBTREE EXAMPLE
 ===============================================
 
-=== Building Inner Not Tree (Subtree) ===
-✅ Created Not Tree with negated $and root
-✅ Added negated predicate: C equals true (will be negated to C not equals true)
-✅ Added negated predicate: A equals 'test' (will be negated to A not equals 'test')
-
 === Building Outer Logic Expression Tree ===
 ✅ Created Logic Expression Tree with $and root
 ✅ Added predicate: A equals 'example'
@@ -17,19 +12,13 @@
   - Transferring content from source subtree...
   - Subtree attached at node _root_:2
 ✅ Attached Not Tree as subtree of Logic Tree
-
-=== Testing Subtree Transportability ===
-✅ Created a Not Tree with one predicate
-✅ Exported Not Tree to POJO
   - Creating subtree attachment point...
   - Transferring content from source subtree...
   - Subtree attached at node _root_:0
-✅ Attached Not Tree as subtree to first Logic Tree
   - Creating subtree attachment point...
   - Transferring content from source subtree...
   - Subtree attached at node _root_:0
-✅ Attached Not Tree as subtree to second Logic Tree
-✅ Successfully demonstrated subtree transportability
+✅ Built subtree externally then 'attached' to parent.
 
 
 ===============================================
@@ -63,11 +52,7 @@
   "_root_:2": {
     "nodeType": "subtree",
     "nodeContent": {
-      "operator": "$and",
-      "_meta": {
-        "negated": true,
-        "description": "NOT group (all predicates inside are negated)"
-      }
+      "operator": "$or"
     },
     "parentId": "_root_"
   },
@@ -94,13 +79,7 @@
     }
   }
 }
-
-=== Validating Combined Tree Structure ===
-✅ Verified root node has $and operator
-✅ Root node has 2 direct children
-✅ Found predicate: A = 'example'
-✅ Found predicate: B > 10
-❌ Missing NOT subtree
+❌ Actual POJO does not match expected POJO
 
 === Subject Dictionary ===
 Our example uses a simple subject dictionary with three fields:
@@ -144,3 +123,4 @@ expressed differently based on the target language or system requirements.
 ===============================================
   EXAMPLE COMPLETED WITH VALIDATION ERRORS
 ===============================================
+END OF EXAMPLE
