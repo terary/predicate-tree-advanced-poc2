@@ -63,4 +63,22 @@ export function demonstrateComplexTreeWithSubtree(): void {
   } else {
     console.log("❌ FAIL: Object identity is not preserved");
   }
+
+  // export/import
+  subtree.appendChildNodeWithContent(subtree.rootNodeId, {
+    operator: "$eq",
+    value: "Hope to see you clone-side",
+    subjectId: "_SUBTREE_TEST_",
+  });
+
+  const cloneTreePojo = tree.toPojoAt();
+  const cloneTree = PredicateTree.fromPojo(cloneTreePojo as any);
+
+  const cloneSubtreeIds = cloneTree.getSubtreeIdsAt();
+  console.log(`Found ${cloneSubtreeIds.length} subtrees`);
+
+  if (!cloneSubtreeIds || cloneSubtreeIds.length == 0) {
+    throw Error("Failed to create subtree correctly");
+  }
+  console.log("✅ PASS: Subtrees cloned as expected");
 }

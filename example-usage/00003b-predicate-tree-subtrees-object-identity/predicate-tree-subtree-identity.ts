@@ -1,13 +1,8 @@
 /**
  * Predicate Tree with Subtrees - Object Identity Example
  *
- * This example demonstrates how to create a predicate tree that utilizes an Identity subtree.
- * We build:
- * 1. A simple Logic Expression Tree as the outer tree
- * 2. An IdentityTree as an inner tree (subtree) that checks object identity
- *
- * The example shows how different behaviors can be encapsulated in subtrees
- * and embedded within a larger tree structure.
+ * This is an example of how subtrees are not just embedded structures but
+ * they are intertwined with the outer tree.
  */
 
 import { LogicExpressionTree } from "./assets/LogicExpressionTree";
@@ -17,6 +12,7 @@ import * as notTreePojo from "./assets/not-tree.pojo.json";
 
 /**
  * Build a simple Logic Expression Tree (outer tree)
+ * For demonstration purposes only.
  */
 function buildLogicExpressionTree(): LogicExpressionTree {
   // Create a new logic expression tree
@@ -37,27 +33,6 @@ function buildLogicExpressionTree(): LogicExpressionTree {
 }
 
 /**
- * Build an Identity Tree (inner tree for identity checks)
- */
-function buildIdentityTree(): IdentityTree {
-  // Create an identity tree
-  const identityTree = new IdentityTree();
-
-  // Add identity predicates
-  identityTree.appendChildNodeWithContent(
-    identityTree.rootNodeId,
-    identityTreePojo["identity-root-child-1"].nodeContent
-  );
-
-  identityTree.appendChildNodeWithContent(
-    identityTree.rootNodeId,
-    identityTreePojo["identity-root-child-2"].nodeContent
-  );
-
-  return identityTree;
-}
-
-/**
  * Demonstrate combined tree functionality
  */
 function demonstrateCombinedTree(): void {
@@ -65,7 +40,6 @@ function demonstrateCombinedTree(): void {
 
   // Build our trees
   const logicTree = buildLogicExpressionTree();
-  const identityTree = buildIdentityTree();
 
   const theSubtree = logicTree.createSubtreeAt(logicTree.rootNodeId);
 
@@ -80,15 +54,9 @@ function demonstrateCombinedTree(): void {
 
   const treeAlias = logicTree.getChildContentAt(theSubtree.rootNodeId);
 
-  // Object identity check
-  console.log("\n=== Object Identity Check ===");
-  console.log(
-    "Checking if the parent content of the subtree is the subtree itself..."
-  );
-
   if (Object.is(treeAlias, theSubtree)) {
     console.log(
-      "✓ PASS: The parent content is not the subtree itself. Object identity is preserved correctly."
+      "✅ PASS: The parent content is not the subtree itself. Object identity is preserved correctly."
     );
   } else {
     console.log(
@@ -103,13 +71,13 @@ function demonstrateCombinedTree(): void {
     console.log("❌ FAIL: Expected nodeContent from parent to be null.");
   } else {
     console.log(
-      "✓ PASS: Would expect to get an empty nodeContent from parent using subtreeNodeId."
+      "✅ PASS: Would expect to get an empty nodeContent from parent using subtreeNodeId."
     );
   }
 
   if (subtreeNodeContent.value === "Subtree child") {
     console.log(
-      "✓ PASS: Retrieved original value from subtree using subtreeNodeId."
+      "✅ PASS: Retrieved original value from subtree using subtreeNodeId."
     );
   } else {
     console.log(
@@ -118,12 +86,8 @@ function demonstrateCombinedTree(): void {
   }
 
   // Print the parent tree structure
-  console.log("\nParent Tree Structure:");
+  console.log("\nSome nonsense to demonstrate its a real tree");
   console.log(logicTree.toHumanReadableString());
-
-  // Print the identity tree structure
-  console.log("\nIdentity Tree Structure:");
-  console.log(identityTree.toHumanReadableString());
 
   // Demonstrate using the fixed not-tree.pojo.json
   console.log("\nDemonstrating parsing not-tree.pojo.json:");
@@ -145,27 +109,6 @@ function demonstrateCombinedTree(): void {
     );
   }
 
-  // Attach the identity tree as a subtree
-  console.log("\nAttaching Identity Tree as a subtree...");
-  // const subtreeNodeId = logicTree.attachSubtree(
-  //   logicTree.rootNodeId,
-  //   identityTree
-  // );
-
-  // Print the combined tree structure
-  // console.log("\nCombined Tree Structure:");
-  // const combinedTree = `(name = 'John' AND age > 18 AND (objectId = '123' AND type = 'Person'))`;
-  // console.log(combinedTree);
-
-  // Check object identity for a sample object
-  // const sampleObject = {
-  //   name: "John",
-  //   age: 25,
-  //   objectId: "123",
-  //   type: "Person",
-  // };
-
-  // console.log("\nChecking identity for sample object:", sampleObject);
   console.log("All Good"); // Output should be 'All Good' as per requirements
 }
 
