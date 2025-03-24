@@ -1,0 +1,10 @@
+Starting Predicate Tree POJO Import/Export Example
+
+===== DEMONSTRATING COMPLEX TREE WITH SUBTREE =====
+Found 1 subtrees: [ 'complexDemo:4' ]
+✅ PASS: Subtrees were created correctly
+✅ PASS: Subtree rootNodeId matches parent nodeId
+✅ PASS: Object identity is preserved
+
+All demonstrations completed successfully!
+Generated POJO files can be found in: /mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/outputs
