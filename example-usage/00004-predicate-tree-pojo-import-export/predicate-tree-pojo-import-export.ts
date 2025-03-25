@@ -72,6 +72,7 @@ export function demonstrateComplexTreeWithSubtree(): void {
   });
 
   const cloneTreePojo = tree.toPojoAt();
+  cloneTreePojo["complexDemo:4"].nodeType = "subtree:NotTree";
   const cloneTree = PredicateTree.fromPojo(cloneTreePojo as any);
 
   const cloneSubtreeIds = cloneTree.getSubtreeIdsAt();

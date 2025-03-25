@@ -248,13 +248,14 @@ abstract class AbstractExpressionTree<P extends object>
     ) as TTreePojo<T>;
 
     Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
-      if (nodePojo.nodeType === AbstractTree.SubtreeNodeTypeName) {
+      if (
+        nodePojo.nodeType &&
+        nodePojo.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName + ":")
+      ) {
         const subtree = dTree.createSubtreeAt(treeParentId);
         subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
         AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
-          // (dTree as AbstractExpressionTree<T>)._rootNodeId,
           subtree.rootNodeId,
-          // subtree.AbstractExpressionTree,
           nodeId,
           subtree as IExpressionTree<T>,
           treeObject,

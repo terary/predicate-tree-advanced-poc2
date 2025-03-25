@@ -170,24 +170,24 @@ export class NotTree extends GenericExpressionTree<NotTreePredicateContent> {
   }
 
   /**
-   * Convert the tree to a POJO document with negation metadata
-   * @returns The POJO document representing the tree
+   * Constant for the subtree node type
+   * This ensures that the nodeType is consistent across all uses
    */
-  toPojo(): Record<string, any> {
-    // Use the generic method to create the base POJO - using toPojoAt
-    const pojo = this.toPojoAt() as Record<string, any>;
+  public static SubtreeNodeTypeName: string = "NotTree";
 
-    // Add type information to identify as NotTree
-    Object.values(pojo).forEach((node: any) => {
-      // Add metadata if it doesn't exist
-      if (!node.nodeContent._meta) {
-        node.nodeContent._meta = {};
-      }
-      node.nodeContent._meta.negated = true;
+  /**
+   * Convert the tree to a POJO document with correct NotTree nodeType
+   * This ensures that when this tree is used as a subtree, it will be properly recognized
+   * during import with fromPojo
+   */
+  toPojoAt(nodeId: string = this.rootNodeId): Record<string, any> {
+    // Use the parent class implementation to get the base POJO
+    const pojo = super.toPojoAt(nodeId) as Record<string, any>;
 
-      // Add NotTree type marker
-      if (node.parentId === null) {
-        node.nodeType = "NotTree";
+    // Set the correct nodeType for all nodes in this tree
+    Object.keys(pojo).forEach((key) => {
+      if (pojo[key].nodeType === "subtree") {
+        pojo[key].nodeType = "subtree:NotTree";
       }
     });
 

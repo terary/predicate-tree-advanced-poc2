@@ -44,6 +44,7 @@ export const validSubjects: Record<string, SubjectInfo> = {
   department: { type: "string", label: "Department" },
   yearsOfExperience: { type: "number", label: "Years of Experience" },
   role: { type: "string", label: "Role" },
+  _SUBTREE_TEST_: { type: "string", label: "Subtree Test" },
 };
 
 /**

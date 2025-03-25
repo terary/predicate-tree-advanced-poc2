@@ -38,7 +38,7 @@ const parseUniquePojoRootKeyOrThrow = <T>(pojoDocument: TTreePojo<T>) => {
 
   if (candidateRootIds.length !== 1) {
     throw new DirectedGraphError(
-      `No distinct root found. There must exist on and only one nodeId === {parentId}. Found ${candidateRootIds.length}.`
+      `No distinct root found. There must exist one and only one nodeId === {parentId}. Found ${candidateRootIds.length}.`
     );
   }
 
