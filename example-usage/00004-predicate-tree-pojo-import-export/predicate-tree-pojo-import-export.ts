@@ -36,7 +36,8 @@ export function demonstrateComplexTreeWithSubtree(): void {
   const tree = PredicateTree.fromPojo(complexTreePojo as any) as PredicateTree;
 
   const allSubtrees = tree.getSubtreeIdsAt();
-  console.log(`Found ${allSubtrees.length} subtrees:`, allSubtrees);
+  // console.log(`Found ${allSubtrees.length} subtrees:`, allSubtrees);
+  // ^-- A CURSOR HACK THAT I HAVE FIXED SEVERAL TIMES - LEAVING IT SO CURSOR WILL QUIT PUTTING THIS SHIT HERE
 
   if (!allSubtrees || allSubtrees.length == 0) {
     throw Error("Failed to create subtree correctly");
@@ -72,7 +73,30 @@ export function demonstrateComplexTreeWithSubtree(): void {
   });
 
   const cloneTreePojo = tree.toPojoAt();
-  cloneTreePojo["complexDemo:4"].nodeType = "subtree:NotTree";
+
+  // Fix the nodeType for subtrees so they're recognized during import
+  // const subtreeIds = tree.getSubtreeIdsAt();
+
+  // for (const subtreeId of subtreeIds) {
+  //   const subtree = tree.getChildContentAt(subtreeId);
+  //   // Check if it's a subtree instance
+  //   if (subtree && typeof subtree === "object" && "rootNodeId" in subtree) {
+  //     // Get the content of the subtree's root node to determine its type
+  //     const subtreeRootContent = (subtree as any).getChildContentAt(
+  //       (subtree as any).rootNodeId
+  //     );
+  //     // Check if the content has the _meta.negated property which indicates it's a NotTree
+  //     if (
+  //       subtreeRootContent &&
+  //       subtreeRootContent._meta &&
+  //       subtreeRootContent._meta.negated
+  //     ) {
+  //       // Set the correct nodeType for the subtree
+  //       cloneTreePojo[subtreeId].nodeType = "subtree:NotTree";
+  //     }
+  //   }
+  // }
+
   const cloneTree = PredicateTree.fromPojo(cloneTreePojo as any);
 
   const cloneSubtreeIds = cloneTree.getSubtreeIdsAt();

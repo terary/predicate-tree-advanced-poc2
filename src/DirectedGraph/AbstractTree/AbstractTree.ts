@@ -654,7 +654,8 @@ abstract class AbstractTree<T extends object> implements ITree<T> {
     return this.#toPojo(nodeId, nodeId, transformer);
   }
 
-  public SubtreeNodeTypeName: string = "subtree";
+  public SubtreeNodeTypeName: string =
+    "_ABSTRACT_FOR_BACKWARD_COMPATIBILITY_ONLY_";
 
   #toPojo(
     currentNodeId: string,
@@ -669,10 +670,13 @@ abstract class AbstractTree<T extends object> implements ITree<T> {
       Object.entries(subtreePojo).forEach(([nodeId, nodeContent]) => {
         workingPojoDocument[nodeId] = nodeContent;
       });
+      //  static SubtreeNodeTypeName = "subtree";
 
       workingPojoDocument[currentNodeId] = {
-        nodeType: nodeContent.SubtreeNodeTypeName, // AbstractTree.SubtreeNodeTypeName,
-
+        nodeType: [
+          AbstractTree.SubtreeNodeTypeName,
+          nodeContent.SubtreeNodeTypeName,
+        ].join(":"),
         nodeContent: nodeContent.getChildContentAt(nodeContent.rootNodeId),
         parentId: parentNodeId,
       };

@@ -211,6 +211,25 @@ abstract class AbstractExpressionTree<P extends object>
   ): IExpressionTree<P> {
     const pojoObject = { ...srcPojoTree };
 
+    // WHAT THE THE FUCK - THIS IS A COMPOSER HACK
+    // THAT HAS CAUSED MANY PROBLEMS.
+    //  Super Classes shall have no knowledge of the subclasses (rookie mistake)
+    //
+    //
+    // Ensure correct nodeType format for all subtree nodes
+    // Object.keys(pojoObject).forEach((key) => {
+    //   const node = pojoObject[key];
+    //   if (node.nodeType && node.nodeType === "subtree") {
+    //     // Check if this is a NotTree by examining the content
+    //     const nodeContent = node.nodeContent as any;
+    //     if (nodeContent && nodeContent._meta && nodeContent._meta.negated) {
+    //       // This is likely a NotTree subtree
+    //       pojoObject[key].nodeType =
+    //         AbstractTree.SubtreeNodeTypeName + ":NotTree";
+    //     }
+    //   }
+    // });
+
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
     const rootNodePojo = pojoObject[rootNodeId];
     const dTree = AbstractExpressionTree.getNewInstance<P>("root");
@@ -351,6 +370,32 @@ abstract class AbstractExpressionTree<P extends object>
         }
       }
     });
+  }
+
+  public toPojoAt(
+    nodeId: string = this.rootNodeId,
+    transformer?: (nodeContent: any) => any
+  ): TTreePojo<P> {
+    // Get the base POJO from AbstractTree
+    const pojo = super.toPojoAt(nodeId, transformer);
+
+    // Cursor HACK - CAUSES MANY PROBLEMS
+    // Left here because cursor likes to do the same stupid shit, over and over (like humans)
+    // Maybe if cursor can see it's already attempted this stupid shit, it will
+    // Find all subtree nodes and ensure proper nodeType format
+    // Object.entries(pojo).forEach(([key, node]) => {
+    //   if (
+    //     node.nodeType &&
+    //     !node.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName + ":")
+    //   ) {
+    //     // This is a subtree with an incorrect nodeType format
+    //     // Format it as "subtree:ActualType"
+    //     pojo[key].nodeType =
+    //       AbstractTree.SubtreeNodeTypeName + ":" + node.nodeType;
+    //   }
+    // });
+
+    return pojo;
   }
 }
 

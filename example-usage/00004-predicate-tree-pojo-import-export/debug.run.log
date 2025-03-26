@@ -1,7 +1,6 @@
 Starting Predicate Tree POJO Import/Export Example
 
 ===== DEMONSTRATING COMPLEX TREE WITH SUBTREE =====
-Found 1 subtrees: [ 'complexDemo:4' ]
 ✅ PASS: Subtrees were created correctly
 ✅ PASS: Subtree rootNodeId matches parent nodeId
 ✅ PASS: Object identity is preserved

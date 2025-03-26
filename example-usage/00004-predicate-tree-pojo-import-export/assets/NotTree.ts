@@ -12,7 +12,7 @@ import type {
   TNodePojo,
   TTreePojo,
 } from "../../../src/DirectedGraph/types";
-
+import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
 // Extend the PredicateContent interface to include _meta
 export interface NotTreePredicateContent extends PredicateContent {
   _meta?: {
@@ -31,6 +31,8 @@ export interface NotTreePredicateContent extends PredicateContent {
  */
 // @ts-ignore - Bypass TypeScript's static inheritance checking
 export class NotTree extends GenericExpressionTree<NotTreePredicateContent> {
+  public SubtreeNodeTypeName: string = "NotTree";
+
   /**
    * Create a new NotTree with a negated AND root
    */
@@ -183,13 +185,15 @@ export class NotTree extends GenericExpressionTree<NotTreePredicateContent> {
   toPojoAt(nodeId: string = this.rootNodeId): Record<string, any> {
     // Use the parent class implementation to get the base POJO
     const pojo = super.toPojoAt(nodeId) as Record<string, any>;
+    const pojoRootKey = treeUtils.parseUniquePojoRootKeyOrThrow(pojo);
+    pojo[pojoRootKey].nodeType = "subtree:NotTree";
 
-    // Set the correct nodeType for all nodes in this tree
-    Object.keys(pojo).forEach((key) => {
-      if (pojo[key].nodeType === "subtree") {
-        pojo[key].nodeType = "subtree:NotTree";
-      }
-    });
+    // // Set the correct nodeType for all nodes in this tree
+    // Object.keys(pojo).forEach((key) => {
+    //   if (pojo[key].nodeType === "subtree") {
+    //     pojo[key].nodeType = "subtree:NotTree";
+    //   }
+    // });
 
     return pojo;
   }

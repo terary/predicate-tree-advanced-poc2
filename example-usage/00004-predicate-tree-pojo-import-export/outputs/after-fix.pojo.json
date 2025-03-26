@@ -1,0 +1,79 @@
+{
+  "complexDemo": {
+    "parentId": "complexDemo",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "complexDemo:0": {
+    "parentId": "complexDemo",
+    "nodeContent": {
+      "subjectId": "firstName",
+      "operator": "$eq",
+      "value": "John"
+    }
+  },
+  "complexDemo:1": {
+    "parentId": "complexDemo",
+    "nodeContent": {
+      "operator": "$or"
+    }
+  },
+  "complexDemo:1:2": {
+    "parentId": "complexDemo:1",
+    "nodeContent": {
+      "subjectId": "department",
+      "operator": "$eq",
+      "value": "Engineering"
+    }
+  },
+  "complexDemo:1:3": {
+    "parentId": "complexDemo:1",
+    "nodeContent": {
+      "subjectId": "department",
+      "operator": "$eq",
+      "value": "Marketing"
+    }
+  },
+  "complexDemo:4": {
+    "nodeType": "subtree:NotTree",
+    "nodeContent": {
+      "operator": "$and",
+      "_meta": {
+        "negated": true,
+        "description": "NOT group (all predicates inside are negated)"
+      }
+    },
+    "parentId": "complexDemo"
+  },
+  "complexDemo:4:5": {
+    "parentId": "complexDemo:4",
+    "nodeContent": {
+      "subjectId": "age",
+      "operator": "$lt",
+      "value": 18,
+      "_meta": {
+        "negated": true
+      }
+    }
+  },
+  "complexDemo:4:6": {
+    "parentId": "complexDemo:4",
+    "nodeContent": {
+      "subjectId": "role",
+      "operator": "$eq",
+      "value": "Intern",
+      "_meta": {
+        "negated": true
+      }
+    }
+  },
+  "complexDemo:4:7": {
+    "parentId": "complexDemo:4",
+    "nodeContent": {
+      "operator": "$eq",
+      "value": "Hope to see you clone-side",
+      "subjectId": "_SUBTREE_TEST_"
+    }
+  }
+}

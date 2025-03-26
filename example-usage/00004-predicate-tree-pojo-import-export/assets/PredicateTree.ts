@@ -16,6 +16,8 @@ import type {
   TNodePojo,
   TTreePojo,
 } from "../../../src/DirectedGraph/types";
+import { AbstractTree } from "../../../dist";
+import { NotTree } from "./NotTree";
 
 // Define the node content type for our predicate tree
 export interface PredicateContent {
@@ -153,10 +155,20 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
     transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
   ): PredicateTree | IExpressionTree<P> {
     // Find the root node using the utility function
-    let rootKey: string;
+    const rootKey = treeUtils.parseUniquePojoRootKeyOrThrow(srcPojoTree);
+
     try {
+      // ****************************************************************************************
+      // The 'try' block is a Cursor hack and does not follow any pattern, it should be removed.
+      // ****************************************************************************************
+      // I AM LEAVING THE DEAD CODE BECAUSE CURSOR WILL KEEP ADDING THE FUCKING THING BACK
+      // I HAVE REMOVED IT SEVERAL TIMES.
+      // ****************************************************************************************
+      // STRANGE WHEN I AM LOOKING FOR THE FUCKING BUG I FIND CURSOR
+      // ****************************************************************************************
       // Try to find a root where nodeId === parentId (self-parenting)
-      rootKey = treeUtils.parseUniquePojoRootKeyOrThrow(srcPojoTree);
+      //  (CURSOR OVER COMPLICATING THE SIMPLE THINGS _ TO MAKE THE BUG MORE CHALLENGE)
+      // ****************************************************************************************
     } catch (error) {
       // Fall back to looking for parentId === null if the utility function fails
       const nullParentKey = Object.keys(srcPojoTree).find(
@@ -167,18 +179,36 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
         throw new ValidationError("No root node found in POJO document");
       }
 
-      rootKey = nullParentKey;
+      // rootKey = nullParentKey;
     }
 
     // Check if this is a specialized tree type by checking for nodeType pattern "subtree:TreeType"
     const rootNode = srcPojoTree[rootKey];
-    if (rootNode.nodeType && rootNode.nodeType.startsWith("subtree:")) {
+    // ROOT Can Never be subtree, I guess unless it is the subtree.
+    // The content of the root node will NEVER be a subtree (it doesn't make sense).
+    // Because the parent tree determines which subtree to create,  root nodeContent
+    // will never need to considered for subtree creation.
+    /// CURSOR HACK THAT FUCKS SOME SHIT UP, PREVENTING US FROM GETTING THE REAL WORK DONE - AGAIN
+    if (
+      rootNode.nodeType &&
+      rootNode.nodeType.startsWith([AbstractTree.SubtreeNodeTypeName].join(":"))
+    ) {
       // For NotTree specifically
-      if (rootNode.nodeType === "subtree:NotTree") {
+
+      if (
+        rootNode.nodeType.startsWith(
+          [AbstractTree.SubtreeNodeTypeName, NotTree.SubtreeNodeTypeName].join(
+            ":"
+          )
+        )
+      ) {
         // Create a NotTree instance
         const NotTree = getNotTreeClass();
         return NotTree.fromPojo(srcPojoTree, transform);
       }
+
+      // If we get to here, something is wrong, see comment about root content will never be a subtree
+
       // Could add more tree type handlers here in the future
     }
 
@@ -210,11 +240,21 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
         const node = srcPojoTree[childId];
 
         // Check if this is a subtree by looking for "subtree:" pattern in nodeType
+        //        if (node.nodeType && node.nodeType.startsWith("subtree:")) {
+        // ^--- ANOTHER FUCKING CURSOR HACK THAT I HAVE FIXED SEVERAL TIMES - LEAVING HOPING THE CURSOR WILL STOP ADDING IT
         if (node.nodeType && node.nodeType.startsWith("subtree:")) {
           // Create a subtree based on the type
-          if (node.nodeType === "subtree:NotTree") {
-            const NotTree = getNotTreeClass();
-            const subtree = tree.createSubtreeAt(parentId);
+          if (
+            node.nodeType &&
+            node.nodeType.startsWith(
+              [
+                AbstractTree.SubtreeNodeTypeName,
+                NotTree.SubtreeNodeTypeName,
+              ].join(":")
+            )
+          ) {
+            // Use our specialized method to create a NotTree subtree
+            const subtree = tree.createSubtreeNotTree(parentId);
 
             // Initialize with content
             subtree.replaceNodeContent(subtree.rootNodeId, {
@@ -316,6 +356,42 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
     // Set up the subtree's root node and other properties
     GenericExpressionTree.reRootTreeAt<Q>(
       subtree as unknown as GenericExpressionTree<Q>,
+      subtree.rootNodeId,
+      subtreeParentNodeId
+    );
+
+    // Set protected properties (using type assertion to access protected members)
+    (subtree as any)._rootNodeId = subtreeParentNodeId;
+    (subtree as any)._incrementor = this._incrementor;
+
+    return subtree;
+  }
+
+  /**
+   * Create a NotTree subtree at the specified node
+   * This implementation creates a NotTree instance and attaches it as a subtree
+   * to the parent tree at the specified node.
+   * @param targetNodeId The node ID where to create the NotTree subtree
+   * @returns The created NotTree subtree
+   */
+  createSubtreeNotTree(
+    targetNodeId: string
+  ): IExpressionTree<PredicateContent> {
+    // Get the NotTree class using the existing helper function
+    const NotTree = getNotTreeClass();
+
+    // Create a new NotTree instance to use as a subtree
+    const subtree = new NotTree() as IExpressionTree<PredicateContent>;
+
+    // Append the subtree object itself as a child node
+    const subtreeParentNodeId = this.appendChildNodeWithContent(
+      targetNodeId,
+      subtree as unknown as PredicateContent
+    );
+
+    // Set up the subtree's root node and other properties
+    GenericExpressionTree.reRootTreeAt(
+      subtree as unknown as GenericExpressionTree<PredicateContent>,
       subtree.rootNodeId,
       subtreeParentNodeId
     );
