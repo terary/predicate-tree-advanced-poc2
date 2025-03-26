@@ -45,6 +45,7 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
   ): string {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
+
   public reflect(...args: any[]) {
     return Reflect.construct(this.constructor, []);
   }

@@ -79,7 +79,12 @@ abstract class AbstractDirectedGraph<T extends object>
     ) as TTreePojo<T>;
 
     Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
-      if (nodePojo.nodeType === AbstractTree.SubtreeNodeTypeName) {
+      if (
+        nodePojo &&
+        nodePojo.nodeType && // 'startswith' may lead to issues and it will create 'default' subtree
+        nodePojo.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)
+      ) {
+        // if (nodePojo.nodeType === AbstractTree.SubtreeNodeTypeName) {
         const subtree = dTree.createSubtreeAt(treeParentId);
         subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
         AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(

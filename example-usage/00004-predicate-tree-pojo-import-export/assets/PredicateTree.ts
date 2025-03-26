@@ -157,60 +157,8 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
     // Find the root node using the utility function
     const rootKey = treeUtils.parseUniquePojoRootKeyOrThrow(srcPojoTree);
 
-    try {
-      // ****************************************************************************************
-      // The 'try' block is a Cursor hack and does not follow any pattern, it should be removed.
-      // ****************************************************************************************
-      // I AM LEAVING THE DEAD CODE BECAUSE CURSOR WILL KEEP ADDING THE FUCKING THING BACK
-      // I HAVE REMOVED IT SEVERAL TIMES.
-      // ****************************************************************************************
-      // STRANGE WHEN I AM LOOKING FOR THE FUCKING BUG I FIND CURSOR
-      // ****************************************************************************************
-      // Try to find a root where nodeId === parentId (self-parenting)
-      //  (CURSOR OVER COMPLICATING THE SIMPLE THINGS _ TO MAKE THE BUG MORE CHALLENGE)
-      // ****************************************************************************************
-    } catch (error) {
-      // Fall back to looking for parentId === null if the utility function fails
-      const nullParentKey = Object.keys(srcPojoTree).find(
-        (key) => srcPojoTree[key].parentId === null
-      );
-
-      if (!nullParentKey) {
-        throw new ValidationError("No root node found in POJO document");
-      }
-
-      // rootKey = nullParentKey;
-    }
-
     // Check if this is a specialized tree type by checking for nodeType pattern "subtree:TreeType"
     const rootNode = srcPojoTree[rootKey];
-    // ROOT Can Never be subtree, I guess unless it is the subtree.
-    // The content of the root node will NEVER be a subtree (it doesn't make sense).
-    // Because the parent tree determines which subtree to create,  root nodeContent
-    // will never need to considered for subtree creation.
-    /// CURSOR HACK THAT FUCKS SOME SHIT UP, PREVENTING US FROM GETTING THE REAL WORK DONE - AGAIN
-    if (
-      rootNode.nodeType &&
-      rootNode.nodeType.startsWith([AbstractTree.SubtreeNodeTypeName].join(":"))
-    ) {
-      // For NotTree specifically
-
-      if (
-        rootNode.nodeType.startsWith(
-          [AbstractTree.SubtreeNodeTypeName, NotTree.SubtreeNodeTypeName].join(
-            ":"
-          )
-        )
-      ) {
-        // Create a NotTree instance
-        const NotTree = getNotTreeClass();
-        return NotTree.fromPojo(srcPojoTree, transform);
-      }
-
-      // If we get to here, something is wrong, see comment about root content will never be a subtree
-
-      // Could add more tree type handlers here in the future
-    }
 
     // Create a new tree with the root node content
     const tree = new PredicateTree(
