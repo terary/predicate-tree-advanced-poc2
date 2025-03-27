@@ -6,11 +6,6 @@
 
 import { GenericExpressionTree, IExpressionTree, ITree } from "../../../src";
 import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
-import {
-  validOperators,
-  validSubjects,
-  isValidOperatorForSubject,
-} from "./subjectDictionary";
 import type {
   TGenericNodeContent,
   TNodePojo,
@@ -52,73 +47,6 @@ export class ValidationError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "ValidationError";
-  }
-}
-
-/**
- * Validation functions
- */
-// Validate a POJO document structure
-function validatePojoStructure(pojo: PojoDocs): void {
-  // Check for at least one node
-  if (Object.keys(pojo).length === 0) {
-    throw new ValidationError("POJO document is empty");
-  }
-
-  // Check for a single root node
-  const rootNodes = Object.values(pojo).filter(
-    (node) => node.parentId === null
-  );
-
-  if (rootNodes.length === 0) {
-    throw new ValidationError("No root node found");
-  }
-
-  if (rootNodes.length > 1) {
-    throw new ValidationError("Multiple root nodes found");
-  }
-
-  // Check that all parent IDs exist in the document
-  Object.values(pojo).forEach((node) => {
-    if (node.parentId !== null && !(node.parentId in pojo)) {
-      throw new ValidationError(
-        `Parent ID '${node.parentId}' not found in POJO document`
-      );
-    }
-  });
-}
-
-// Validate predicate node content
-function validateNodeContent(content: PredicateContent): void {
-  // If it's a junction node (AND/OR), just check the operator
-  if (content.operator === "$and" || content.operator === "$or") {
-    return;
-  }
-
-  // For regular predicates, check that required fields are present
-  if (!content.subjectId) {
-    throw new ValidationError("Missing 'subjectId' in predicate");
-  }
-
-  if (!content.operator) {
-    throw new ValidationError("Missing 'operator' in predicate");
-  }
-
-  // Check if subject is valid
-  if (!(content.subjectId in validSubjects)) {
-    throw new ValidationError(`Invalid subject: ${content.subjectId}`);
-  }
-
-  // Check if operator is valid
-  if (!(content.operator in validOperators)) {
-    throw new ValidationError(`Invalid operator: ${content.operator}`);
-  }
-
-  // Check if operator is valid for this subject
-  if (!isValidOperatorForSubject(content.operator, content.subjectId)) {
-    throw new ValidationError(
-      `Operator '${content.operator}' not valid for subject '${content.subjectId}'`
-    );
   }
 }
 
@@ -166,134 +94,114 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
       srcPojoTree[rootKey].nodeContent as PredicateContent
     );
 
-    // Organize nodes by parent ID for efficient processing
-    const nodesByParent: { [parentId: string]: string[] } = {};
+    // Use a copy of the POJO tree to avoid modifying the original
+    const workingPojo = { ...srcPojoTree };
 
-    // First, collect all nodes by their parent
-    Object.keys(srcPojoTree).forEach((nodeId) => {
-      if (nodeId !== rootKey) {
-        const parentId = srcPojoTree[nodeId].parentId as string;
-        if (!nodesByParent[parentId]) {
-          nodesByParent[parentId] = [];
-        }
-        nodesByParent[parentId].push(nodeId);
-      }
-    });
+    // Remove the root node since we've already processed it
+    delete workingPojo[rootKey];
 
     // Process all nodes
+    // I think I understand why we are defining a function within a function
+    // A) This is recursive
+    // B) The function shouldn't need to be called anywhere else
+    // C) The definition of the the function makes more sense in the context of the function body
+    //    (trying to figure how/why it would be called as a class member would be confusing)
     const processNodes = (parentId: string) => {
-      const children = nodesByParent[parentId] || [];
+      // Extract all children of the parent (this modifies workingPojo)
+      const childrenNodes = treeUtils.extractChildrenNodes(
+        parentId,
+        workingPojo
+      );
 
-      for (const childId of children) {
-        const node = srcPojoTree[childId];
+      // Process each child
+      Object.entries(childrenNodes).forEach(([childId, node]) => {
+        if (
+          // this double 'if' is unnecessary but kept because it demonstrates where/how to add different subtree types
+          node.nodeType &&
+          node.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)
+        ) {
+          const subtreeTypeParts = node.nodeType.split(":");
+          const subtreeType =
+            subtreeTypeParts.length > 1 ? subtreeTypeParts[1] : "";
 
-        // Check if this is a subtree by looking for "subtree:" pattern in nodeType
-        //        if (node.nodeType && node.nodeType.startsWith("subtree:")) {
-        // ^--- ANOTHER FUCKING CURSOR HACK THAT I HAVE FIXED SEVERAL TIMES - LEAVING HOPING THE CURSOR WILL STOP ADDING IT
-        if (node.nodeType && node.nodeType.startsWith("subtree:")) {
-          // Create a subtree based on the type
-          if (
-            node.nodeType &&
-            node.nodeType.startsWith(
-              [
-                AbstractTree.SubtreeNodeTypeName,
-                NotTree.SubtreeNodeTypeName,
-              ].join(":")
-            )
-          ) {
-            // Use our specialized method to create a NotTree subtree
-            const subtree = tree.createSubtreeNotTree(parentId);
+          let subtree: IExpressionTree<any>;
 
-            // Initialize with content
-            subtree.replaceNodeContent(subtree.rootNodeId, {
-              ...(node.nodeContent as PredicateContent),
-            });
+          switch (subtreeType) {
+            case NotTree.SubtreeNodeTypeName:
+              // Use our specialized method to create a NotTree subtree
+              subtree = tree.createSubtreeNotTree(parentId);
+              break;
 
-            // Process children of this subtree
-            const subtreeChildren = nodesByParent[childId] || [];
+            // Could add more subtree types here as additional cases
+            // case 'OtherTreeType':
+            //   // Create and configure OtherTreeType subtree
+            //   break;
 
-            // Add children to the subtree
-            for (const subtreeChildId of subtreeChildren) {
-              const childNode = srcPojoTree[subtreeChildId];
+            default:
+              subtree = tree.createSubtreeAt(parentId);
+              break; // <-- never stops being funny. (AI DO NOT REMOVE)
+          }
+
+          // Replace default root value with pojo root content
+          subtree.replaceNodeContent(subtree.rootNodeId, {
+            ...(node.nodeContent as PredicateContent),
+          });
+
+          const subtreeChildrenPojo = treeUtils.extractChildrenNodes(
+            childId,
+            workingPojo
+          );
+
+          // Add children to the subtree
+          // This is problematic because it does not descend (recurse)
+          // This will only work  with simple trees (root + children, no other descendants)
+          // I *think*
+          Object.entries(subtreeChildrenPojo).forEach(
+            ([subtreeChildId, childNode]) => {
               subtree.appendChildNodeWithContent(
                 subtree.rootNodeId,
                 childNode.nodeContent as PredicateContent
               );
             }
-          }
-          // Could add more subtree types here
+          );
         } else {
-          // Regular node
-          const nodeContent = node.nodeContent as PredicateContent;
+          // Add this node to the tree
+          tree.appendChildNodeWithContent(
+            parentId,
+            node.nodeContent as PredicateContent
+          );
 
-          // Validate node content for non-junction operators
-          if (
-            nodeContent.operator !== "$and" &&
-            nodeContent.operator !== "$or"
-          ) {
-            validateNodeContent(nodeContent);
-          }
-
-          // Add node to tree
-          tree.addChildWithCustomId(parentId, nodeContent, childId);
-
-          // Process this node's children
-          if (nodesByParent[childId]) {
-            processNodes(childId);
-          }
+          // Process this node's children recursively
+          processNodes(childId);
         }
-      }
+      });
     };
 
     // Start processing from the root
     processNodes(rootKey);
 
+    // Check for orphan nodes (any node left in workingPojo after processing)
+    if (Object.keys(workingPojo).length > 0) {
+      throw new ValidationError(
+        `Orphan nodes detected: ${Object.keys(workingPojo).join(", ")}`
+      );
+    }
+
     return tree;
   }
 
   /**
-   * Helper method to add a child node with a custom node ID
-   * This wraps the base appendChildNodeWithContent method to support custom IDs
-   */
-  addChildWithCustomId(
-    parentNodeId: string,
-    nodeContent: PredicateContent,
-    customNodeId: string
-  ): string {
-    // Validate the node content first
-    if (
-      nodeContent &&
-      nodeContent.operator !== "$and" &&
-      nodeContent.operator !== "$or"
-    ) {
-      validateNodeContent(nodeContent);
-    }
-
-    // Create the node first
-    const generatedNodeId = this.appendChildNodeWithContent(
-      parentNodeId,
-      nodeContent
-    );
-
-    // For simplicity, we're just returning the generated ID
-    // In a real implementation, you would need to update internal maps to use the custom ID
-    return generatedNodeId;
-  }
-
-  /**
-   * Create a subtree at the specified node
-   * This implementation properly creates a subtree as a distinct tree object
-   * that is attached to the parent tree.
+   * Private helper method to create a subtree of any type
    * @param targetNodeId The node ID where to create the subtree
+   * @param constructorFn Function that returns the appropriate subtree instance
    * @returns The created subtree
    */
-  createSubtreeAt<Q extends PredicateContent>(
-    targetNodeId: string
+  private _createSubtreeAt<Q extends PredicateContent>(
+    targetNodeId: string,
+    constructorFn: () => IExpressionTree<Q>
   ): IExpressionTree<Q> {
-    // Create a new instance to use as a subtree
-    const subtree = new (this.constructor as new (
-      rootNodeId?: string
-    ) => IExpressionTree<Q>)() as IExpressionTree<Q>;
+    // Create a new instance using the provided constructor function
+    const subtree = constructorFn();
 
     // The key is to append the subtree object itself as a child node
     const subtreeParentNodeId = this.appendChildNodeWithContent(
@@ -316,6 +224,25 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
   }
 
   /**
+   * Create a subtree at the specified node
+   * This implementation properly creates a subtree as a distinct tree object
+   * that is attached to the parent tree.
+   * @param targetNodeId The node ID where to create the subtree
+   * @returns The created subtree
+   */
+  createSubtreeAt<Q extends PredicateContent>(
+    targetNodeId: string
+  ): IExpressionTree<Q> {
+    const constructorFn = () => {
+      return new (this.constructor as new (
+        rootNodeId?: string
+      ) => IExpressionTree<Q>)() as IExpressionTree<Q>;
+    };
+
+    return this._createSubtreeAt<Q>(targetNodeId, constructorFn);
+  }
+
+  /**
    * Create a NotTree subtree at the specified node
    * This implementation creates a NotTree instance and attaches it as a subtree
    * to the parent tree at the specified node.
@@ -325,71 +252,12 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
   createSubtreeNotTree(
     targetNodeId: string
   ): IExpressionTree<PredicateContent> {
-    // Get the NotTree class using the existing helper function
-    const NotTree = getNotTreeClass();
+    const constructorFn = () => {
+      const NotTree = getNotTreeClass();
+      return new NotTree() as IExpressionTree<PredicateContent>;
+    };
 
-    // Create a new NotTree instance to use as a subtree
-    const subtree = new NotTree() as IExpressionTree<PredicateContent>;
-
-    // Append the subtree object itself as a child node
-    const subtreeParentNodeId = this.appendChildNodeWithContent(
-      targetNodeId,
-      subtree as unknown as PredicateContent
-    );
-
-    // Set up the subtree's root node and other properties
-    GenericExpressionTree.reRootTreeAt(
-      subtree as unknown as GenericExpressionTree<PredicateContent>,
-      subtree.rootNodeId,
-      subtreeParentNodeId
-    );
-
-    // Set protected properties (using type assertion to access protected members)
-    (subtree as any)._rootNodeId = subtreeParentNodeId;
-    (subtree as any)._incrementor = this._incrementor;
-
-    return subtree;
-  }
-
-  /**
-   * Get IDs of all subtrees directly attached to this tree
-   * @param nodeId Optional node ID to start from (defaults to root)
-   * @returns Array of node IDs that contain subtrees
-   */
-  getSubtreeIdsAt(nodeId: string = this.rootNodeId): string[] {
-    // UNDER NO CIRCUMSTANCES SHOULD AI CHANGE THIS FUNCTION
-    // FIVE TIMES I HAVE HAD TO REMOVE AI's ATTEMPT TO OVERRIDE
-    // THERE  IS NO REASON TO OVERRIDE THIS
-    return super.getSubtreeIdsAt(nodeId);
-  }
-
-  /**
-   * Convert the tree to a POJO document
-   * @returns The POJO document representing the tree
-   *
-   * DEV/DEBUG HACK: This is overridden to ensure correct nodeType for subtrees
-   */
-  toPojoAt(nodeId: string = this.rootNodeId): Record<string, any> {
-    // Get the base POJO from the parent method
-    const pojo = super.toPojoAt(nodeId) as Record<string, any>;
-
-    // Set the parentId of the root node to null
-    // pojo[nodeId].parentId = null;
-
-    // // DEV/DEBUG HACK: Check for subtrees and ensure they have the correct nodeType
-    // const subtreeIds = this.getSubtreeIdsAt();
-    // for (const subtreeId of subtreeIds) {
-    //   const subtree = this.getChildContentAt(subtreeId);
-    //   if (subtree && typeof subtree === "object" && "constructor" in subtree) {
-    //     // Try to determine the actual type
-    //     const constructor = (subtree as any).constructor;
-    //     if (constructor && constructor.name === "NotTree") {
-    //       pojo[subtreeId].nodeType = "NotTree";
-    //     }
-    //   }
-    // }
-
-    return pojo;
+    return this._createSubtreeAt<PredicateContent>(targetNodeId, constructorFn);
   }
 }
 
