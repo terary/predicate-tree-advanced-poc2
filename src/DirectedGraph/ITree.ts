@@ -354,6 +354,16 @@ interface IExpressionTree<P extends object> extends ITree<P> {
   createSubtreeAt(nodeId: string): IExpressionTree<P>;
 
   /**
+   * Creates a subtree of the specified type at the given node
+   * This method is used when importing trees from POJO to create subtrees of the appropriate type
+   *
+   * @param nodeId - The ID of the node where the subtree will be created
+   * @param nodeType - The type of the subtree (e.g., "subtree:NotTree")
+   * @returns The created subtree of the appropriate type
+   */
+  createSubtreeOfTypeAt(nodeId: string, nodeType: string): IExpressionTree<P>;
+
+  /**
    * Creates a new instance of the expression tree
    *
    * @param rootSeed - Optional seed for the root node ID

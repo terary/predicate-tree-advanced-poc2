@@ -36,7 +36,7 @@
     }
   },
   "complexDemo:4": {
-    "nodeType": "subtree",
+    "nodeType": "subtree:NotTree",
     "nodeContent": {
       "operator": "$and",
       "_meta": {
@@ -46,34 +46,58 @@
     },
     "parentId": "complexDemo"
   },
-  "complexDemo:4:5": {
-    "parentId": "complexDemo:4",
-    "nodeContent": {
-      "subjectId": "age",
-      "operator": "$lt",
-      "value": 18,
-      "_meta": {
-        "negated": true
-      }
-    }
-  },
-  "complexDemo:4:6": {
-    "parentId": "complexDemo:4",
-    "nodeContent": {
-      "subjectId": "role",
-      "operator": "$eq",
-      "value": "Intern",
-      "_meta": {
-        "negated": true
-      }
-    }
-  },
-  "complexDemo:4:7": {
+  "complexDemo:4:13": {
     "parentId": "complexDemo:4",
     "nodeContent": {
       "operator": "$eq",
       "value": "Hope to see you clone-side",
-      "subjectId": "_SUBTREE_TEST_"
+      "subjectId": "_SUBTREE_TEST_",
+      "_meta": {
+        "negated": true
+      }
+    }
+  },
+  "complexDemo:7": {
+    "nodeType": "subtree:ArithmeticTree",
+    "nodeContent": {
+      "operator": "$add",
+      "subjectLabel": "Addition Example"
+    },
+    "parentId": "complexDemo"
+  },
+  "complexDemo:7:8": {
+    "parentId": "complexDemo:7",
+    "nodeContent": {
+      "value": 100,
+      "subjectLabel": "First Operand"
+    }
+  },
+  "complexDemo:7:9": {
+    "parentId": "complexDemo:7",
+    "nodeContent": {
+      "value": 101,
+      "subjectLabel": "Second Operand"
+    }
+  },
+  "complexDemo:7:10": {
+    "parentId": "complexDemo:7",
+    "nodeContent": {
+      "operator": "$subtract",
+      "subjectLabel": "Second Operand"
+    }
+  },
+  "complexDemo:7:10:11": {
+    "parentId": "complexDemo:7:10",
+    "nodeContent": {
+      "value": 102,
+      "subjectLabel": "First Operand (-)"
+    }
+  },
+  "complexDemo:7:10:12": {
+    "parentId": "complexDemo:7:10",
+    "nodeContent": {
+      "value": 103,
+      "subjectLabel": "Second Operand (-)"
     }
   }
 }

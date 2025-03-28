@@ -1,39 +1,77 @@
 /**
- * Predicate Tree POJO Import/Export Example
+ * Predicate Tree POJO Import/Export Examples
  *
- * This example demonstrates how to:
- * 1. Import a predicate tree from a POJO document
- * 2. Create and modify a predicate tree
- * 3. Export a predicate tree to a POJO document
- * 4. Working with existing POJO documents
- * 5. Working with complex trees that include subtrees
- *
- * Note: This example uses a static factory pattern to implement the fromPojo method,
- * which allows creating PredicateTree instances from POJO documents.
+ * This file serves as the entry point for examples demonstrating
+ * how to import and export predicate trees as Plain Old JavaScript Objects (POJO).
  */
 
-import * as fs from "fs";
-import * as path from "path";
 import { demonstrateComplexTreeWithSubtree } from "./predicate-tree-pojo-import-export";
-import { PredicateTree } from "./assets/PredicateTree";
+import { runComplexPojoExample } from "./predicate-tree-pojo-import-export-complex";
+import { runArithmeticTreeExamples } from "./arithmetic-tree-example";
 
-// Ensure outputs directory exists
-const outputsDir = path.join(__dirname, "outputs");
-if (!fs.existsSync(outputsDir)) {
-  console.log(`Creating outputs directory at: ${outputsDir}`);
-  fs.mkdirSync(outputsDir);
+// Parse command line arguments
+const args = process.argv.slice(2);
+const showHelp = args.includes("--help") || args.includes("-h");
+const runBasicExample = args.includes("--basic") || args.includes("-b");
+const runComplexExample = args.includes("--complex") || args.includes("-c");
+const runArithmeticExample =
+  args.includes("--arithmetic") || args.includes("-a");
+const runAll = args.includes("--all") || args.includes("--all-examples");
+
+/**
+ * Display help information
+ */
+function showHelpMessage() {
+  console.log("========================================================");
+  console.log("  Predicate Tree POJO Import/Export Examples");
+  console.log("========================================================");
+  console.log("");
+  console.log("Usage: npx ts-node index.ts [options]");
+  console.log("");
+  console.log("Options:");
+  console.log("  --help, -h              Show this help message");
+  console.log(
+    "  --basic, -b             Run the basic POJO import/export example"
+  );
+  console.log(
+    "  --complex, -c           Run the complex POJO import/export example"
+  );
+  console.log("  --arithmetic, -a        Run the arithmetic tree example");
+  console.log("  --all, --all-examples   Run all examples");
+  console.log("");
+  console.log(
+    "If no options are provided, the complex example will run by default."
+  );
+  console.log("");
+  console.log("Examples:");
+  console.log(
+    "  npx ts-node index.ts --basic        Run the basic POJO example"
+  );
+  console.log(
+    "  npx ts-node index.ts --complex      Run the complex POJO example"
+  );
+  console.log(
+    "  npx ts-node index.ts --arithmetic   Run the arithmetic tree example"
+  );
+  console.log("  npx ts-node index.ts --all          Run all examples");
+  console.log("========================================================");
 }
 
-// Enable debugging
-console.log("Starting Predicate Tree POJO Import/Export Example");
+// Show help if explicitly requested
+if (showHelp) {
+  showHelpMessage();
+  process.exit(0);
+}
 
-try {
-  // Demonstrate working with complex trees that include subtrees
+// Run examples based on command line args or run complex example by default
+if (runAll || runBasicExample) {
   demonstrateComplexTreeWithSubtree();
+}
 
-  console.log("\nAll demonstrations completed successfully!");
-  console.log(`Generated POJO files can be found in: ${outputsDir}`);
-} catch (error: any) {
-  console.error("\nAn error occurred:", error.message);
-  console.error(error.stack);
+if (runAll || runComplexExample || args.length === 0) {
+  runComplexPojoExample();
+}
+
+if (runAll || runArithmeticExample) {
+  runArithmeticTreeExamples();
 }

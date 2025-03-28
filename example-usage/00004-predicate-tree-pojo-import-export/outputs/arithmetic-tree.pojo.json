@@ -1,0 +1,59 @@
+{
+  "_root_": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$add",
+      "subjectLabel": "Complex Expression"
+    },
+    "nodeType": "subtree:ArithmeticTree"
+  },
+  "_root_:0": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "value": 100,
+      "subjectLabel": "Constant"
+    }
+  },
+  "_root_:1": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$multiply",
+      "subjectLabel": "Product Term"
+    }
+  },
+  "_root_:1:2": {
+    "parentId": "_root_:1",
+    "nodeContent": {
+      "value": 5,
+      "subjectLabel": "Factor 1"
+    }
+  },
+  "_root_:1:3": {
+    "parentId": "_root_:1",
+    "nodeContent": {
+      "value": 7,
+      "subjectLabel": "Factor 2"
+    }
+  },
+  "_root_:4": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$divide",
+      "subjectLabel": "Division Term"
+    }
+  },
+  "_root_:4:5": {
+    "parentId": "_root_:4",
+    "nodeContent": {
+      "value": 100,
+      "subjectLabel": "Numerator"
+    }
+  },
+  "_root_:4:6": {
+    "parentId": "_root_:4",
+    "nodeContent": {
+      "value": 2,
+      "subjectLabel": "Denominator"
+    }
+  }
+}

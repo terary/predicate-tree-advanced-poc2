@@ -61,6 +61,21 @@ abstract class AbstractExpressionTree<P extends object>
    */
   abstract createSubtreeAt(nodeId: string): IExpressionTree<P>;
 
+  /**
+   * Creates a subtree of the specified type
+   * This method is used when importing trees from POJO to create subtrees of the appropriate type
+   * The default implementation creates a generic subtree, but subclasses can override
+   * this method to create specialized subtree types based on the node type.
+   * @param nodeId The ID of the parent node where the subtree should be attached
+   * @param nodeType The type of the subtree (e.g., "subtree:NotTree")
+   * @returns A new subtree of the appropriate type
+   */
+  createSubtreeOfTypeAt(nodeId: string, nodeType: string): IExpressionTree<P> {
+    // Default implementation simply creates a generic subtree
+    // Subclasses should override this to create specialized subtree types
+    return this.createSubtreeAt(nodeId);
+  }
+
   protected defaultJunction(nodeId: string): P {
     // Create a default junction operator with $and
     // This should be properly typed in subclasses that extend this class
@@ -271,7 +286,12 @@ abstract class AbstractExpressionTree<P extends object>
         nodePojo.nodeType &&
         nodePojo.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName + ":")
       ) {
-        const subtree = dTree.createSubtreeAt(treeParentId);
+        // Use createSubtreeOfTypeAt instead of createSubtreeAt
+        // This allows subclasses to create the appropriate subtree type
+        const subtree = dTree.createSubtreeOfTypeAt(
+          treeParentId,
+          nodePojo.nodeType
+        );
         subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
         AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
           subtree.rootNodeId,
@@ -423,6 +443,15 @@ class GenericExpressionTree<
     subtree._incrementor = this._incrementor;
 
     return subtree as IExpressionTree<Q>;
+  }
+
+  createSubtreeOfTypeAt<Q extends T>(
+    targetNodeId: string,
+    nodeType: string
+  ): IExpressionTree<Q> {
+    // Generic implementation just creates a normal subtree
+    // Specialized subclasses will override this with more specific behavior
+    return this.createSubtreeAt<Q>(targetNodeId);
   }
 }
 

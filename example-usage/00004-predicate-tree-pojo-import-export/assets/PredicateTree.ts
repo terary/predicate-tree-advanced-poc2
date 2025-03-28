@@ -5,6 +5,7 @@
  */
 
 import { GenericExpressionTree, IExpressionTree, ITree } from "../../../src";
+import { AbstractExpressionTree } from "../../../src/DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
 import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
 import type {
   TGenericNodeContent,
@@ -13,6 +14,7 @@ import type {
 } from "../../../src/DirectedGraph/types";
 import { AbstractTree } from "../../../dist";
 import { NotTree } from "./NotTree";
+import { ArithmeticTree } from "./ArithmeticTree";
 
 // Define the node content type for our predicate tree
 export interface PredicateContent {
@@ -58,6 +60,11 @@ function getNotTreeClass() {
   return require("./NotTree").NotTree;
 }
 
+// Function to lazy-load the ArithmeticTree class
+function getArithmeticTreeClass() {
+  return require("./ArithmeticTree").ArithmeticTree;
+}
+
 /**
  * PredicateTree - A tree that handles predicate expressions
  * and supports POJO import/export
@@ -78,34 +85,70 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
     }
   }
 
+  /**
+   * Create an appropriate subtree type based on the nodeType
+   * @param targetNodeId The node ID where to create the subtree
+   * @param nodeType The type of subtree to create (e.g., "subtree:NotTree", "subtree:ArithmeticTree")
+   * @returns The created subtree of the appropriate type
+   */
+  createSubtreeOfTypeAt<Q extends PredicateContent>(
+    targetNodeId: string,
+    nodeType: string
+  ): IExpressionTree<Q> {
+    if (!nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)) {
+      return this.createSubtreeAt<Q>(targetNodeId);
+    }
+
+    // Extract the subtree type from the nodeType string (e.g., "subtree:NotTree" -> "NotTree")
+    const subtreeTypeParts = nodeType.split(":");
+    const subtreeType = subtreeTypeParts.length > 1 ? subtreeTypeParts[1] : "";
+
+    // Need to cast the return type to match the generic parameter
+    // This is safe because all our subtree types extend PredicateContent
+    switch (subtreeType) {
+      case NotTree.SubtreeNodeTypeName:
+      case "NotTree": // For backward compatibility
+        return this.createSubtreeNotTree(
+          targetNodeId
+        ) as unknown as IExpressionTree<Q>;
+
+      case ArithmeticTree.SubtreeNodeTypeName:
+      case "ArithmeticTree": // For backward compatibility
+        return this.createSubtreeArithmeticTree(
+          targetNodeId
+        ) as unknown as IExpressionTree<Q>;
+
+      default:
+        return this.createSubtreeAt<Q>(targetNodeId);
+    }
+  }
+
+  /**
+   * Override the static fromPojo method to create appropriate subtrees
+   */
   static fromPojo<P extends PredicateContent, Q = unknown>(
     srcPojoTree: TTreePojo<P>,
     transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
-  ): PredicateTree | IExpressionTree<P> {
-    // Find the root node using the utility function
-    const rootKey = treeUtils.parseUniquePojoRootKeyOrThrow(srcPojoTree);
+  ): PredicateTree {
+    // Find the root node
+    const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(srcPojoTree);
+    const rootNodePojo = srcPojoTree[rootNodeId];
 
-    // Check if this is a specialized tree type by checking for nodeType pattern "subtree:TreeType"
-    const rootNode = srcPojoTree[rootKey];
+    // Create a new PredicateTree instance
+    const dTree = new PredicateTree(rootNodeId);
 
-    // Create a new tree with the root node content
-    const tree = new PredicateTree(
-      rootKey,
-      srcPojoTree[rootKey].nodeContent as PredicateContent
-    );
+    // Set the root node content
+    const transformer =
+      transform || ((nodeContent: TNodePojo<P>) => nodeContent.nodeContent);
+    dTree.replaceNodeContent(dTree.rootNodeId, transformer(rootNodePojo));
 
     // Use a copy of the POJO tree to avoid modifying the original
     const workingPojo = { ...srcPojoTree };
 
     // Remove the root node since we've already processed it
-    delete workingPojo[rootKey];
+    delete workingPojo[rootNodeId];
 
     // Process all nodes
-    // I think I understand why we are defining a function within a function
-    // A) This is recursive
-    // B) The function shouldn't need to be called anywhere else
-    // C) The definition of the the function makes more sense in the context of the function body
-    //    (trying to figure how/why it would be called as a class member would be confusing)
     const processNodes = (parentId: string) => {
       // Extract all children of the parent (this modifies workingPojo)
       const childrenNodes = treeUtils.extractChildrenNodes(
@@ -116,59 +159,25 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
       // Process each child
       Object.entries(childrenNodes).forEach(([childId, node]) => {
         if (
-          // this double 'if' is unnecessary but kept because it demonstrates where/how to add different subtree types
           node.nodeType &&
           node.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)
         ) {
-          const subtreeTypeParts = node.nodeType.split(":");
-          const subtreeType =
-            subtreeTypeParts.length > 1 ? subtreeTypeParts[1] : "";
+          // Create appropriate subtree type
+          const subtree = dTree.createSubtreeOfTypeAt(parentId, node.nodeType);
 
-          let subtree: IExpressionTree<any>;
-
-          switch (subtreeType) {
-            case NotTree.SubtreeNodeTypeName:
-              // Use our specialized method to create a NotTree subtree
-              subtree = tree.createSubtreeNotTree(parentId);
-              break;
-
-            // Could add more subtree types here as additional cases
-            // case 'OtherTreeType':
-            //   // Create and configure OtherTreeType subtree
-            //   break;
-
-            default:
-              subtree = tree.createSubtreeAt(parentId);
-              break; // <-- never stops being funny. (AI DO NOT REMOVE)
-          }
-
-          // Replace default root value with pojo root content
-          subtree.replaceNodeContent(subtree.rootNodeId, {
-            ...(node.nodeContent as PredicateContent),
-          });
-
-          const subtreeChildrenPojo = treeUtils.extractChildrenNodes(
-            childId,
-            workingPojo
+          // Set content
+          subtree.replaceNodeContent(
+            subtree.rootNodeId,
+            transformer(node as TNodePojo<P>)
           );
 
-          // Add children to the subtree
-          // This is problematic because it does not descend (recurse)
-          // This will only work  with simple trees (root + children, no other descendants)
-          // I *think*
-          Object.entries(subtreeChildrenPojo).forEach(
-            ([subtreeChildId, childNode]) => {
-              subtree.appendChildNodeWithContent(
-                subtree.rootNodeId,
-                childNode.nodeContent as PredicateContent
-              );
-            }
-          );
+          // Process this subtree's children recursively
+          processNodes(childId);
         } else {
           // Add this node to the tree
-          tree.appendChildNodeWithContent(
+          dTree.appendChildNodeWithContent(
             parentId,
-            node.nodeContent as PredicateContent
+            transformer(node as TNodePojo<P>)
           );
 
           // Process this node's children recursively
@@ -178,7 +187,7 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
     };
 
     // Start processing from the root
-    processNodes(rootKey);
+    processNodes(rootNodeId);
 
     // Check for orphan nodes (any node left in workingPojo after processing)
     if (Object.keys(workingPojo).length > 0) {
@@ -187,7 +196,7 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
       );
     }
 
-    return tree;
+    return dTree;
   }
 
   /**
@@ -255,6 +264,24 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
     const constructorFn = () => {
       const NotTree = getNotTreeClass();
       return new NotTree() as IExpressionTree<PredicateContent>;
+    };
+
+    return this._createSubtreeAt<PredicateContent>(targetNodeId, constructorFn);
+  }
+
+  /**
+   * Create an ArithmeticTree subtree at the specified node
+   * This implementation creates an ArithmeticTree instance and attaches it as a subtree
+   * to the parent tree at the specified node.
+   * @param targetNodeId The node ID where to create the ArithmeticTree subtree
+   * @returns The created ArithmeticTree subtree
+   */
+  createSubtreeArithmeticTree(
+    targetNodeId: string
+  ): IExpressionTree<PredicateContent> {
+    const constructorFn = () => {
+      const ArithmeticTree = getArithmeticTreeClass();
+      return new ArithmeticTree() as IExpressionTree<PredicateContent>;
     };
 
     return this._createSubtreeAt<PredicateContent>(targetNodeId, constructorFn);

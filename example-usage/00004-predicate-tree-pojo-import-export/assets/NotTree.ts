@@ -185,8 +185,8 @@ export class NotTree extends GenericExpressionTree<NotTreePredicateContent> {
   toPojoAt(nodeId: string = this.rootNodeId): Record<string, any> {
     // Use the parent class implementation to get the base POJO
     const pojo = super.toPojoAt(nodeId) as Record<string, any>;
-    const pojoRootKey = treeUtils.parseUniquePojoRootKeyOrThrow(pojo);
-    pojo[pojoRootKey].nodeType = "subtree:NotTree";
+    // const pojoRootKey = treeUtils.parseUniquePojoRootKeyOrThrow(pojo);
+    //    pojo[pojoRootKey].nodeType = "subtree:NotTree";
 
     // // Set the correct nodeType for all nodes in this tree
     // Object.keys(pojo).forEach((key) => {
