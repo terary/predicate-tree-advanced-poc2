@@ -147,15 +147,14 @@ export function demonstrateComplexTreeWithSubtree(): void {
 
     if (subtree instanceof ArithmeticTree) {
       const arithmeticClonedEvaluations = subtree.evaluate();
-      arithmeticOriginalEvaluations;
 
       if (arithmeticClonedEvaluations === arithmeticOriginalEvaluations) {
         console.log(
           "✅ PASS: Arithmetic tree cloned evaluations match original"
         );
+      } else {
+        throw new Error("Cloned Arithmetic failed to match original value");
       }
-
-      throw new Error("Cloned Arithmetic failed to match original value");
     }
   });
 
