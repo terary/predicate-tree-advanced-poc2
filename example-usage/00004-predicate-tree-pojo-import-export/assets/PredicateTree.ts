@@ -11,6 +11,7 @@ import type {
   TGenericNodeContent,
   TNodePojo,
   TTreePojo,
+  TFromToMap,
 } from "../../../src/DirectedGraph/types";
 import { AbstractTree } from "../../../dist";
 import { NotTree } from "./NotTree";
@@ -124,9 +125,35 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
   }
 
   /**
-   * Override the static fromPojo method to create appropriate subtrees
+   * alternative fromPojo - do not use
+   *
    */
-  static fromPojo<P extends PredicateContent, Q = unknown>(
+  static z_fromPojo<P extends PredicateContent, Q = unknown>(
+    srcPojoTree: TTreePojo<P>,
+    transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
+  ): PredicateTree {
+    const newPredicateTree = new PredicateTree();
+
+    // so the reason this won't work is 'AbstractExpressionTree.fromPojo' will call
+    // class defined on that class and not this (PredicateTree) class
+    const tree = AbstractExpressionTree.fromPojo(srcPojoTree, transform);
+
+    // @ts-ignore
+    newPredicateTree._incrementor = tree._incrementor;
+    // @ts-ignore
+    newPredicateTree._rootNodeId = tree._rootNodeId;
+    // @ts-ignore
+    newPredicateTree._nodeDictionary = tree._nodeDictionary;
+    return newPredicateTree;
+  }
+
+  /**
+   * Override the static fromPojo method to create appropriate subtrees
+   *
+   * alternative fromPojo - do not use
+   *
+   */
+  static x_fromPojo<P extends PredicateContent, Q = unknown>(
     srcPojoTree: TTreePojo<P>,
     transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
   ): PredicateTree {
@@ -148,8 +175,16 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
     // Remove the root node since we've already processed it
     delete workingPojo[rootNodeId];
 
+    // Create a mapping of nodeId to subtree instances
+    // This helps us keep track of all subtrees we create
+    const subtreeMap = new Map<string, any>();
+    subtreeMap.set(rootNodeId, dTree);
+
     // Process all nodes
     const processNodes = (parentId: string) => {
+      // Get the parent subtree (either the main tree or a previously created subtree)
+      const parentTree = subtreeMap.get(parentId) || dTree;
+
       // Extract all children of the parent (this modifies workingPojo)
       const childrenNodes = treeUtils.extractChildrenNodes(
         parentId,
@@ -163,7 +198,10 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
           node.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)
         ) {
           // Create appropriate subtree type
-          const subtree = dTree.createSubtreeOfTypeAt(parentId, node.nodeType);
+          const subtree = parentTree.createSubtreeOfTypeAt(
+            parentId,
+            node.nodeType
+          );
 
           // Set content
           subtree.replaceNodeContent(
@@ -171,11 +209,14 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
             transformer(node as TNodePojo<P>)
           );
 
+          // Add to our map for future lookups
+          subtreeMap.set(childId, subtree);
+
           // Process this subtree's children recursively
           processNodes(childId);
         } else {
           // Add this node to the tree
-          dTree.appendChildNodeWithContent(
+          const newNodeId = parentTree.appendChildNodeWithContent(
             parentId,
             transformer(node as TNodePojo<P>)
           );
@@ -197,6 +238,110 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
     }
 
     return dTree;
+  }
+
+  /**
+   * Implementation of fromPojo following AbstractExpressionTree pattern
+   * This uses the PredicateTree's createSubtreeOfTypeAt method for subtrees
+   */
+  static fromPojo(
+    srcPojoTree: TTreePojo<PredicateContent>,
+    transform: (
+      nodeContent: TNodePojo<PredicateContent>
+    ) => TGenericNodeContent<PredicateContent> = (
+      nodeContent: TNodePojo<PredicateContent>
+    ) => nodeContent.nodeContent
+  ): PredicateTree {
+    const pojoObject = { ...srcPojoTree };
+
+    const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
+    const rootNodePojo = pojoObject[rootNodeId];
+    const dTree = new PredicateTree(rootNodeId);
+    dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
+    delete pojoObject[rootNodeId];
+
+    // Use our helper function to traverse and extract children
+    PredicateTree.fromPojoTraverseAndExtractChildren(
+      dTree._rootNodeId,
+      rootNodeId,
+      dTree,
+      pojoObject,
+      transform
+    );
+
+    if (Object.keys(pojoObject).length > 0) {
+      throw new ValidationError(
+        "Orphan nodes detected while parsing pojo object."
+      );
+    }
+
+    return dTree;
+  }
+
+  /**
+   * Helper method that follows AbstractExpressionTree.#fromPojoTraverseAndExtractChildren pattern
+   * but uses PredicateTree's createSubtreeOfTypeAt for subtrees
+   */
+  static fromPojoTraverseAndExtractChildren<T extends PredicateContent>(
+    treeParentId: string,
+    jsonParentId: string,
+    dTree: IExpressionTree<T>,
+    treeObject: TTreePojo<T>,
+    transformer: (nodePojo: TNodePojo<T>) => TGenericNodeContent<T>,
+    fromToMap: TFromToMap[] = []
+  ): TFromToMap[] {
+    const childrenNodes = treeUtils.extractChildrenNodes<T>(
+      jsonParentId,
+      treeObject
+    ) as TTreePojo<T>;
+
+    Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
+      if (
+        nodePojo.nodeType &&
+        nodePojo.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName + ":")
+      ) {
+        // Create the appropriate subtree type using our createSubtreeOfTypeAt
+        const subtree = dTree.createSubtreeOfTypeAt(
+          treeParentId,
+          nodePojo.nodeType
+        );
+        subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
+
+        // Continue processing children of this subtree
+        PredicateTree.fromPojoTraverseAndExtractChildren(
+          subtree.rootNodeId,
+          nodeId,
+          subtree as IExpressionTree<T>,
+          treeObject,
+          transformer,
+          fromToMap
+        );
+      } else {
+        // Regular node
+        const childId = (dTree as any).fromPojoAppendChildNodeWithContent
+          ? (dTree as any).fromPojoAppendChildNodeWithContent(
+              treeParentId,
+              transformer(nodePojo)
+            )
+          : dTree.appendChildNodeWithContent(
+              treeParentId,
+              transformer(nodePojo)
+            );
+
+        fromToMap.push({ from: nodeId, to: childId });
+
+        // Process children of this node
+        PredicateTree.fromPojoTraverseAndExtractChildren(
+          childId,
+          nodeId,
+          dTree,
+          treeObject,
+          transformer,
+          fromToMap
+        );
+      }
+    });
+    return fromToMap;
   }
 
   /**
@@ -258,15 +403,16 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
    * @param targetNodeId The node ID where to create the NotTree subtree
    * @returns The created NotTree subtree
    */
-  createSubtreeNotTree(
-    targetNodeId: string
-  ): IExpressionTree<PredicateContent> {
+  createSubtreeNotTree(targetNodeId: string): NotTree {
     const constructorFn = () => {
       const NotTree = getNotTreeClass();
       return new NotTree() as IExpressionTree<PredicateContent>;
     };
 
-    return this._createSubtreeAt<PredicateContent>(targetNodeId, constructorFn);
+    return this._createSubtreeAt<PredicateContent>(
+      targetNodeId,
+      constructorFn
+    ) as NotTree;
   }
 
   /**
@@ -276,15 +422,16 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
    * @param targetNodeId The node ID where to create the ArithmeticTree subtree
    * @returns The created ArithmeticTree subtree
    */
-  createSubtreeArithmeticTree(
-    targetNodeId: string
-  ): IExpressionTree<PredicateContent> {
+  createSubtreeArithmeticTree(targetNodeId: string): ArithmeticTree {
     const constructorFn = () => {
       const ArithmeticTree = getArithmeticTreeClass();
       return new ArithmeticTree() as IExpressionTree<PredicateContent>;
     };
 
-    return this._createSubtreeAt<PredicateContent>(targetNodeId, constructorFn);
+    return this._createSubtreeAt<PredicateContent>(
+      targetNodeId,
+      constructorFn
+    ) as ArithmeticTree;
   }
 }
 

@@ -46,6 +46,28 @@
     },
     "parentId": "complexDemo"
   },
+  "complexDemo:4:5": {
+    "parentId": "complexDemo:4",
+    "nodeContent": {
+      "subjectId": "age",
+      "operator": "$lt",
+      "value": 18,
+      "_meta": {
+        "negated": true
+      }
+    }
+  },
+  "complexDemo:4:6": {
+    "parentId": "complexDemo:4",
+    "nodeContent": {
+      "subjectId": "role",
+      "operator": "$eq",
+      "value": "Intern",
+      "_meta": {
+        "negated": true
+      }
+    }
+  },
   "complexDemo:4:13": {
     "parentId": "complexDemo:4",
     "nodeContent": {

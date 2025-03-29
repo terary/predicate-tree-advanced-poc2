@@ -77,8 +77,11 @@ export function demonstrateComplexTreeWithSubtree(): void {
   });
 
   // Evaluate and log the result
-  const arithmeticOriginalEvaluations = "x";
-  console.log(`ArithmeticTree Result: ${arithmeticSubtree.toString()}`);
+
+  const arithmeticOriginalEvaluations = arithmeticSubtree.evaluate();
+  console.log(
+    `Original ArithmeticTree Result: ${arithmeticOriginalEvaluations}`
+  );
 
   const allSubtrees = tree.getSubtreeIdsAt();
 
@@ -117,6 +120,12 @@ export function demonstrateComplexTreeWithSubtree(): void {
 
   const cloneTreePojo = tree.toPojoAt();
 
+  // for some reason cursor is not picking up clonedArithmeticTree as ArithmeticTree
+  // in variables but tree is a PredicateTree - my monkey patch is not working
+  // I think it works but I don't love it.
+
+  // perhaps another approach is to create static function - monkeyPatch(genericTree, neededTree)
+
   // Write the cloned tree POJO to a file
   const clonedPojoPath = path.join(outputsDir, "cloned.pojo.json");
   fs.writeFileSync(
@@ -126,14 +135,30 @@ export function demonstrateComplexTreeWithSubtree(): void {
   );
   console.log(`Saved cloned tree POJO to ${clonedPojoPath}`);
 
+  // Clone the tree
   const cloneTree = PredicateTree.fromPojo(cloneTreePojo as any);
+  console.log(`\nClone tree created: root=${cloneTree.rootNodeId}`);
 
-  const cloneSubtreeIds = cloneTree.getSubtreeIdsAt();
-  console.log(`Found ${cloneSubtreeIds.length} subtrees`);
+  // this is almost working the .fromPojo is returning Generic subtrees
 
-  if (!cloneSubtreeIds || cloneSubtreeIds.length == 0) {
-    throw Error("Failed to create subtree correctly");
-  }
+  const clonedSubtreeIds = cloneTree.getSubtreeIdsAt();
+  clonedSubtreeIds.forEach((subtreeId) => {
+    const subtree = cloneTree.getChildContentAt(subtreeId) as any;
+
+    if (subtree instanceof ArithmeticTree) {
+      const arithmeticClonedEvaluations = subtree.evaluate();
+      arithmeticOriginalEvaluations;
+
+      if (arithmeticClonedEvaluations === arithmeticOriginalEvaluations) {
+        console.log(
+          "✅ PASS: Arithmetic tree cloned evaluations match original"
+        );
+      }
+
+      throw new Error("Cloned Arithmetic failed to match original value");
+    }
+  });
+
   console.log("✅ PASS: Subtrees cloned as expected");
 }
 

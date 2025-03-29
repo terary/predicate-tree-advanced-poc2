@@ -5,16 +5,25 @@
 
 
 ===== DEMONSTRATING COMPLEX. TREE WITH SUBTREE =====
-ArithmeticTree Result: Addition Example: 200
+Original ArithmeticTree Result: 200
 ✅ PASS: Subtrees were created correctly
 ✅ PASS: Subtree rootNodeId matches parent nodeId
 ✅ PASS: Object identity is preserved
+✅ PASS: Cloned arithmetic tree is an instance of ArithmeticTree
 Saved cloned tree POJO to /mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/outputs/cloned.pojo.json
-Found 2 subtrees
-✅ PASS: Subtrees cloned as expected
 
-===== DEMONSTRATING BASIC ARITHMETIC TREE =====
-Basic Addition: 100
-Exported tree to POJO structure
-
-Complex POJO Example Completed
+Clone tree created: root=complexDemo
+/mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/assets/ArithmeticTree.ts:96
+      throw new ArithmeticTreeError(
+            ^
+ArithmeticTreeError: Node complexDemo:6 has no children and no value to evaluate
+    at ArithmeticTree.evaluate (/mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/assets/ArithmeticTree.ts:96:13)
+    at /mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/predicate-tree-pojo-import-export-complex.ts:161:51
+    at Array.forEach (<anonymous>)
+    at demonstrateComplexTreeWithSubtree (/mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/predicate-tree-pojo-import-export-complex.ts:157:20)
+    at Object.runComplexPojoExample (/mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/predicate-tree-pojo-import-export-complex.ts:217:3)
+    at Object.<anonymous> (/mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/index.ts:72:3)
+    at Module._compile (node:internal/modules/cjs/loader:1369:14)
+    at Module.m._compile (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/ts-node/src/index.ts:1455:23)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1427:10)
+    at Object.require.extensions.<computed> [as .ts] (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/ts-node/src/index.ts:1458:12)

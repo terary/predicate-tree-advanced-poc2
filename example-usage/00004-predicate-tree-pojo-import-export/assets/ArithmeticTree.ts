@@ -4,7 +4,11 @@
  * A specialized implementation of GenericExpressionTree for arithmetic operations
  */
 
-import { GenericExpressionTree, IExpressionTree } from "../../../src";
+import {
+  AbstractExpressionTree,
+  GenericExpressionTree,
+  IExpressionTree,
+} from "../../../src";
 import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
 import type {
   TGenericNodeContent,
@@ -165,13 +169,31 @@ export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
     }
   }
 
+  static fromPojo<P extends ArithmeticContent>(
+    srcPojoTree: TTreePojo<P>,
+    transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
+  ): ArithmeticTree {
+    const genericTree = AbstractExpressionTree.fromPojo(srcPojoTree, transform);
+
+    const arithmeticTree = new ArithmeticTree();
+
+    // @ts-ignore  - Duck Punch ArithmeticTree
+    arithmeticTree._incrementor = genericTree._incrementor;
+    // @ts-ignore  - Duck Punch ArithmeticTree
+    arithmeticTree._rootNodeId = genericTree._rootNodeId;
+    // @ts-ignore  - Duck Punch ArithmeticTree
+    arithmeticTree._nodeDictionary = genericTree._nodeDictionary;
+
+    return arithmeticTree;
+  }
+
   /**
    * Create an ArithmeticTree from a POJO
    * @param srcPojoTree The source POJO tree
    * @param transform Optional transform function
    * @returns A new ArithmeticTree
    */
-  static fromPojo<P extends ArithmeticContent>(
+  static x_fromPojo<P extends ArithmeticContent>(
     srcPojoTree: TTreePojo<P>,
     transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
   ): ArithmeticTree {
@@ -190,7 +212,12 @@ export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
     // Remove the root node since we've already processed it
     delete workingPojo[rootKey];
 
-    // Process all nodes
+    // Create a mapping of nodeId to subtree instances
+    // This helps us keep track of all subtrees we create
+    const subtreeMap = new Map<string, IExpressionTree<ArithmeticContent>>();
+    subtreeMap.set(rootKey, tree);
+
+    // Process all nodes, ensuring we maintain the exact node IDs from the POJO
     const processNodes = (parentId: string) => {
       // Extract all children of the parent (this modifies workingPojo)
       const childrenNodes = treeUtils.extractChildrenNodes(
@@ -200,20 +227,52 @@ export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
 
       // Process each child
       Object.entries(childrenNodes).forEach(([childId, node]) => {
+        // Get the parent subtree (either the main tree or a previously created subtree)
+        const parentTree = subtreeMap.get(parentId);
+        if (!parentTree) {
+          throw new ArithmeticTreeError(
+            `Parent tree for ${parentId} not found`
+          );
+        }
+
         if (
           node.nodeType &&
           node.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)
         ) {
-          // Handle subtrees if needed in the future
-          console.warn("Subtrees not currently supported in ArithmeticTree");
+          // For subtree nodes, create a subtree
+          // We need to use the exact childId as the node ID
+          const exactIdParts = childId.split(":");
+          const nodeIdInParent = exactIdParts[exactIdParts.length - 1];
+
+          // Create an subtree at the parent with this exact ID
+          const subtree = parentTree.createSubtreeAt(
+            parentId
+          ) as ArithmeticTree;
+
+          // Set the content
+          subtree.replaceNodeContent(
+            subtree.rootNodeId,
+            node.nodeContent as ArithmeticContent
+          );
+
+          // Add to our map for future lookups
+          subtreeMap.set(childId, subtree);
+
+          // Continue processing this subtree's children
+          processNodes(childId);
         } else {
-          // Add this node to the tree
-          tree.appendChildNodeWithContent(
+          // For regular nodes, attach them with the exact childId
+          // Extract the last part of the node ID (e.g., "7" from "parent:7")
+          const exactIdParts = childId.split(":");
+          const nodeIdInParent = exactIdParts[exactIdParts.length - 1];
+
+          // Append with exact ID
+          const newNodeId = parentTree.appendChildNodeWithContent(
             parentId,
             node.nodeContent as ArithmeticContent
           );
 
-          // Process this node's children recursively
+          // Process any children of this node
           processNodes(childId);
         }
       });
@@ -285,17 +344,47 @@ export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
   }
 
   /**
+   *
+   * Cursor/Coposer - Fuck Up.  Left here to remind it - not to do this again.
+   *
    * Convert the tree to a POJO document
    * @param nodeId Optional ID of the node to start from (defaults to root)
    * @returns The POJO document representing the tree
    */
-  toPojoAt(nodeId: string = this.rootNodeId): Record<string, any> {
+  x_toPojoAt(nodeId: string = this.rootNodeId): Record<string, any> {
     // Get the base POJO from the parent method
     const pojo = super.toPojoAt(nodeId) as Record<string, any>;
 
-    // Set proper nodeType if this is used as a subtree
+    // Find the root node key
     const pojoRootKey = treeUtils.parseUniquePojoRootKeyOrThrow(pojo);
+
+    // Set proper nodeType if this is used as a subtree
     pojo[pojoRootKey].nodeType = "subtree:ArithmeticTree";
+
+    // Identify all operation nodes that might need to be marked as subtrees
+    Object.entries(pojo).forEach(([key, node]: [string, any]) => {
+      // Skip the root node, we already set its type
+      if (key === pojoRootKey) return;
+
+      // Check if this is an operation node
+      if (
+        node.nodeContent &&
+        node.nodeContent.operator &&
+        ["$add", "$subtract", "$multiply", "$divide"].includes(
+          node.nodeContent.operator
+        )
+      ) {
+        // Check if this node has children (making it a subtree)
+        const hasChildren = Object.values(pojo).some(
+          (otherNode: any) => otherNode.parentId === key
+        );
+
+        if (hasChildren) {
+          // Mark operation nodes with children as ArithmeticTree subtrees
+          node.nodeType = "subtree:ArithmeticTree";
+        }
+      }
+    });
 
     return pojo;
   }

@@ -1,0 +1,351 @@
+diff --git a/example-usage/00004-predicate-tree-pojo-import-export/assets/ArithmeticTree.ts b/example-usage/00004-predicate-tree-pojo-import-export/assets/ArithmeticTree.ts
+index 244b1b8..a89068a 100644
+--- a/example-usage/00004-predicate-tree-pojo-import-export/assets/ArithmeticTree.ts
++++ b/example-usage/00004-predicate-tree-pojo-import-export/assets/ArithmeticTree.ts
+@@ -190,7 +190,12 @@ export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
+     // Remove the root node since we've already processed it
+     delete workingPojo[rootKey];
+ 
+-    // Process all nodes
++    // Create a mapping of nodeId to subtree instances
++    // This helps us keep track of all subtrees we create
++    const subtreeMap = new Map<string, IExpressionTree<ArithmeticContent>>();
++    subtreeMap.set(rootKey, tree);
++
++    // Process all nodes, ensuring we maintain the exact node IDs from the POJO
+     const processNodes = (parentId: string) => {
+       // Extract all children of the parent (this modifies workingPojo)
+       const childrenNodes = treeUtils.extractChildrenNodes(
+@@ -200,20 +205,52 @@ export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
+ 
+       // Process each child
+       Object.entries(childrenNodes).forEach(([childId, node]) => {
++        // Get the parent subtree (either the main tree or a previously created subtree)
++        const parentTree = subtreeMap.get(parentId);
++        if (!parentTree) {
++          throw new ArithmeticTreeError(
++            `Parent tree for ${parentId} not found`
++          );
++        }
++
+         if (
+           node.nodeType &&
+           node.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)
+         ) {
+-          // Handle subtrees if needed in the future
+-          console.warn("Subtrees not currently supported in ArithmeticTree");
++          // For subtree nodes, create a subtree
++          // We need to use the exact childId as the node ID
++          const exactIdParts = childId.split(":");
++          const nodeIdInParent = exactIdParts[exactIdParts.length - 1];
++
++          // Create an subtree at the parent with this exact ID
++          const subtree = parentTree.createSubtreeAt(
++            parentId
++          ) as ArithmeticTree;
++
++          // Set the content
++          subtree.replaceNodeContent(
++            subtree.rootNodeId,
++            node.nodeContent as ArithmeticContent
++          );
++
++          // Add to our map for future lookups
++          subtreeMap.set(childId, subtree);
++
++          // Continue processing this subtree's children
++          processNodes(childId);
+         } else {
+-          // Add this node to the tree
+-          tree.appendChildNodeWithContent(
++          // For regular nodes, attach them with the exact childId
++          // Extract the last part of the node ID (e.g., "7" from "parent:7")
++          const exactIdParts = childId.split(":");
++          const nodeIdInParent = exactIdParts[exactIdParts.length - 1];
++
++          // Append with exact ID
++          const newNodeId = parentTree.appendChildNodeWithContent(
+             parentId,
+             node.nodeContent as ArithmeticContent
+           );
+ 
+-          // Process this node's children recursively
++          // Process any children of this node
+           processNodes(childId);
+         }
+       });
+@@ -293,10 +330,37 @@ export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
+     // Get the base POJO from the parent method
+     const pojo = super.toPojoAt(nodeId) as Record<string, any>;
+ 
+-    // Set proper nodeType if this is used as a subtree
++    // Find the root node key
+     const pojoRootKey = treeUtils.parseUniquePojoRootKeyOrThrow(pojo);
++
++    // Set proper nodeType if this is used as a subtree
+     pojo[pojoRootKey].nodeType = "subtree:ArithmeticTree";
+ 
++    // Identify all operation nodes that might need to be marked as subtrees
++    Object.entries(pojo).forEach(([key, node]: [string, any]) => {
++      // Skip the root node, we already set its type
++      if (key === pojoRootKey) return;
++
++      // Check if this is an operation node
++      if (
++        node.nodeContent &&
++        node.nodeContent.operator &&
++        ["$add", "$subtract", "$multiply", "$divide"].includes(
++          node.nodeContent.operator
++        )
++      ) {
++        // Check if this node has children (making it a subtree)
++        const hasChildren = Object.values(pojo).some(
++          (otherNode: any) => otherNode.parentId === key
++        );
++
++        if (hasChildren) {
++          // Mark operation nodes with children as ArithmeticTree subtrees
++          node.nodeType = "subtree:ArithmeticTree";
++        }
++      }
++    });
++
+     return pojo;
+   }
+ }
+diff --git a/example-usage/00004-predicate-tree-pojo-import-export/assets/PredicateTree.ts b/example-usage/00004-predicate-tree-pojo-import-export/assets/PredicateTree.ts
+index d2b876c..604d187 100644
+--- a/example-usage/00004-predicate-tree-pojo-import-export/assets/PredicateTree.ts
++++ b/example-usage/00004-predicate-tree-pojo-import-export/assets/PredicateTree.ts
+@@ -148,8 +148,16 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
+     // Remove the root node since we've already processed it
+     delete workingPojo[rootNodeId];
+ 
++    // Create a mapping of nodeId to subtree instances
++    // This helps us keep track of all subtrees we create
++    const subtreeMap = new Map<string, any>();
++    subtreeMap.set(rootNodeId, dTree);
++
+     // Process all nodes
+     const processNodes = (parentId: string) => {
++      // Get the parent subtree (either the main tree or a previously created subtree)
++      const parentTree = subtreeMap.get(parentId) || dTree;
++
+       // Extract all children of the parent (this modifies workingPojo)
+       const childrenNodes = treeUtils.extractChildrenNodes(
+         parentId,
+@@ -163,7 +171,10 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
+           node.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)
+         ) {
+           // Create appropriate subtree type
+-          const subtree = dTree.createSubtreeOfTypeAt(parentId, node.nodeType);
++          const subtree = parentTree.createSubtreeOfTypeAt(
++            parentId,
++            node.nodeType
++          );
+ 
+           // Set content
+           subtree.replaceNodeContent(
+@@ -171,11 +182,14 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
+             transformer(node as TNodePojo<P>)
+           );
+ 
++          // Add to our map for future lookups
++          subtreeMap.set(childId, subtree);
++
+           // Process this subtree's children recursively
+           processNodes(childId);
+         } else {
+           // Add this node to the tree
+-          dTree.appendChildNodeWithContent(
++          const newNodeId = parentTree.appendChildNodeWithContent(
+             parentId,
+             transformer(node as TNodePojo<P>)
+           );
+@@ -258,15 +272,16 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
+    * @param targetNodeId The node ID where to create the NotTree subtree
+    * @returns The created NotTree subtree
+    */
+-  createSubtreeNotTree(
+-    targetNodeId: string
+-  ): IExpressionTree<PredicateContent> {
++  createSubtreeNotTree(targetNodeId: string): NotTree {
+     const constructorFn = () => {
+       const NotTree = getNotTreeClass();
+       return new NotTree() as IExpressionTree<PredicateContent>;
+     };
+ 
+-    return this._createSubtreeAt<PredicateContent>(targetNodeId, constructorFn);
++    return this._createSubtreeAt<PredicateContent>(
++      targetNodeId,
++      constructorFn
++    ) as NotTree;
+   }
+ 
+   /**
+@@ -276,15 +291,16 @@ export class PredicateTree extends GenericExpressionTree<PredicateContent> {
+    * @param targetNodeId The node ID where to create the ArithmeticTree subtree
+    * @returns The created ArithmeticTree subtree
+    */
+-  createSubtreeArithmeticTree(
+-    targetNodeId: string
+-  ): IExpressionTree<PredicateContent> {
++  createSubtreeArithmeticTree(targetNodeId: string): ArithmeticTree {
+     const constructorFn = () => {
+       const ArithmeticTree = getArithmeticTreeClass();
+       return new ArithmeticTree() as IExpressionTree<PredicateContent>;
+     };
+ 
+-    return this._createSubtreeAt<PredicateContent>(targetNodeId, constructorFn);
++    return this._createSubtreeAt<PredicateContent>(
++      targetNodeId,
++      constructorFn
++    ) as ArithmeticTree;
+   }
+ }
+ 
+diff --git a/example-usage/00004-predicate-tree-pojo-import-export/debug.run.log b/example-usage/00004-predicate-tree-pojo-import-export/debug.run.log
+index 7d78d1a..2c14371 100644
+--- a/example-usage/00004-predicate-tree-pojo-import-export/debug.run.log
++++ b/example-usage/00004-predicate-tree-pojo-import-export/debug.run.log
+@@ -5,12 +5,37 @@
+ 
+ 
+ ===== DEMONSTRATING COMPLEX. TREE WITH SUBTREE =====
+-ArithmeticTree Result: Addition Example: 200
++Original ArithmeticTree Result: 200
+ ✅ PASS: Subtrees were created correctly
+ ✅ PASS: Subtree rootNodeId matches parent nodeId
+ ✅ PASS: Object identity is preserved
+ Saved cloned tree POJO to /mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/outputs/cloned.pojo.json
+-Found 2 subtrees
++
++Original POJO node structure:
++  complexDemo: parentId=complexDemo, type=regular, content: $and
++  complexDemo:0: parentId=complexDemo, type=regular, content: $eq
++  complexDemo:1: parentId=complexDemo, type=regular, content: $or
++  complexDemo:1:2: parentId=complexDemo:1, type=regular, content: $eq
++  complexDemo:1:3: parentId=complexDemo:1, type=regular, content: $eq
++  complexDemo:4: parentId=complexDemo, type=subtree:NotTree, content: $and
++  complexDemo:4:13: parentId=complexDemo:4, type=regular, content: $eq
++  complexDemo:7: parentId=complexDemo, type=subtree:ArithmeticTree, content: $add
++  complexDemo:7:8: parentId=complexDemo:7, type=regular, content: 100
++  complexDemo:7:9: parentId=complexDemo:7, type=regular, content: 101
++  complexDemo:7:10: parentId=complexDemo:7, type=subtree:ArithmeticTree, content: $subtract
++  complexDemo:7:10:11: parentId=complexDemo:7:10, type=regular, content: 102
++  complexDemo:7:10:12: parentId=complexDemo:7:10, type=regular, content: 103
++
++Clone tree created: root=complexDemo
++
++All nodes in cloned tree: complexDemo, complexDemo:0, complexDemo:1, complexDemo:1:2, complexDemo:1:3
++  Node complexDemo: parent=null, type=Object, content: $and
++  Node complexDemo:0: parent=complexDemo, type=Object, content: $eq
++  Node complexDemo:1: parent=complexDemo, type=Object, content: $or
++  Node complexDemo:1:2: parent=complexDemo:1, type=Object, content: $eq
++  Node complexDemo:1:3: parent=complexDemo:1, type=Object, content: $eq
++
++Found 2 subtrees in cloned tree: complexDemo:4, complexDemo:6
+ ✅ PASS: Subtrees cloned as expected
+ 
+ ===== DEMONSTRATING BASIC ARITHMETIC TREE =====
+diff --git a/example-usage/00004-predicate-tree-pojo-import-export/outputs/cloned.pojo.json b/example-usage/00004-predicate-tree-pojo-import-export/outputs/cloned.pojo.json
+index a42d544..d8888f1 100644
+--- a/example-usage/00004-predicate-tree-pojo-import-export/outputs/cloned.pojo.json
++++ b/example-usage/00004-predicate-tree-pojo-import-export/outputs/cloned.pojo.json
+@@ -84,7 +84,8 @@
+     "nodeContent": {
+       "operator": "$subtract",
+       "subjectLabel": "Second Operand"
+-    }
++    },
++    "nodeType": "subtree:ArithmeticTree"
+   },
+   "complexDemo:7:10:11": {
+     "parentId": "complexDemo:7:10",
+diff --git a/example-usage/00004-predicate-tree-pojo-import-export/predicate-tree-pojo-import-export-complex.ts b/example-usage/00004-predicate-tree-pojo-import-export/predicate-tree-pojo-import-export-complex.ts
+index 2963932..a52b710 100644
+--- a/example-usage/00004-predicate-tree-pojo-import-export/predicate-tree-pojo-import-export-complex.ts
++++ b/example-usage/00004-predicate-tree-pojo-import-export/predicate-tree-pojo-import-export-complex.ts
+@@ -77,8 +77,11 @@ export function demonstrateComplexTreeWithSubtree(): void {
+   });
+ 
+   // Evaluate and log the result
+-  const arithmeticOriginalEvaluations = "x";
+-  console.log(`ArithmeticTree Result: ${arithmeticSubtree.toString()}`);
++
++  const arithmeticOriginalEvaluations = arithmeticSubtree.evaluate();
++  console.log(
++    `Original ArithmeticTree Result: ${arithmeticOriginalEvaluations}`
++  );
+ 
+   const allSubtrees = tree.getSubtreeIdsAt();
+ 
+@@ -126,10 +129,67 @@ export function demonstrateComplexTreeWithSubtree(): void {
+   );
+   console.log(`Saved cloned tree POJO to ${clonedPojoPath}`);
+ 
++  // Print the nodes in the original POJO
++  console.log("\nOriginal POJO node structure:");
++  Object.entries(cloneTreePojo).forEach(([key, node]: [string, any]) => {
++    console.log(
++      `  ${key}: parentId=${node.parentId}, type=${
++        node.nodeType || "regular"
++      }, content:`,
++      node.nodeContent
++        ? node.nodeContent.operator || node.nodeContent.value || "unknown"
++        : "null"
++    );
++  });
++
++  // Clone the tree
+   const cloneTree = PredicateTree.fromPojo(cloneTreePojo as any);
++  console.log(`\nClone tree created: root=${cloneTree.rootNodeId}`);
++
++  // Get all nodes in the cloned tree
++  const allCloneNodes = cloneTree.getTreeNodeIdsAt(cloneTree.rootNodeId);
++  console.log(`\nAll nodes in cloned tree: ${allCloneNodes.join(", ")}`);
++
++  // Print details of each node
++  allCloneNodes.forEach((nodeId) => {
++    const content = cloneTree.getChildContentAt(nodeId);
++    const parentId =
++      nodeId === cloneTree.rootNodeId
++        ? null
++        : cloneTree.getParentNodeId(nodeId);
++    const contentType =
++      content instanceof ArithmeticTree
++        ? "ArithmeticTree"
++        : content instanceof NotTree
++        ? "NotTree"
++        : content && typeof content === "object"
++        ? "Object"
++        : "primitive";
++
++    console.log(
++      `  Node ${nodeId}: parent=${parentId}, type=${contentType}, content:`,
++      content && typeof content === "object" && "operator" in content
++        ? content.operator
++        : content && typeof content === "object" && "value" in content
++        ? content.value
++        : content
++    );
++
++    // If this is a subtree, show its children
++    if (contentType === "ArithmeticTree" || contentType === "NotTree") {
++      const subtree = content as any;
++      const subtreeChildren = subtree.getChildrenNodeIdsOf(subtree.rootNodeId);
++      console.log(`    Subtree children: ${subtreeChildren.join(", ")}`);
++    }
++  });
+ 
++  // Get the IDs of all subtrees in the cloned tree
+   const cloneSubtreeIds = cloneTree.getSubtreeIdsAt();
+-  console.log(`Found ${cloneSubtreeIds.length} subtrees`);
++  console.log(
++    `\nFound ${
++      cloneSubtreeIds.length
++    } subtrees in cloned tree: ${cloneSubtreeIds.join(", ")}`
++  );
+ 
+   if (!cloneSubtreeIds || cloneSubtreeIds.length == 0) {
+     throw Error("Failed to create subtree correctly");
