@@ -7,12 +7,12 @@
 import * as fs from "fs";
 import * as path from "path";
 // Import PredicateTree - we can now use its static methods directly
-import { PredicateTree, PojoDocs } from "./assets/PredicateTree";
-import { NotTree } from "./assets/NotTree";
-import { ArithmeticTree } from "./assets/ArithmeticTree";
+import { PredicateTree, PojoDocs } from "./common/classes/PredicateTree";
+import { NotTree } from "./common/classes/NotTree";
+import { ArithmeticTree } from "./common/classes/ArithmeticTree";
 
 // Set up paths for samples and outputs
-const assetsDir = path.join(__dirname, "assets");
+const assetsDir = path.join(__dirname, "common/pojo");
 const outputsDir = path.join(__dirname, "outputs");
 
 // Ensure outputs directory exists

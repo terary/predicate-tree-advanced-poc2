@@ -5,9 +5,9 @@
  * how to import and export predicate trees as Plain Old JavaScript Objects (POJO).
  */
 
-import { demonstrateComplexTreeWithSubtree } from "./predicate-tree-pojo-import-export";
-import { runComplexPojoExample } from "./predicate-tree-pojo-import-export-complex";
-import { runArithmeticTreeExamples } from "./arithmetic-tree-example";
+import { demonstrateComplexTreeWithSubtree } from "./example-basic-subtrees";
+import { runComplexPojoExample } from "./example-complex-subtrees";
+import { runArithmeticTreeExamples } from "./example-arithmetic-operations";
 
 // Parse command line arguments
 const args = process.argv.slice(2);

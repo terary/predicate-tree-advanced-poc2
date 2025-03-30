@@ -12,10 +12,10 @@ import {
   ArithmeticTree,
   createArithmeticTree,
   ArithmeticPojoDocs,
-} from "./assets/ArithmeticTree";
+} from "./common/classes/ArithmeticTree";
 
 // Set up paths for samples and outputs
-const assetsDir = path.join(__dirname, "assets");
+const assetsDir = path.join(__dirname, "common/pojo");
 const outputsDir = path.join(__dirname, "outputs");
 
 // Ensure outputs directory exists

@@ -1,1 +1,22 @@
 
+==================================================
+ Running Complex Predicate Tree POJO Import/Export Example
+==================================================
+
+
+===== DEMONSTRATING COMPLEX. TREE WITH SUBTREE =====
+Original ArithmeticTree Result: 200
+✅ PASS: Subtrees were created correctly
+✅ PASS: Subtree rootNodeId matches parent nodeId
+✅ PASS: Object identity is preserved
+Saved cloned tree POJO to /mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/outputs/cloned.pojo.json
+
+Clone tree created: root=complexDemo
+✅ PASS: Arithmetic tree cloned evaluations match original
+✅ PASS: Subtrees cloned as expected
+
+===== DEMONSTRATING BASIC ARITHMETIC TREE =====
+Basic Addition: 100
+Exported tree to POJO structure
+
+Complex POJO Example Completed

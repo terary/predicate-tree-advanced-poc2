@@ -8,14 +8,14 @@ import {
   AbstractExpressionTree,
   GenericExpressionTree,
   IExpressionTree,
-} from "../../../src";
-import treeUtils from "../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
+} from "../../../../src";
+import treeUtils from "../../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
 import type {
   TGenericNodeContent,
   TNodePojo,
   TTreePojo,
-} from "../../../src/DirectedGraph/types";
-import { AbstractTree } from "../../../dist";
+} from "../../../../src/DirectedGraph/types";
+import { AbstractTree } from "../../../../dist";
 
 // Define the node content type for our arithmetic tree
 export interface ArithmeticContent {

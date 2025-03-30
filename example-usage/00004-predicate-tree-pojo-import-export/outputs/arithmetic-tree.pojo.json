@@ -4,8 +4,7 @@
     "nodeContent": {
       "operator": "$add",
       "subjectLabel": "Complex Expression"
-    },
-    "nodeType": "subtree:ArithmeticTree"
+    }
   },
   "_root_:0": {
     "parentId": "_root_",

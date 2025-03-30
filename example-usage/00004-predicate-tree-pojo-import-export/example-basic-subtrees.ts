@@ -7,11 +7,11 @@
 import * as fs from "fs";
 import * as path from "path";
 // Import PredicateTree - we can now use its static methods directly
-import { PredicateTree, PojoDocs } from "./assets/PredicateTree";
-import { NotTree } from "./assets/NotTree";
+import { PredicateTree, PojoDocs } from "./common/classes/PredicateTree";
+import { NotTree } from "./common/classes/NotTree";
 
 // Set up paths for samples and outputs
-const assetsDir = path.join(__dirname, "assets");
+const assetsDir = path.join(__dirname, "common/pojo");
 const outputsDir = path.join(__dirname, "outputs");
 
 // Ensure outputs directory exists
@@ -26,9 +26,10 @@ export function demonstrateComplexTreeWithSubtree(): void {
   console.log("\n===== DEMONSTRATING COMPLEX TREE WITH SUBTREE =====");
 
   // Read the complex tree with subtree file
-  // const complexTreePath = "./assets/complex-tree-with-subtree.pojo.json";
-  const complexTreePath =
-    "/mypart/tmc/projects/predicate-tree-advanced-poc2/example-usage/00004-predicate-tree-pojo-import-export/assets/complex-tree-with-subtree.pojo.json";
+  const complexTreePath = path.join(
+    assetsDir,
+    "complex-tree-with-subtree.pojo.json"
+  );
   const complexTreeJson = fs.readFileSync(complexTreePath, "utf8");
   const complexTreePojo = JSON.parse(complexTreeJson) as PojoDocs;
 
