@@ -32,3 +32,4 @@ export { isUUIDv4 } from "./common/utilities/isFunctions";
 export { Incrementor } from "./DirectedGraph/Incrementor/Incrementor";
 export { KeyStore } from "./DirectedGraph/keystore/KeyStore";
 export { KeyStoreError } from "./DirectedGraph/keystore/KeyStoreError";
+export { default as treeUtils } from "./DirectedGraph/AbstractDirectedGraph/treeUtilities";

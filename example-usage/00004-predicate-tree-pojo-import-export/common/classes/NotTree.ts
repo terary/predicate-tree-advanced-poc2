@@ -5,14 +5,16 @@
  * negates predicates. It serves as an example of a subtree with custom behavior.
  */
 
-import { GenericExpressionTree, IExpressionTree } from "../../../../src";
-import { PredicateContent } from "./PredicateTree";
-import type {
+import {
+  GenericExpressionTree,
+  IExpressionTree,
+  treeUtils,
   TGenericNodeContent,
   TNodePojo,
   TTreePojo,
-} from "../../../../src/DirectedGraph/types";
-import treeUtils from "../../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
+} from "../../../../src";
+import { PredicateContent } from "./PredicateTree";
+
 // Extend the PredicateContent interface to include _meta
 export interface NotTreePredicateContent extends PredicateContent {
   _meta?: {

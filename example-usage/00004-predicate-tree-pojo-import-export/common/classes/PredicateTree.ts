@@ -4,16 +4,18 @@
  * A specialized implementation of GenericExpressionTree that supports POJO import/export
  */
 
-import { GenericExpressionTree, IExpressionTree, ITree } from "../../../../src";
-import { AbstractExpressionTree } from "../../../../src/DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
-import treeUtils from "../../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
-import type {
+import {
+  AbstractExpressionTree,
+  GenericExpressionTree,
+  IExpressionTree,
+  ITree,
+  treeUtils,
   TGenericNodeContent,
   TNodePojo,
   TTreePojo,
   TFromToMap,
-} from "../../../../src/DirectedGraph/types";
-import { AbstractTree } from "../../../../dist";
+  AbstractTree,
+} from "../../../../src";
 import { NotTree } from "./NotTree";
 import { ArithmeticTree } from "./ArithmeticTree";
 

@@ -8,14 +8,12 @@ import {
   AbstractExpressionTree,
   GenericExpressionTree,
   IExpressionTree,
-} from "../../../../src";
-import treeUtils from "../../../../src/DirectedGraph/AbstractDirectedGraph/treeUtilities";
-import type {
+  treeUtils,
   TGenericNodeContent,
   TNodePojo,
   TTreePojo,
-} from "../../../../src/DirectedGraph/types";
-import { AbstractTree } from "../../../../dist";
+  AbstractTree,
+} from "../../../../src";
 
 // Define the node content type for our arithmetic tree
 export interface ArithmeticContent {
@@ -52,7 +50,7 @@ export class ArithmeticTreeError extends Error {
  * ArithmeticTree - A tree that handles arithmetic expressions
  * and supports POJO import/export
  */
-// @ts-ignore - Bypass TypeScript's static inheritance checking
+// @ts-ignore - Bypass TypeScript's static inheritance checking: Class static side 'typeof ArithmeticTree' incorrectly extends base class static side 'typeof GenericExpressionTree'
 export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
   static SubtreeNodeTypeName: string = "ArithmeticTree";
   public SubtreeNodeTypeName: string = "ArithmeticTree";
