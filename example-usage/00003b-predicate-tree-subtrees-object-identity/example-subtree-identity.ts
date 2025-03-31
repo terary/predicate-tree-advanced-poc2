@@ -7,8 +7,6 @@
 
 import { LogicExpressionTree } from "./assets/LogicExpressionTree";
 import * as identityTreePojo from "./assets/identity-tree.pojo.json";
-import { IdentityTree } from "./assets/IdentityTree";
-import * as notTreePojo from "./assets/not-tree.pojo.json";
 
 /**
  * Build a simple Logic Expression Tree (outer tree)
@@ -36,7 +34,9 @@ function buildLogicExpressionTree(): LogicExpressionTree {
  * Demonstrate combined tree functionality
  */
 function demonstrateCombinedTree(): void {
-  console.log("\n=== Demonstrating Object Identity with Predicate Trees ===");
+  console.log(
+    "\n=== Demonstrating Object Identity with Predicate Trees and Subtree ==="
+  );
 
   // Build our trees
   const logicTree = buildLogicExpressionTree();
@@ -56,11 +56,11 @@ function demonstrateCombinedTree(): void {
 
   if (Object.is(treeAlias, theSubtree)) {
     console.log(
-      "✅ PASS: The parent content is not the subtree itself. Object identity is preserved correctly."
+      "✅ PASS: The parent content IS the subtree itself. Object identity is preserved correctly."
     );
   } else {
     console.log(
-      "❌ FAIL: The parent content is the subtree itself. This indicates a problem with object identity."
+      "❌ FAIL: The parent content is NOT the subtree itself. This indicates a problem with object identity."
     );
   }
 
@@ -68,11 +68,11 @@ function demonstrateCombinedTree(): void {
   const parentTreeNodeContent = logicTree.getChildContentAt(subtreeNodeId);
 
   if (parentTreeNodeContent) {
-    console.log("❌ FAIL: Expected nodeContent from parent to be null.");
-  } else {
     console.log(
-      "✅ PASS: Would expect to get an empty nodeContent from parent using subtreeNodeId."
+      "❌ FAIL: Expected nodeIds of subtree to NOT be valid parent tree nodes."
     );
+  } else {
+    console.log("✅ PASS: subtree IDs return no value from parent tree.");
   }
 
   if (subtreeNodeContent.value === "Subtree child") {
@@ -85,30 +85,6 @@ function demonstrateCombinedTree(): void {
     );
   }
 
-  // Print the parent tree structure
-  console.log("\nSome nonsense to demonstrate its a real tree");
-  console.log(logicTree.toHumanReadableString());
-
-  // Demonstrate using the fixed not-tree.pojo.json
-  console.log("\nDemonstrating parsing not-tree.pojo.json:");
-  try {
-    // Import our custom LogicExpressionTree with createFromPojo method
-    const {
-      LogicExpressionTree: CustomLogicExpressionTree,
-    } = require("./assets/LogicExpressionTree");
-
-    // Use the createFromPojo method we created
-    const notTree = CustomLogicExpressionTree.createFromPojo(notTreePojo);
-    console.log("Successfully created tree from not-tree.pojo.json!");
-    console.log("Not Tree Structure:");
-    console.log(notTree.toHumanReadableString());
-  } catch (error: any) {
-    console.error(
-      "Error creating tree from not-tree.pojo.json:",
-      error.message
-    );
-  }
-
   console.log("All Good"); // Output should be 'All Good' as per requirements
 }
 
@@ -116,10 +92,6 @@ function demonstrateCombinedTree(): void {
  * Main function to run the identity subtree example
  */
 export function runPredicateTreeWithIdentitySubtreeExample(): void {
-  console.log("Running Predicate Tree with Identity Subtree Example");
-
   // Demonstrate the combined tree functionality
   demonstrateCombinedTree();
-
-  console.log("\nIdentity Subtree Example Completed");
 }

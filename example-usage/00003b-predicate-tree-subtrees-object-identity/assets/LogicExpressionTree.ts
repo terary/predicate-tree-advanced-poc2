@@ -7,7 +7,21 @@
 
 import { GenericExpressionTree } from "../../../src";
 import { validOperators } from "./subjectDictionary";
-import { PredicateContent } from "./NotTree";
+
+/**
+ * Definition of predicate content structure
+ */
+export interface PredicateContent {
+  subject?: string;
+  operator?: string;
+  value?: any;
+  _meta?: {
+    negated?: boolean;
+    description?: string;
+    isSubtree?: boolean;
+    [key: string]: any;
+  };
+}
 
 /**
  * Validation error class for our logic tree

@@ -5,7 +5,7 @@
  * how to use predicate trees with subtrees for object identity checks.
  */
 
-import { runPredicateTreeWithIdentitySubtreeExample } from "./predicate-tree-subtree-identity";
+import { runPredicateTreeWithIdentitySubtreeExample } from "./example-subtree-identity";
 
 // Parse command line arguments
 const args = process.argv.slice(2);

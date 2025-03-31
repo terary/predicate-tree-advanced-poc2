@@ -70,11 +70,11 @@
       "protocol": "inspector"
     },
     {
-      "name": "00004-example index.ts",
+      "name": "00003b-example index.ts",
       "type": "node",
       "request": "launch",
       "args": [
-        "${workspaceFolder}/example-usage/00004-predicate-tree-pojo-import-export/index.ts",
+        "${workspaceFolder}/example-usage/00003b-predicate-tree-subtrees-object-identity/index.ts",
       ],
       "runtimeArgs": [
         "--nolazy",
