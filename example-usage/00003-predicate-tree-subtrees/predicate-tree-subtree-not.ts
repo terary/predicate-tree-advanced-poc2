@@ -13,7 +13,7 @@
 import { LogicExpressionTree } from "./assets/LogicExpressionTree";
 import { NotTree, PredicateContent } from "./assets/NotTree";
 import { simpleSubjectDictionary } from "./assets/subjectDictionary";
-import * as notTreePojo from "./assets/ not-tree.pojo.json";
+import * as notTreePojo from "./assets/not-tree.pojo.json";
 
 /**
  * Build a simple Logic Expression Tree (outer tree)
@@ -75,8 +75,6 @@ function buildNotTree(): NotTree {
  * Validate the expected structure of our combined tree
  */
 function validateCombinedTree(tree: LogicExpressionTree): boolean {
-  tree.getChildContentAt(tree.rootNodeId) as PredicateContent;
-
   // Get all child nodes of root
   const actualPojoJsonStringBase64 = Buffer.from(
     JSON.stringify(tree.toPojoAt())
@@ -119,9 +117,6 @@ function smokeTest(
         : "❌ NotTree does not match hardcoded structure"
     }`
   );
-
-  const logicPojo = logicTree.toPojoAt();
-  console.log({ logicPojo: JSON.stringify(logicPojo, null, 2) });
 
   // Test 3: Validate Parent Tree
   const parentTreeString = logicTree.toHumanReadableString();
@@ -292,10 +287,6 @@ function createFullTreeRepresentation(
  * Main function that runs the NotTree subtree example
  */
 export function runPredicateTreeWithNotSubtreeExample() {
-  console.log("===============================================");
-  console.log("  PREDICATE TREE WITH NOT SUBTREE EXAMPLE");
-  console.log("===============================================");
-
   // Build trees and attach subtree first (technical setup)
   const notTree = buildNotTree();
   const logicTree = buildLogicExpressionTree();
@@ -303,22 +294,13 @@ export function runPredicateTreeWithNotSubtreeExample() {
   // Attach the NotTree as a subtree - using local variable to avoid console output
   const subtreeNodeId = logicTree.attachSubtree(logicTree.rootNodeId, notTree);
 
-  const parentTreePojo = logicTree.toPojoAt();
-
-  console.log({ parentTreePojo });
-
   // Test subtree transportability (more technical setup)
-  demonstrateSubtreeTransportability();
+  //demonstrateSubtreeTransportability();
 
   // Now display the interesting output
-  console.log("\n===============================================");
-  console.log("  KEY INFORMATION AND RESULTS");
-  console.log("===============================================");
-
   // Export the tree to POJO and display it first
   console.log("\n=== Combined Tree Structure (POJO) ===");
   const combinedPojo = logicTree.exportWithSubtrees();
-  console.log(JSON.stringify(combinedPojo, null, 2));
 
   // Display subject dictionary (only once)
   console.log("\n=== Subject Dictionary ===");

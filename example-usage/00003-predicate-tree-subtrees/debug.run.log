@@ -1,65 +1,5 @@
-===============================================
-  PREDICATE TREE WITH NOT SUBTREE EXAMPLE
-===============================================
-
-===============================================
-  KEY INFORMATION AND RESULTS
-===============================================
 
 === Combined Tree Structure (POJO) ===
-{
-  "_root_": {
-    "parentId": "_root_",
-    "nodeContent": {
-      "operator": "$and"
-    }
-  },
-  "_root_:0": {
-    "parentId": "_root_",
-    "nodeContent": {
-      "subject": "A",
-      "operator": "$eq",
-      "value": "example"
-    }
-  },
-  "_root_:1": {
-    "parentId": "_root_",
-    "nodeContent": {
-      "subject": "B",
-      "operator": "$gt",
-      "value": 10
-    }
-  },
-  "_root_:2": {
-    "nodeType": "subtree",
-    "nodeContent": {
-      "operator": "$or"
-    },
-    "parentId": "_root_"
-  },
-  "_root_:2:3": {
-    "parentId": "_root_:2",
-    "nodeContent": {
-      "subject": "C",
-      "operator": "$eq",
-      "value": true,
-      "_meta": {
-        "negated": true
-      }
-    }
-  },
-  "_root_:2:4": {
-    "parentId": "_root_:2",
-    "nodeContent": {
-      "subject": "A",
-      "operator": "$eq",
-      "value": "test",
-      "_meta": {
-        "negated": true
-      }
-    }
-  }
-}
 
 === Subject Dictionary ===
 Our example uses a simple subject dictionary with three fields:
@@ -72,7 +12,7 @@ POJO Structure  ✅ Actual POJO matches expected POJO
 (C != true OR A != 'test')  ✅ NotTree matches hardcoded structure
 (A = 'example' AND B > 10)  ✅ Parent Tree with Subtree matches hardcoded structure
 'Subtree/Parent tree nodeId relationship'  ✅ Subtree and the thing parent points to are the same thing.
-(A = 'example' AND B > 10 AND (C != true OR A != 'test'))  ✅ Parent Tree with Subtree matches hardcoded structure
+(A = 'example' AND B > 10)  ❌ Parent Tree with Subtree matches hardcoded structure
 
 === Output Formats ===
 JS: (A === "example" && B > 10 && (C !== true || A !== "test"))
@@ -92,6 +32,6 @@ These different representations show how the same logical structure can be
 expressed differently based on the target language or system requirements.
 
 ===============================================
-  EXAMPLE COMPLETED SUCCESSFULLY
+  EXAMPLE COMPLETED WITH VALIDATION ERRORS
 ===============================================
 END OF EXAMPLE
