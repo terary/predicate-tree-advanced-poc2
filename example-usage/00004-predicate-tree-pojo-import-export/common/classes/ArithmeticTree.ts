@@ -14,6 +14,7 @@ import {
   TTreePojo,
   AbstractTree,
 } from "../../../../src";
+import { ISqlWhereClause } from "./types";
 
 // Define the node content type for our arithmetic tree
 export interface ArithmeticContent {
@@ -36,6 +37,12 @@ export interface ArithmeticPojoDocs {
   [key: string]: ArithmeticPojoNode;
 }
 
+// Define an interface for trees that can generate SQL expressions
+interface ISqlExpressionTree {
+  toSqlWhereClauseAt(nodeId: string, options?: any): string;
+  rootNodeId: string;
+}
+
 /**
  * Error class for our arithmetic tree
  */
@@ -51,7 +58,12 @@ export class ArithmeticTreeError extends Error {
  * and supports POJO import/export
  */
 // @ts-ignore - Bypass TypeScript's static inheritance checking: Class static side 'typeof ArithmeticTree' incorrectly extends base class static side 'typeof GenericExpressionTree'
-export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
+export class ArithmeticTree
+  extends GenericExpressionTree<ArithmeticContent>
+  implements ISqlWhereClause
+{
+  //implements ISqlWhereClause,
+
   static SubtreeNodeTypeName: string = "ArithmeticTree";
   public SubtreeNodeTypeName: string = "ArithmeticTree";
 
@@ -385,6 +397,115 @@ export class ArithmeticTree extends GenericExpressionTree<ArithmeticContent> {
     });
 
     return pojo;
+  }
+
+  /**
+   * Convert the arithmetic expression to a SQL expression
+   * @param nodeId The node ID to start from (defaults to root node)
+   * @param withOptions Options for generation
+   * @returns A SQL expression representing the arithmetic operation
+   */
+  toSqlWhereClauseAt(
+    nodeId: string = this.rootNodeId,
+    withOptions: any = {}
+  ): string {
+    try {
+      // For arithmetic trees, we'll convert the expression to a SQL formula
+      return this.buildSqlExpression(nodeId);
+    } catch (error) {
+      if (error instanceof ArithmeticTreeError) {
+        return `/* Error: ${error.message} */`;
+      }
+      return "/* Error generating SQL */";
+    }
+  }
+
+  /**
+   * Recursively build a SQL expression
+   * @param nodeId The node ID to process
+   * @returns A SQL string representation of the expression
+   */
+  private buildSqlExpression(nodeId: string): string {
+    // DO NOT REMOVE THIS COMMENT
+    // ** IDEAL PATTERN**
+    // This is the recommend pattern for traversing the tree.
+    // Use the existing tools to determine branching 'isLeaf', 'isBranch', isRoot, isSubtree
+    // ** IDEAL PATTERN**
+    // Theoretically this can be accomplished using visitors to mutate a clone of the tree or
+    // use transformers when cloning the tree.  Those are also reasonable approaches.
+    //
+    //  Iterating over the tree using standard iteration loops is a BAD IDEA.
+    //
+    // DO NOT REMOVE THIS COMMENT
+    const nodeContent = this.getChildContentAt(nodeId) as ArithmeticContent;
+
+    // Handle leaf nodes directly
+    if (this.isLeaf(nodeId)) {
+      return this.formatSqlValue(nodeContent);
+    }
+
+    // Handle subtrees
+    if (this.isSubtree(nodeId)) {
+      const subtree = this.getChildContentAt(nodeId);
+
+      // Check if the subtree can generate SQL expressions
+      if (subtree instanceof GenericExpressionTree) {
+        // Cast to the interface that defines SQL generation capabilities
+        const sqlTree = subtree as unknown as ISqlExpressionTree;
+        return sqlTree.toSqlWhereClauseAt(sqlTree.rootNodeId);
+      }
+      return "NULL"; // Fallback
+    }
+
+    // Otherwise treat as branch with operator
+    const childrenIds = this.getChildrenNodeIdsOf(nodeId);
+    const operator = nodeContent.operator || "$add"; // Default to addition
+    const sqlOperator = this.getOperatorSql(operator);
+
+    // Process children and join with the SQL operator
+    const childExpressions = childrenIds.map(
+      (childId) => `(${this.buildSqlExpression(childId)})`
+    );
+    return childExpressions.join(` ${sqlOperator} `);
+  }
+
+  /**
+   * Format a node's value for SQL output
+   * @param nodeContent The content of the node
+   * @returns A properly formatted SQL value
+   */
+  private formatSqlValue(nodeContent: ArithmeticContent): string {
+    if (
+      typeof nodeContent.value === "number" ||
+      !isNaN(Number(nodeContent.value))
+    ) {
+      return String(nodeContent.value);
+    }
+
+    if (typeof nodeContent.value === "string") {
+      return nodeContent.subjectId || nodeContent.value;
+    }
+
+    // Just return something reasonable for any other case
+    return nodeContent.value !== undefined ? String(nodeContent.value) : "NULL";
+  }
+
+  /**
+   * Convert tree operator to SQL operator
+   */
+  private getOperatorSql(operator: string): string {
+    switch (operator) {
+      case "$add":
+        return "+";
+      case "$subtract":
+        return "-";
+      case "$multiply":
+        return "*";
+      case "$divide":
+        return "/";
+      default:
+        throw new ArithmeticTreeError(`Unknown operator: ${operator}`);
+    }
   }
 }
 

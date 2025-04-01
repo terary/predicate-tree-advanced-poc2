@@ -1,13 +1,14 @@
-import { AbstractExpressionTree, IExpressionTree } from "../../../src";
-import type { TJunctionOperators, TSubjectDictionary } from "../types";
+import { IExpressionTree, AbstractExpressionTree } from "../../../src";
+
+import { UtilizedLeafVisitor } from "./UtilizedLeafVisitor";
+import type { TSubjectDictionary, TJunctionOperators } from "./types";
+import { quoteValue, predicateJunctionToJsOperator } from "./helperFunctions";
 import {
   TJunction,
   TOperand,
-  TPredicateNodeTypesOrNull,
   TPredicateTypes,
-} from "../types";
-import { predicateJunctionToJsOperator, quoteValue } from "./helperFunctions";
-import { UtilizedLeafVisitor } from "./UtilizedLeafVisitor";
+  TPredicateNodeTypesOrNull,
+} from "./types";
 
 const commentOutObject = (obj: Object): string => {
   const json = JSON.stringify(obj, null, 2);

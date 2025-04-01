@@ -70,11 +70,11 @@
       "protocol": "inspector"
     },
     {
-      "name": "00003-example index.ts",
+      "name": "00003a-example index.ts",
       "type": "node",
       "request": "launch",
       "args": [
-        "${workspaceFolder}/example-usage/00003-predicate-tree-subtrees/index.ts",
+        "${workspaceFolder}/example-usage/00003a-predicate-tree-subtrees/index.ts",
       ],
       "runtimeArgs": [
         "--nolazy",

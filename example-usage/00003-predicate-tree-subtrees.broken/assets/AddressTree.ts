@@ -1,19 +1,15 @@
 import {
-  IExpressionTree,
   TGenericNodeContent,
   TNodePojo,
   TTreePojo,
-} from "../../../src";
-import {
-  TOperand,
-  TPredicateNodeTypesOrNull,
-  TPredicateTypes,
-  TSubjectDictionary,
-} from "../types";
+  IExpressionTree,
+} from "../../../../src";
+import { TOperand, TPredicateNodeTypesOrNull, TPredicateTypes } from "./types";
 import { JsPredicateTree } from "./JsPredicateTree";
+import { TSubjectDictionary } from "../types";
 
 import treeUtils from "../treeUtilities";
-import { predicateOperatorToJsOperator, quoteValue } from "./helperFunctions";
+import { quoteValue, predicateOperatorToJsOperator } from "./helperFunctions";
 
 type TTreeInitiator = <P, Q>(rootSeedNodeId: string, nodeContent: P) => Q;
 

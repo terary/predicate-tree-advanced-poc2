@@ -1,4 +1,54 @@
-called directly
 {
-  fnBody: "(( (record['customer.lastname'] $eq 'Rubble')  && ( (record['customer.firstname'] $eq 'Barney')  ||  (record['customer.firstname'] $eq 'Betty') )) || ( (record['customer.lastname'] $eq 'Flintstone')  && ( (record['customer.firstname'] $eq 'Fred')  ||  (record['customer.firstname'] $eq 'Wilma') )) || ( record['customer.address.address1'] === 'addr1' &&  record['customer.address.address2'] === 'addr2' &&  record['customer.address.address3'] === 'addr3' &&  record['customer.address.postalCode'] === 'postalCode' &&  record['customer.address.specialInstructions'] === 'specialInstructions'))"
+  pTree: '{\n' +
+    '  "_root_": {\n' +
+    '    "parentId": "_root_",\n' +
+    '    "nodeContent": {\n' +
+    '      "operator": "$and"\n' +
+    '    }\n' +
+    '  },\n' +
+    '  "_root_:0": {\n' +
+    '    "parentId": "_root_",\n' +
+    '    "nodeContent": {\n' +
+    '      "operator": "$and"\n' +
+    '    }\n' +
+    '  },\n' +
+    '  "_root_:1": {\n' +
+    '    "parentId": "_root_",\n' +
+    '    "nodeContent": {\n' +
+    '      "operator": "$gt",\n' +
+    '      "subjectId": "age",\n' +
+    '      "value": 18\n' +
+    '    }\n' +
+    '  },\n' +
+    '  "_root_:2": {\n' +
+    '    "parentId": "_root_",\n' +
+    '    "nodeContent": {\n' +
+    '      "operator": "$lt",\n' +
+    '      "subjectId": "age",\n' +
+    '      "value": 45\n' +
+    '    }\n' +
+    '  },\n' +
+    '  "_root_:3": {\n' +
+    '    "nodeType": "subtree:NotTree",\n' +
+    '    "nodeContent": {\n' +
+    '      "operator": "$and",\n' +
+    '      "_meta": {\n' +
+    '        "negated": true,\n' +
+    '        "description": "NOT group (all predicates inside are negated)"\n' +
+    '      }\n' +
+    '    },\n' +
+    '    "parentId": "_root_"\n' +
+    '  },\n' +
+    '  "_root_:3:4": {\n' +
+    '    "parentId": "_root_:3",\n' +
+    '    "nodeContent": {\n' +
+    '      "operator": "$eq",\n' +
+    '      "subjectId": "gender",\n' +
+    '      "value": "female",\n' +
+    '      "_meta": {\n' +
+    '        "negated": true\n' +
+    '      }\n' +
+    '    }\n' +
+    '  }\n' +
+    '}'
 }

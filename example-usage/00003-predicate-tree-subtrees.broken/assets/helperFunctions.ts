@@ -4,7 +4,7 @@ import type {
   TJsOperandOperators,
   TSubjectDataTypes,
   TJsJunctionOperators,
-} from "../types";
+} from "./types";
 const predicateOperatorToJsOperator = (
   operator: TOperandOperators
 ): TJsOperandOperators => {

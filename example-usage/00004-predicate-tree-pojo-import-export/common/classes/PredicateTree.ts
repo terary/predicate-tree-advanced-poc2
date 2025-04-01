@@ -18,10 +18,11 @@ import {
 } from "../../../../src";
 import { NotTree } from "./NotTree";
 import { ArithmeticTree } from "./ArithmeticTree";
+import { TPredicateOperator } from "./types";
 
 // Define the node content type for our predicate tree
 export interface PredicateContent {
-  operator?: string;
+  operator?: TPredicateOperator;
   subjectId?: string;
   value?: any;
   _meta?: {

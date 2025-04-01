@@ -1,4 +1,4 @@
-import type { TPredicateNodeTypes, TOperand } from "../types";
+import type { TPredicateNodeTypes, TOperand } from "./types";
 import { ITreeVisitor } from "../../../src";
 import type { TGenericNodeContent } from "../../../src";
 

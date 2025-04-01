@@ -1,4 +1,4 @@
-import type { TTreePojo } from "../../src";
+import type { TTreePojo } from "../../../src";
 import type { TPredicateNodeTypes } from "./types";
 
 const rubblePojo = {

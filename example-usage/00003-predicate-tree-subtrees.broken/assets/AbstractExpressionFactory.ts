@@ -1,14 +1,14 @@
-import type { TFromToMap, TNodePojo, TTreePojo } from "../../src";
+import type { TFromToMap, TNodePojo, TTreePojo } from "../../../src";
 
 import {
   AbstractExpressionTree,
   AbstractTree,
   DirectedGraphError,
   IExpressionTree,
-} from "../../src";
-import { AddressTree } from "./JsPredicateTree/AddressTree";
+} from "../../../src";
 import treeUtils from "./treeUtilities";
-import { TPredicateNodeTypesOrNull, TPredicateTypes } from "./types";
+import { AddressTree } from "./JsPredicateTree/AddressTree";
+import { TPredicateTypes, TPredicateNodeTypesOrNull } from "./types";
 
 import { JsPredicateTree } from "./JsPredicateTree/JsPredicateTree";
 
@@ -30,7 +30,7 @@ abstract class AbstractExpressionFactory extends AbstractExpressionTree<TPredica
 
     switch (operator) {
       case "$addressTree":
-        // @ts-ignore - some how this is implements ITree, ???
+        // @ts-ignore - some how this is inherit ITree, ???
         return AddressTree.getNewInstance<TPredicateNodeTypesOrNull>(
           rootSeedNodeId,
           nodeContent

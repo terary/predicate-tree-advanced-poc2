@@ -1,5 +1,5 @@
-import type { TTreePojo } from "../../src";
-import { DirectedGraphError } from "../../src";
+import type { TTreePojo } from "../../../src";
+import { DirectedGraphError } from "../../../src";
 
 const parseCandidateRootNodeId = <T>(treeObject: TTreePojo<T>): string[] => {
   const candidateRootIds: string[] = [];

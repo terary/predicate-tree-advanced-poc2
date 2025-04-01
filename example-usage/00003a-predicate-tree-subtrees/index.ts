@@ -1,44 +1,31 @@
-import { AbstractExpressionTree } from "../../src";
-import { AbstractExpressionFactory } from "./AbstractExpressionFactory";
-import { JsPredicateTree } from "./JsPredicateTree/JsPredicateTree";
-import {
-  addressTreePojo,
-  matcherPojo,
-  rubblePojo,
-} from "./MatcherPojoWithSubtree";
-import { SubjectsSimple } from "./SubjectsExamples";
-import { TPredicateTypes } from "./types";
+import { PredicateTree } from "../00004-predicate-tree-pojo-import-export/common/classes/PredicateTree";
 
-const genericTree = AbstractExpressionFactory.createExpressionTree("_root_", {
+const pTree = new PredicateTree();
+
+pTree.appendChildNodeWithContent(pTree.rootNodeId, {
   operator: "$and",
-}) as AbstractExpressionTree<TPredicateTypes>;
-const addressTree = AbstractExpressionFactory.createExpressionTree("_root_", {
-  operator: "$addressTree",
-}) as AbstractExpressionTree<TPredicateTypes>;
+});
 
-const treeFromPojo = AbstractExpressionFactory.fromPojo({
-  ...matcherPojo,
-  ...rubblePojo,
-  ...addressTreePojo,
-}) as JsPredicateTree;
+pTree.appendChildNodeWithContent(pTree.rootNodeId, {
+  operator: "$gt",
+  subjectId: "age",
+  value: 18,
+});
 
-const fnBody = treeFromPojo.toFunctionBody(
-  treeFromPojo.rootNodeId,
-  SubjectsSimple
-);
-//
-if (require && require.main === module) {
-  console.log("called directly");
-  // console.log({
-  //   genericTree,
-  //   addressTree,
-  //   address2,
-  //      treeFromPojo,
-  // });
-  console.log({ fnBody });
-} else {
-  // Likely being called from tests
-  // console.log('required as a module');
-}
+pTree.appendChildNodeWithContent(pTree.rootNodeId, {
+  operator: "$lt",
+  subjectId: "age",
+  value: 45,
+});
 
-export { fnBody };
+const notTree = pTree.createSubtreeNotTree(pTree.rootNodeId);
+
+notTree.appendChildNodeWithContent(notTree.rootNodeId, {
+  operator: "$eq",
+  subjectId: "gender",
+  value: "female",
+});
+
+console.log({
+  pTree: JSON.stringify(pTree.toPojoAt(pTree.rootNodeId), null, 2),
+});
