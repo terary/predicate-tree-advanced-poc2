@@ -10,3 +10,9 @@ Maybe a couple of ways
 - brute-form, simply copy 'toPojoAt' and change as necessary
 
 We need to consider an interface
+
+- ISqlWhereClause
+- IJavascriptMatcherFunction
+- IHumanReadableExplanation
+- ICloneableTree
+- ITransformableTree

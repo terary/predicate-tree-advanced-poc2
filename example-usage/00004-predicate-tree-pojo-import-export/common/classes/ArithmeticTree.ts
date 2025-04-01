@@ -14,7 +14,7 @@ import {
   TTreePojo,
   AbstractTree,
 } from "../../../../src";
-import { ISqlWhereClause } from "./types";
+import { IJavascriptMatcherFunction, ISqlWhereClause } from "./types";
 
 // Define the node content type for our arithmetic tree
 export interface ArithmeticContent {
@@ -43,6 +43,11 @@ interface ISqlExpressionTree {
   rootNodeId: string;
 }
 
+// Define an interface for trees that can generate JavaScript expressions
+interface IJavascriptExpressionTree extends IJavascriptMatcherFunction {
+  rootNodeId: string;
+}
+
 /**
  * Error class for our arithmetic tree
  */
@@ -60,7 +65,7 @@ export class ArithmeticTreeError extends Error {
 // @ts-ignore - Bypass TypeScript's static inheritance checking: Class static side 'typeof ArithmeticTree' incorrectly extends base class static side 'typeof GenericExpressionTree'
 export class ArithmeticTree
   extends GenericExpressionTree<ArithmeticContent>
-  implements ISqlWhereClause
+  implements ISqlWhereClause, IJavascriptMatcherFunction
 {
   //implements ISqlWhereClause,
 
@@ -426,8 +431,8 @@ export class ArithmeticTree
    * @returns A SQL string representation of the expression
    */
   private buildSqlExpression(nodeId: string): string {
-    // DO NOT REMOVE THIS COMMENT
-    // ** IDEAL PATTERN**
+    // **  DO NOT REMOVE THIS COMMENT **
+    //        IDEAL PATTERN
     // This is the recommend pattern for traversing the tree.
     // Use the existing tools to determine branching 'isLeaf', 'isBranch', isRoot, isSubtree
     // ** IDEAL PATTERN**
@@ -494,6 +499,144 @@ export class ArithmeticTree
    * Convert tree operator to SQL operator
    */
   private getOperatorSql(operator: string): string {
+    switch (operator) {
+      case "$add":
+        return "+";
+      case "$subtract":
+        return "-";
+      case "$multiply":
+        return "*";
+      case "$divide":
+        return "/";
+      default:
+        throw new ArithmeticTreeError(`Unknown operator: ${operator}`);
+    }
+  }
+
+  /**
+   * Convert the arithmetic expression to a JavaScript function
+   * @param nodeId The node ID to start from (defaults to root node)
+   * @param withOptions Options for generation
+   * @returns A JavaScript function as a string
+   */
+  toJavascriptMatcherFunctionAt(
+    nodeId: string = this.rootNodeId,
+    withOptions: any = {}
+  ): string {
+    try {
+      const functionBody = this.toJavascriptMatcherFunctionBodyAt(
+        nodeId,
+        withOptions
+      );
+      return `function arithmeticMatcher(record) {\n  return ${functionBody};\n}`;
+    } catch (error) {
+      if (error instanceof ArithmeticTreeError) {
+        return `/* Error: ${error.message} */\nfunction arithmeticMatcher() { return false; }`;
+      }
+      return "/* Error generating JavaScript */\nfunction arithmeticMatcher() { return false; }";
+    }
+  }
+
+  /**
+   * Generate just the function body for a JavaScript matcher
+   * @param nodeId The node ID to start from (defaults to root node)
+   * @param withOptions Options for generation
+   * @returns The function body as a string
+   */
+  toJavascriptMatcherFunctionBodyAt(
+    nodeId: string = this.rootNodeId,
+    withOptions: any = {}
+  ): string {
+    try {
+      // For arithmetic trees, we'll convert the expression to a JavaScript formula
+      return this.buildJsExpression(nodeId);
+    } catch (error) {
+      if (error instanceof ArithmeticTreeError) {
+        return `/* Error: ${error.message} */\nfalse`;
+      }
+      return "/* Error generating JavaScript */\nfalse";
+    }
+  }
+
+  /**
+   * Recursively build a JavaScript expression
+   * @param nodeId The node ID to process
+   * @returns A JavaScript string representation of the expression
+   */
+  private buildJsExpression(nodeId: string): string {
+    // **  DO NOT REMOVE THIS COMMENT **
+    //        IDEAL PATTERN
+    // This is the recommend pattern for traversing the tree.
+    // Use the existing tools to determine branching 'isLeaf', 'isBranch', isRoot, isSubtree
+    // ** IDEAL PATTERN**
+    // Theoretically this can be accomplished using visitors to mutate a clone of the tree or
+    // use transformers when cloning the tree.  Those are also reasonable approaches.
+    //
+    //  Iterating over the tree using standard iteration loops is a BAD IDEA.
+    //
+    // DO NOT REMOVE THIS COMMENT
+    const nodeContent = this.getChildContentAt(nodeId) as ArithmeticContent;
+
+    // Handle leaf nodes directly
+    if (this.isLeaf(nodeId)) {
+      return this.formatJsValue(nodeContent);
+    }
+
+    // Handle subtrees
+    if (this.isSubtree(nodeId)) {
+      const subtree = this.getChildContentAt(nodeId);
+
+      // Check if the subtree can generate JavaScript expressions
+      if (subtree instanceof GenericExpressionTree) {
+        // Cast to an interface that would define JS generation capabilities
+        const jsTree = subtree as unknown as IJavascriptExpressionTree;
+        return jsTree.toJavascriptMatcherFunctionBodyAt(jsTree.rootNodeId, {});
+      }
+      return "null"; // Fallback
+    }
+
+    // Otherwise treat as branch with operator
+    const childrenIds = this.getChildrenNodeIdsOf(nodeId);
+    const operator = nodeContent.operator || "$add"; // Default to addition
+    const jsOperator = this.getJsOperator(operator);
+
+    // Process children and join with the JS operator
+    const childExpressions = childrenIds.map(
+      (childId) => `(${this.buildJsExpression(childId)})`
+    );
+    return childExpressions.join(` ${jsOperator} `);
+  }
+
+  /**
+   * Format a node's value for JavaScript output
+   * @param nodeContent The content of the node
+   * @returns A properly formatted JavaScript value
+   */
+  private formatJsValue(nodeContent: ArithmeticContent): string {
+    if (
+      typeof nodeContent.value === "number" ||
+      !isNaN(Number(nodeContent.value))
+    ) {
+      return String(nodeContent.value);
+    }
+
+    if (typeof nodeContent.value === "string") {
+      if (nodeContent.subjectId) {
+        // Reference a property from the record object
+        return `record['${nodeContent.subjectId}']`;
+      }
+      // String literals need quotes in JavaScript
+      return `"${nodeContent.value}"`;
+    }
+
+    // Just return something reasonable for any other case
+    return nodeContent.value !== undefined ? String(nodeContent.value) : "null";
+  }
+
+  /**
+   * Convert tree operator to JavaScript operator
+   */
+  private getJsOperator(operator: string): string {
     switch (operator) {
       case "$add":
         return "+";
