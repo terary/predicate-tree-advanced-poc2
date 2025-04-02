@@ -84,7 +84,7 @@ Are false. Our primary focus to make an example from a pre-existing example.
 - [x] Build the subject dictionary
 - [x] Build the NotTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [x] Build the PostalAddressTree (Inclusive of test, javascript interface implementation, human readable explanation)
-- [ ] Build the ArithmeticTree (Inclusive of test, javascript interface implementation, human readable explanation)
+- [x] Build the ArithmeticTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [ ] Build the PredicateTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [ ] Write the Readme.md file
 

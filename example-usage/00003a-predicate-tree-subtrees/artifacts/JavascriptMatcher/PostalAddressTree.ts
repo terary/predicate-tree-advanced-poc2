@@ -3,6 +3,12 @@
  *
  * This file defines a PostalAddressTree, which is a specialized Predicate Tree that
  * handles address-related predicates. It serves as an example of a subtree with custom behavior.
+ *
+ * This is demonstration only.  In a real implementation we would implement checks
+ * to prevent adding complex types.  Address (as atomic type) can only be a leaf probably.
+ * We make none of the considerations in this example.
+ *
+ *
  */
 
 import {

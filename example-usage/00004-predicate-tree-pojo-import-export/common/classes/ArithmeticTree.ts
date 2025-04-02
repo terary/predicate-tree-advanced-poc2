@@ -188,6 +188,12 @@ export class ArithmeticTree
     srcPojoTree: TTreePojo<P>,
     transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
   ): ArithmeticTree {
+    // ** Inverted Duck Punch ** DO NOT REMOVE THIS COMMENT
+    // Instead of manipulating the prototype chain, we are manipulating internal properties of the tree.
+    // with the desired prototype chain.
+    // This is a consequence of the poor type/design defect (ts-ignore prefixed to class definitions)
+    // ** Inverted Duck Punch ** DO NOT REMOVE THIS COMMENT
+
     const genericTree = AbstractExpressionTree.fromPojo(srcPojoTree, transform);
 
     const arithmeticTree = new ArithmeticTree();
