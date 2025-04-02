@@ -76,14 +76,37 @@ Are false. Our primary focus to make an example from a pre-existing example.
   These classes demonstrate a how to accomplish pretty much the same thing we are trying to do. We will incorporate the subject dictionary to write
   true working matcher functions.
 
-- [subject dictionary](src/test-resources/predicate-tree/SubjectsExamples.ts) - this is for demonstration purposes but notice there are fields: label, datatype, and subjectId. This should only serve as an example of what subject dictionaries often look like. The actual definition depends on our purposes.
+- [subject dictionary](example-usage/00003a-predicate-tree-subtrees/artifacts/JavascriptMatcher/subjectDictionary.ts) - we are using this subject dictionary.
 
 ## Knock-off List (ToDo List)
 
 - [x] Build directory scaffolding for the example
 - [x] Build the subject dictionary
-- [ ] Build the NotTree (Inclusive of test, javascript interface implementation, human readable explanation)
+- [x] Build the NotTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [ ] Build the PostalAddressTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [ ] Build the ArithmeticTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [ ] Build the PredicateTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [ ] Write the Readme.md file
+
+## Gotchas
+
+### Error: Class static side 'typeof [TREE]' ...
+
+```
+// @ts-ignore - Bypass TypeScript's static inheritance checking
+```
+
+The above is placed just before the class definition to resolve the following error:
+
+```
+Class static side 'typeof [_TREE_CLASS_NAME_]' incorrectly extends base class static side 'typeof GenericExpressionTree'.
+  The types returned by 'fromPojo(...).cloneAt(...).getChildContentAt(...)' are incompatible between these types.
+    Type 'TGenericNodeContent<NotTreePredicateContent>' is not assignable to type 'TGenericNodeContent<P>'.
+      Type 'NotTreePredicateContent' is not assignable to type 'TGenericNodeContent<P>'.
+```
+
+### Subject Dictionary
+
+The subject dictionary can be found in above file references.
+
+It is noteworthy we are dealing with various levels of complexity. We are capable of supporting dot notation with in the subjectId (`customer.firstname`), we are choosing to avoid this conventions. We will treat subjectId as atomic and _NEVER PARSE THE SUBJECT ID_
