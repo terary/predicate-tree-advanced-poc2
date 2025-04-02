@@ -78,6 +78,12 @@ Are false. Our primary focus to make an example from a pre-existing example.
 
 - [subject dictionary](example-usage/00003a-predicate-tree-subtrees/artifacts/JavascriptMatcher/subjectDictionary.ts) - we are using this subject dictionary.
 
+## Patterns To follow
+
+- [ArithmeticTree](example-usage/00003a-predicate-tree-subtrees/artifacts/JavascriptMatcher/ArithmeticTree.ts)
+- [NotTree](example-usage/00003a-predicate-tree-subtrees/artifacts/JavascriptMatcher/NotTree.ts)
+- [PostalAddressTree](example-usage/00003a-predicate-tree-subtrees/artifacts/JavascriptMatcher/PostalAddressTree.ts)
+
 ## Knock-off List (ToDo List)
 
 - [x] Build directory scaffolding for the example
@@ -85,8 +91,8 @@ Are false. Our primary focus to make an example from a pre-existing example.
 - [x] Build the NotTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [x] Build the PostalAddressTree (Inclusive of test, javascript interface implementation, human readable explanation)
 - [x] Build the ArithmeticTree (Inclusive of test, javascript interface implementation, human readable explanation)
-- [ ] Build the PredicateTree (Inclusive of test, javascript interface implementation, human readable explanation)
-- [ ] Write the Readme.md file
+- [x] Build the PredicateTree (Inclusive of test, javascript interface implementation, human readable explanation)
+- [x] Write the Readme.md file
 
 ## Gotchas
 

@@ -9,19 +9,12 @@
 import {
   GenericExpressionTree,
   IExpressionTree,
-  treeUtils,
+  ITree,
   TGenericNodeContent,
   TNodePojo,
   TTreePojo,
-  ITree,
 } from "../../../../src";
-import {
-  IMatcher,
-  IJavaScriptMatchable,
-  PredicateContent,
-  TOperandOperator,
-  TPredicateOperator,
-} from "./types";
+import { IJavaScriptMatchable, IMatcher, PredicateContent } from "./types";
 
 // Define supported arithmetic operators
 export type TArithmeticOperator = "+" | "-" | "*" | "/" | "%" | "**";
@@ -139,14 +132,14 @@ export class ArithmeticTree
     const pojo = super.toPojoAt(nodeId) as Record<string, any>;
 
     // Add the nodeType only to our own nodes, not subtrees
-    for (const key in pojo) {
-      if (Object.prototype.hasOwnProperty.call(pojo, key)) {
-        if (!pojo[key].nodeType) {
-          // Only add if it doesn't already have a nodeType
-          pojo[key].nodeType = ArithmeticTree.SubtreeNodeTypeName;
-        }
-      }
-    }
+    // for (const key in pojo) {
+    //   if (Object.prototype.hasOwnProperty.call(pojo, key)) {
+    //     if (!pojo[key].nodeType) {
+    //       // Only add if it doesn't already have a nodeType
+    //       pojo[key].nodeType = ArithmeticTree.SubtreeNodeTypeName;
+    //     }
+    //   }
+    // }
 
     return pojo;
   }

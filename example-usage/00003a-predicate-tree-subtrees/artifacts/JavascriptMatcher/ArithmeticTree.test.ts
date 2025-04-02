@@ -1,8 +1,4 @@
-import {
-  ArithmeticTree,
-  ArithmeticTreePredicateContent,
-} from "./ArithmeticTree";
-import { ITree } from "../../../../src";
+import { ArithmeticTree } from "./ArithmeticTree";
 
 describe("ArithmeticTree", () => {
   it("should create a tree with a valid rootNodeId", () => {

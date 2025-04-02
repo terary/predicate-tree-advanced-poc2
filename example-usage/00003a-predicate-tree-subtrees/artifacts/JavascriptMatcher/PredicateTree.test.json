@@ -1,0 +1,124 @@
+{
+  "TEST_ARITHMETIC_TREE_CREATE_POJO": {
+    "predicate-root": {
+      "parentId": "predicate-root",
+      "nodeContent": {
+        "operator": "$and"
+      }
+    },
+    "predicate-root:0": {
+      "parentId": "predicate-root",
+      "nodeContent": {
+        "subjectId": "child.0",
+        "operator": "$eq",
+        "value": "first field"
+      }
+    },
+    "predicate-root:1": {
+      "nodeType": "subtree:ArithmeticTree",
+      "nodeContent": {
+        "arithmeticOperator": "+"
+      },
+      "parentId": "predicate-root"
+    },
+    "predicate-root:1:2": {
+      "parentId": "predicate-root:1",
+      "nodeContent": {
+        "arithmeticOperator": "+"
+      }
+    },
+    "predicate-root:1:2:4": {
+      "parentId": "predicate-root:1:2",
+      "nodeContent": {
+        "value": 100
+      }
+    },
+    "predicate-root:1:2:5": {
+      "parentId": "predicate-root:1:2",
+      "nodeContent": {
+        "value": 101
+      }
+    },
+    "predicate-root:1:3": {
+      "parentId": "predicate-root:1",
+      "nodeContent": {
+        "value": "99"
+      }
+    }
+  },
+  "TEST_NOT_TREE_CREATE_POJO": {
+    "predicate-root": {
+      "parentId": "predicate-root",
+      "nodeContent": {
+        "operator": "$and"
+      }
+    },
+    "predicate-root:0": {
+      "parentId": "predicate-root",
+      "nodeContent": {
+        "subjectId": "child.0",
+        "operator": "$eq",
+        "value": "first field"
+      }
+    },
+    "predicate-root:1": {
+      "nodeType": "subtree:NotTree",
+      "nodeContent": {
+        "operator": "$and",
+        "_meta": {
+          "negated": true,
+          "description": "NOT group (all predicates inside are negated)"
+        }
+      },
+      "parentId": "predicate-root"
+    },
+    "predicate-root:1:2": {
+      "parentId": "predicate-root:1",
+      "nodeContent": {
+        "subjectId": "age",
+        "operator": "$gt",
+        "value": 18,
+        "_meta": {
+          "negated": true
+        }
+      },
+      "nodeType": "NotTree"
+    }
+  },
+  "TEST_POSTAL_ADDRESS_TREE_CREATE_POJO": {
+    "predicate-root": {
+      "parentId": "predicate-root",
+      "nodeContent": {
+        "operator": "$and"
+      }
+    },
+    "predicate-root:0": {
+      "parentId": "predicate-root",
+      "nodeContent": {
+        "subjectId": "child.0",
+        "operator": "$eq",
+        "value": "first field"
+      }
+    },
+    "predicate-root:1": {
+      "nodeType": "subtree:PostalAddressTree",
+      "nodeContent": {
+        "operator": "$and",
+        "_meta": {
+          "description": "Address predicates (all conditions must be met)"
+        }
+      },
+      "parentId": "predicate-root"
+    },
+    "predicate-root:1:2": {
+      "parentId": "predicate-root:1",
+      "nodeContent": {
+        "subjectId": "postalCode",
+        "operator": "$gt",
+        "value": "10000",
+        "_meta": {}
+      },
+      "nodeType": "PostalAddressTree"
+    }
+  }
+}
