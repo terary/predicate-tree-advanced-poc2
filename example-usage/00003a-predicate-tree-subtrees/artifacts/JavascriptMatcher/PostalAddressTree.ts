@@ -188,11 +188,13 @@ export class PostalAddressTree
     const pojo = super.toPojoAt(nodeId) as Record<string, any>;
 
     // Add the nodeType to all nodes to identify this as a PostalAddressTree
-    for (const key in pojo) {
-      if (Object.prototype.hasOwnProperty.call(pojo, key)) {
-        pojo[key].nodeType = PostalAddressTree.SubtreeNodeTypeName;
-      }
-    }
+    // for (const key in pojo) {
+    // Cursor/Composer - We will never tag each node with nodeType
+    //  nodeType is a function of the super/parent tree
+    //   if (Object.prototype.hasOwnProperty.call(pojo, key)) {
+    //     pojo[key].nodeType = PostalAddressTree.SubtreeNodeTypeName;
+    //   }
+    // }
 
     return pojo;
   }

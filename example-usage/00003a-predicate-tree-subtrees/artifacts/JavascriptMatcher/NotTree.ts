@@ -211,11 +211,13 @@ export class NotTree
     const pojo = super.toPojoAt(nodeId) as Record<string, any>;
 
     // Add the nodeType to all nodes to identify this as a NotTree
-    for (const key in pojo) {
-      if (Object.prototype.hasOwnProperty.call(pojo, key)) {
-        pojo[key].nodeType = NotTree.SubtreeNodeTypeName;
-      }
-    }
+    // WE DO NOT TAG EACH NODE WITH nodeType -
+    // That is strictly a function of the super/parent tree
+    // for (const key in pojo) {
+    //   if (Object.prototype.hasOwnProperty.call(pojo, key)) {
+    //     pojo[key].nodeType = NotTree.SubtreeNodeTypeName;
+    //   }
+    // }
 
     return pojo;
   }

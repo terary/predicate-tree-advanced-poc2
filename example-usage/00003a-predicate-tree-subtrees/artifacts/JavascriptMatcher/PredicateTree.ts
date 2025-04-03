@@ -63,26 +63,29 @@ export class PredicateTree
     // Create a new instance of the specified subtree class
     const subtree = new SubtreeClass();
 
-    // Create a unique ID for the subtree node
-    const subtreeNodeId = this.appendChildNodeWithContent(parentNodeId, {});
+    // IMPORTANT: Create a node in this tree to host the subtree
+    // The subtree object itself becomes the node content
+    const subtreeNodeId = this.appendChildNodeWithContent(
+      parentNodeId,
+      subtree
+    );
 
-    // Reroot the subtree to make it a subtree of this tree
+    // Reroot the subtree to the node we just created
     GenericExpressionTree.reRootTreeAt(
       subtree,
       subtree.rootNodeId,
       subtreeNodeId
     );
 
-    // Set the internal properties to integrate with this tree
+    // Update the subtree's internal properties to integrate with this tree
     // @ts-ignore - Access protected properties with type casting
     subtree._rootNodeId = subtreeNodeId;
     // @ts-ignore - Share the incrementor with the parent tree
     subtree._incrementor = this._incrementor;
 
-    // Critical fix: Store the actual subtree object as the node content
-    // This ensures object identity is maintained when retrieved
-    // @ts-ignore - Access protected properties to directly modify the node dictionary
-    this._nodeDictionary[subtreeNodeId].nodeContent = subtree;
+    // The critical part is to ensure the node directly references the subtree object
+    // This directly matches the reference implementation in AbstractExpressionTree.createSubtreeAt
+    // No need to explicitly set the content since it's already set by appendChildNodeWithContent
 
     return subtree;
   }
