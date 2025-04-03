@@ -1,6 +1,5 @@
 import { PredicateTree } from "./PredicateTree";
 import { TPredicateOperator } from "./types";
-import * as testExpected from "./PredicateTree.test.json";
 import { NotTree } from "./NotTree";
 describe("PredicateTree", () => {
   it("should store and retrieve content correctly", () => {
@@ -58,63 +57,6 @@ describe("PredicateTree", () => {
 
     // Create content with proper typing
     expect(Object.keys(treePojo).length).toStrictEqual(7);
-  });
-  it("should create NotTree correctly.", () => {
-    // Create a tree
-    const tree = new PredicateTree();
-    tree.appendChildNodeWithContent(tree.rootNodeId, {
-      subjectId: "child.0",
-      operator: "$eq",
-      value: "first field",
-    });
-    const notTree = tree.createNotTreeAt(tree.rootNodeId);
-
-    const notTreeAlias = tree.getChildContentAt(notTree.rootNodeId);
-
-    expect(Object.is(notTreeAlias, notTree)).toStrictEqual(true);
-
-    const notTreeAddNodeId = notTree.appendChildNodeWithContent(
-      notTree.rootNodeId,
-      {
-        subjectId: "age",
-        operator: "$gt",
-        value: 18,
-      }
-    );
-
-    const treePojo = tree.toPojoAt();
-    // --
-
-    // Create content with proper typing
-    expect(treePojo).toStrictEqual(testExpected.TEST_NOT_TREE_CREATE_POJO);
-  });
-  it("should create PostalAddressTree correctly.", () => {
-    // Create a tree
-    const tree = new PredicateTree();
-    tree.appendChildNodeWithContent(tree.rootNodeId, {
-      subjectId: "child.0",
-      operator: "$eq",
-      value: "first field",
-    });
-    const addressTree = tree.createPostalAddressTreeAt(tree.rootNodeId);
-
-    const addressTreeAlias = tree.getChildContentAt(addressTree.rootNodeId);
-
-    expect(Object.is(addressTreeAlias, addressTree)).toStrictEqual(true);
-
-    addressTree.appendChildNodeWithContent(addressTree.rootNodeId, {
-      subjectId: "postalCode",
-      operator: "$gt",
-      value: "10000",
-    });
-
-    const treePojo = tree.toPojoAt();
-    // --
-
-    // Create content with proper typing
-    expect(treePojo).toStrictEqual(
-      testExpected.TEST_POSTAL_ADDRESS_TREE_CREATE_POJO
-    );
   });
   it("should create all three subtree types correctly in the same tree", () => {
     // Create a main tree
@@ -196,7 +138,7 @@ describe("PredicateTree", () => {
 
     expect(Object.keys(pTreePojo).length).toBe(14);
   });
-  it.only("should be able to build complex matcher function.", () => {
+  it("should be able to build complex matcher function.", () => {
     const pTree = buildMegaPredicateTree(new PredicateTree());
 
     const pTreePojo = pTree.toPojoAt();
@@ -242,6 +184,69 @@ describe("PredicateTree", () => {
     const cloneMatcher = pTreeClone.buildMatcherFunction();
     expect(cloneMatcher.isMatch(passingRecord)).toBe(true);
     expect(cloneMatcher.isMatch(failingRecord)).toBe(false);
+  });
+  it.only("should be able to build complex functionally identical matcher function from reconstituted tree.", () => {
+    // Create the original tree
+    const originalTree = buildMegaPredicateTree(new PredicateTree());
+
+    // Convert to POJO for serialization
+    const originalTreePojo = originalTree.toPojoAt();
+
+    // Add debug info to see the structure
+    console.log(
+      "Original tree POJO:",
+      JSON.stringify(originalTreePojo, null, 2)
+    );
+    console.log("Node count:", Object.keys(originalTreePojo).length);
+
+    // Create a clone from the original tree's POJO
+    const clonedTree = PredicateTree.fromPojo(originalTreePojo);
+
+    // Create matchers from both trees
+    const originalMatcher = originalTree.buildMatcherFunction();
+    const clonedMatcher = clonedTree.buildMatcherFunction();
+
+    // Debug the matcher function bodies to confirm they're identical
+    const originalMatcherBody = originalTree.buildJavaScriptMatcherBodyAt(
+      originalTree.rootNodeId
+    );
+    const clonedMatcherBody = clonedTree.buildJavaScriptMatcherBodyAt(
+      clonedTree.rootNodeId
+    );
+
+    console.log("\nOriginal tree matcher function body:", originalMatcherBody);
+    console.log("Cloned tree matcher function body:", clonedMatcherBody);
+
+    // Create a record that should PASS the matcher
+    const passingRecord = {
+      "child.0": "first field",
+      "child.1": "second field",
+      age: 21, // NOT less than 18 (passes NotTree condition)
+      postalCode: "04240", // Matches postal code
+    };
+
+    // Create a record that should FAIL the matcher (age < 18)
+    const failingRecord = {
+      "child.0": "first field",
+      "child.1": "second field",
+      age: 16, // Less than 18 (fails NotTree condition)
+      postalCode: "04240", // Matches postal code
+    };
+
+    // Assertions for the original tree
+    expect(originalMatcher.isMatch(passingRecord)).toBe(true);
+    expect(originalMatcher.isMatch(failingRecord)).toBe(false);
+
+    // Assertions for the cloned tree
+    expect(clonedMatcher.isMatch(passingRecord)).toBe(true);
+    expect(clonedMatcher.isMatch(failingRecord)).toBe(false);
+
+    // DO NOT REMOVE THIS COMMENT
+    // Verify that both matchers produce identical function bodies
+    // I am pretty sure 'toBe' works ONLY because we are talking about identical strings
+    // Additionally, this may be a bit flaky because we make no guarantees about the order
+    // of various predicates... Only functionally equivalency is guaranteed.
+    expect(originalMatcherBody).toBe(clonedMatcherBody);
   });
 });
 

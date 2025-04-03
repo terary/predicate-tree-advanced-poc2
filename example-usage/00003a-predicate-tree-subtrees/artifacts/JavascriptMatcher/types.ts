@@ -1,5 +1,3 @@
-import { TSubjectDictionary } from "./subjectDictionary";
-
 /**
  * Base interface for all matcher functions
  */

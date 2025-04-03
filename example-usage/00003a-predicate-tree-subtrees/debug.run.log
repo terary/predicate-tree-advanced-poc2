@@ -1,54 +1,22 @@
-{
-  pTree: '{\n' +
-    '  "_root_": {\n' +
-    '    "parentId": "_root_",\n' +
-    '    "nodeContent": {\n' +
-    '      "operator": "$and"\n' +
-    '    }\n' +
-    '  },\n' +
-    '  "_root_:0": {\n' +
-    '    "parentId": "_root_",\n' +
-    '    "nodeContent": {\n' +
-    '      "operator": "$and"\n' +
-    '    }\n' +
-    '  },\n' +
-    '  "_root_:1": {\n' +
-    '    "parentId": "_root_",\n' +
-    '    "nodeContent": {\n' +
-    '      "operator": "$gt",\n' +
-    '      "subjectId": "age",\n' +
-    '      "value": 18\n' +
-    '    }\n' +
-    '  },\n' +
-    '  "_root_:2": {\n' +
-    '    "parentId": "_root_",\n' +
-    '    "nodeContent": {\n' +
-    '      "operator": "$lt",\n' +
-    '      "subjectId": "age",\n' +
-    '      "value": 45\n' +
-    '    }\n' +
-    '  },\n' +
-    '  "_root_:3": {\n' +
-    '    "nodeType": "subtree:NotTree",\n' +
-    '    "nodeContent": {\n' +
-    '      "operator": "$and",\n' +
-    '      "_meta": {\n' +
-    '        "negated": true,\n' +
-    '        "description": "NOT group (all predicates inside are negated)"\n' +
-    '      }\n' +
-    '    },\n' +
-    '    "parentId": "_root_"\n' +
-    '  },\n' +
-    '  "_root_:3:4": {\n' +
-    '    "parentId": "_root_:3",\n' +
-    '    "nodeContent": {\n' +
-    '      "operator": "$eq",\n' +
-    '      "subjectId": "gender",\n' +
-    '      "value": "female",\n' +
-    '      "_meta": {\n' +
-    '        "negated": true\n' +
-    '      }\n' +
-    '    }\n' +
-    '  }\n' +
-    '}'
+=== PredicateTree Demonstration ===
+Original tree created with all three subtree types.
+Successfully cloned the tree from its serialized POJO representation.
+
+Test Results: {
+  "originalMatcherBody": "(record[\"child.0\"] === \"first field\" && record[\"child.1\"] === \"second field\" && !(record[\"age\"] < 18) && record[\"postalCode\"] === \"04240\")",
+  "clonedMatcherBody": "(record[\"child.0\"] === \"first field\" && record[\"child.1\"] === \"second field\" && !(record[\"age\"] < 18) && record[\"postalCode\"] === \"04240\")",
+  "originalMatcher": {
+    "passingRecord": true,
+    "failingRecord": false
+  },
+  "clonedMatcher": {
+    "passingRecord": true,
+    "failingRecord": false
+  },
+  "matcherBodiesIdentical": true
 }
+
+✅ Demonstration successful: Original and cloned trees produce identical matchers!
+
+Generated Matcher Function Body:
+(record["child.0"] === "first field" && record["child.1"] === "second field" && !(record["age"] < 18) && record["postalCode"] === "04240")
