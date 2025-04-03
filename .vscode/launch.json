@@ -84,6 +84,22 @@
       "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "protocol": "inspector"
+    },
+    {
+      "name": "00004-example index.ts",
+      "type": "node",
+      "request": "launch",
+      "args": [
+        "${workspaceFolder}/example-usage/00004-predicate-tree-pojo-import-export/index.ts",
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register"
+      ],
+      "sourceMaps": true,
+      "cwd": "${workspaceFolder}",
+      "protocol": "inspector"
     }
   ]
 }

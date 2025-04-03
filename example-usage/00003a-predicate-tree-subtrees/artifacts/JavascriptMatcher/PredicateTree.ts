@@ -118,15 +118,20 @@ export class PredicateTree
     parentNodeId: string,
     nodeType: string
   ): IExpressionTree<Q> {
-    if (nodeType === NotTree.SubtreeNodeTypeName) {
+    // Extract the actual type name by removing the 'subtree:' prefix if present
+    const typeName = nodeType.startsWith("subtree:")
+      ? nodeType.substring(8)
+      : nodeType;
+
+    if (typeName === NotTree.SubtreeNodeTypeName) {
       return this.createNotTreeAt(
         parentNodeId
       ) as unknown as IExpressionTree<Q>;
-    } else if (nodeType === PostalAddressTree.SubtreeNodeTypeName) {
+    } else if (typeName === PostalAddressTree.SubtreeNodeTypeName) {
       return this.createPostalAddressTreeAt(
         parentNodeId
       ) as unknown as IExpressionTree<Q>;
-    } else if (nodeType === ArithmeticTree.SubtreeNodeTypeName) {
+    } else if (typeName === ArithmeticTree.SubtreeNodeTypeName) {
       return this.createArithmeticTreeAt(
         parentNodeId
       ) as unknown as IExpressionTree<Q>;
@@ -138,35 +143,107 @@ export class PredicateTree
   /**
    * Create a PredicateTree instance from a POJO document
    *
-   * This method uses what we call an "Inverted Duck Punch" approach:
-   * Rather than manipulating the prototype chain, we create a generic tree
-   * and then copy its internal structure to a new PredicateTree instance.
-   *
-   * This approach is needed because of the inheritance limitations in TypeScript
-   * where the return type of static methods cannot be properly overridden in subclasses.
-   * See the @ts-ignore comment above the class definition for related context.
+   * This method properly processes subtree nodeTypes to create the correct subtree instances.
    */
-  static fromPojo<P extends PredicateContent, Q = unknown>(
+  static fromPojo<P extends PredicateContent>(
     srcPojoTree: TTreePojo<P>,
     transform?: (nodeContent: TNodePojo<P>) => TGenericNodeContent<P>
   ): PredicateTree {
-    // ** Inverted Duck Punch ** DO NOT REMOVE THIS COMMENT
-    // Create a generic tree using the parent class's fromPojo
-    const genericTree = GenericExpressionTree.fromPojo(srcPojoTree, transform);
+    // Use default transform if not provided
+    const transformer =
+      transform || ((nodeContent: TNodePojo<P>) => nodeContent.nodeContent);
 
-    // Create a new PredicateTree
-    const predicateTree = new PredicateTree();
+    // Create a copy of the source POJO to work with
+    const pojoObject = { ...srcPojoTree };
 
-    // Copy the internal properties from the generic tree (Duck Punch)
-    // @ts-ignore - Set internal properties from generic tree
-    predicateTree._incrementor = genericTree._incrementor;
-    // @ts-ignore
-    predicateTree._rootNodeId = genericTree._rootNodeId;
-    // @ts-ignore
-    predicateTree._nodeDictionary = genericTree._nodeDictionary;
-    // ** Inverted Duck Punch ** DO NOT REMOVE THIS COMMENT
+    // Find the root node ID
+    const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
+    const rootNodePojo = pojoObject[rootNodeId];
 
-    return predicateTree;
+    // Create a new PredicateTree with the root node
+    const dTree = new PredicateTree(rootNodeId);
+    dTree.replaceNodeContent(
+      dTree.rootNodeId,
+      transformer(rootNodePojo) as PredicateContent
+    );
+    delete pojoObject[rootNodeId];
+
+    // Process all child nodes and create appropriate subtrees
+    PredicateTree.fromPojoTraverseAndExtractChildren(
+      dTree.rootNodeId,
+      rootNodeId,
+      dTree as unknown as IExpressionTree<P>,
+      pojoObject,
+      transformer
+    );
+
+    // Check for orphaned nodes
+    if (Object.keys(pojoObject).length > 0) {
+      throw new Error(
+        "Orphan nodes detected while parsing POJO object: " +
+          Object.keys(pojoObject).join(", ")
+      );
+    }
+
+    return dTree;
+  }
+
+  /**
+   * Helper method to traverse POJO and extract children with appropriate subtree handling
+   */
+  private static fromPojoTraverseAndExtractChildren<P extends PredicateContent>(
+    treeParentId: string,
+    jsonParentId: string,
+    dTree: IExpressionTree<P>,
+    treeObject: TTreePojo<P>,
+    transformer: (nodePojo: TNodePojo<P>) => TGenericNodeContent<P>
+  ): void {
+    // Extract all children of the current node
+    const childrenNodes = treeUtils.extractChildrenNodes<P>(
+      jsonParentId,
+      treeObject
+    ) as TTreePojo<P>;
+
+    // Process each child node
+    Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
+      // Check if this is a subtree node
+      if (nodePojo.nodeType && nodePojo.nodeType.startsWith("subtree:")) {
+        // Create the appropriate subtree type - we need to cast dTree to PredicateTree
+        const subtree = (
+          dTree as unknown as PredicateTree
+        ).createSubtreeOfTypeAt(treeParentId, nodePojo.nodeType);
+
+        // Set the content for the subtree root
+        subtree.replaceNodeContent(
+          subtree.rootNodeId,
+          transformer(nodePojo) as PredicateContent
+        );
+
+        // Process children of this subtree
+        PredicateTree.fromPojoTraverseAndExtractChildren(
+          subtree.rootNodeId,
+          nodeId,
+          subtree as unknown as IExpressionTree<P>,
+          treeObject,
+          transformer
+        );
+      } else {
+        // Regular node - add it to the tree
+        const childId = dTree.appendChildNodeWithContent(
+          treeParentId,
+          transformer(nodePojo) as P
+        );
+
+        // Process children of this node
+        PredicateTree.fromPojoTraverseAndExtractChildren(
+          childId,
+          nodeId,
+          dTree,
+          treeObject,
+          transformer
+        );
+      }
+    });
   }
 
   /**
@@ -181,6 +258,39 @@ export class PredicateTree
   toPojoAt(nodeId: string = this.rootNodeId): Record<string, any> {
     // Use the parent class implementation to get the POJO
     const pojo = super.toPojoAt(nodeId) as Record<string, any>;
+
+    // For each subtree node, ensure it has the correct nodeType
+    Object.keys(pojo).forEach((key) => {
+      const node = pojo[key];
+      if (this.isSubtree(key)) {
+        const subtree = this.getChildContentAt(key);
+        if (
+          subtree &&
+          typeof subtree === "object" &&
+          "SubtreeNodeTypeName" in subtree
+        ) {
+          // Set the nodeType using the pattern "subtree:SubtreeTypeName"
+          node.nodeType = `subtree:${(subtree as any).SubtreeNodeTypeName}`;
+
+          // Make sure we don't have nodeType on inner nodes of this subtree
+          // Find all child nodes that belong to this subtree
+          const allNodes = Object.keys(pojo);
+          const childrenIds = allNodes.filter((id) => {
+            return id !== key && id.startsWith(key + ":");
+          });
+
+          // Remove any nodeType set on inner nodes of this subtree
+          childrenIds.forEach((childId) => {
+            if (
+              pojo[childId].nodeType === (subtree as any).SubtreeNodeTypeName
+            ) {
+              delete pojo[childId].nodeType;
+            }
+          });
+        }
+      }
+    });
+
     return pojo;
   }
 

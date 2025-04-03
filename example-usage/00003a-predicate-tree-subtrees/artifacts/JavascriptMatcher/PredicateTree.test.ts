@@ -194,7 +194,7 @@ describe("PredicateTree", () => {
 
     const pTreeClone = PredicateTree.fromPojo(pTreePojo);
 
-    expect(Object.keys(pTreePojo).length).toBe(10);
+    expect(Object.keys(pTreePojo).length).toBe(14);
   });
 });
 
