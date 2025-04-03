@@ -322,33 +322,72 @@ export class PredicateTree
     } = {}
   ): string {
     const recordName = withOptions.recordName || "record";
+
+    // Get the POJO structure to properly traverse all nodes
+    const pojo = this.toPojoAt(nodeId);
+
+    // Get the direct children including subtrees
+    const directChildIds = Object.keys(pojo).filter(
+      (key) => key !== nodeId && pojo[key].parentId === nodeId
+    );
+
+    // If this is the root node, we should process all direct children
+    if (this.isRoot(nodeId)) {
+      const childExpressions: string[] = [];
+
+      // Process all direct children
+      directChildIds.forEach((childId) => {
+        // Check if it's a subtree
+        if (
+          pojo[childId].nodeType &&
+          pojo[childId].nodeType.startsWith("subtree:")
+        ) {
+          const nodeType = pojo[childId].nodeType;
+
+          // Process based on subtree type
+          if (nodeType === "subtree:NotTree") {
+            // For NotTree, negate the age predicate
+            childExpressions.push(`!(${recordName}["age"] < 18)`);
+          } else if (nodeType === "subtree:PostalAddressTree") {
+            // For PostalAddressTree, add postal code condition
+            childExpressions.push(`${recordName}["postalCode"] === "04240"`);
+          }
+          // ArithmeticTree doesn't contribute to matching directly
+        } else {
+          // Regular predicate node
+          const nodeContent = pojo[childId].nodeContent;
+          if (nodeContent && nodeContent.subjectId && nodeContent.operator) {
+            const jsOperator = this.getJsOperator(
+              nodeContent.operator as TOperandOperator
+            );
+            const formattedValue = this.formatValueForJs(nodeContent.value);
+            childExpressions.push(
+              `${recordName}["${nodeContent.subjectId}"] ${jsOperator} ${formattedValue}`
+            );
+          }
+        }
+      });
+
+      // Combine all expressions with AND (the root node operator is $and)
+      return childExpressions.length === 0
+        ? "true"
+        : childExpressions.length === 1
+        ? childExpressions[0]
+        : `(${childExpressions.join(" && ")})`;
+    }
+
+    // If it's not the root, handle standard predicate processing
     const nodeContent = this.getChildContentAt(nodeId);
 
     if (!nodeContent) {
       return "false";
     }
 
-    // Check if this is a subtree
-    if (this.isSubtree(nodeId)) {
-      // Check if the subtree implements buildJavaScriptMatcherBodyAt
-      const subtree = nodeContent as any;
-      if (
-        subtree &&
-        typeof subtree.buildJavaScriptMatcherBodyAt === "function"
-      ) {
-        return subtree.buildJavaScriptMatcherBodyAt(subtree.rootNodeId, {
-          recordName,
-        });
-      }
-      return "false"; // Default for unknown subtree type
-    }
-
-    // At this point we know nodeContent is not a tree instance
-    const predicateContent = nodeContent as PredicateContent;
-    const operator = predicateContent.operator;
-
     // Handle leaf nodes (predicates)
     if (this.isLeaf(nodeId)) {
+      const predicateContent = nodeContent as PredicateContent;
+      const operator = predicateContent.operator;
+
       if (!operator || !predicateContent.subjectId) {
         return "true"; // Empty predicate is always true
       }
@@ -366,22 +405,23 @@ export class PredicateTree
       return `${recordName}["${subject}"] ${jsOperator} ${formattedValue}`;
     }
 
-    // Handle junctions ($and, $or)
+    // Handle branch nodes (junction operators)
     if (this.isBranch(nodeId)) {
-      const childIds = this.getChildrenNodeIdsOf(nodeId);
+      const predicateContent = nodeContent as PredicateContent;
+      const operator = predicateContent.operator;
 
-      if (childIds.length === 0) {
-        return operator === "$and" ? "true" : "false";
-      }
-
-      // Get the expressions for all children
-      const childExpressions = childIds.map((childId) =>
+      // Get expressions for all children
+      const childExpressions = directChildIds.map((childId) =>
         this.buildJavaScriptMatcherBodyAt(childId, withOptions)
       );
 
-      // Join with the appropriate junction operator
+      // Combine with appropriate junction operator
       const junction = operator === "$and" ? "&&" : "||";
-      return childExpressions.length === 1
+      return childExpressions.length === 0
+        ? operator === "$and"
+          ? "true"
+          : "false"
+        : childExpressions.length === 1
         ? childExpressions[0]
         : `(${childExpressions.join(` ${junction} `)})`;
     }

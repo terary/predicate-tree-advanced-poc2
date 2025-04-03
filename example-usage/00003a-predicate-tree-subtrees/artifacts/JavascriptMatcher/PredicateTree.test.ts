@@ -187,7 +187,7 @@ describe("PredicateTree", () => {
     expect(addressTreeChildren.length).toBe(1);
     expect(arithmeticTreeChildren.length).toBe(1);
   });
-  it.only("should be able to build complex matcher functions", () => {
+  it("should be able to build complex matcher functions, serialize and deserialize.", () => {
     const pTree = buildMegaPredicateTree(new PredicateTree());
 
     const pTreePojo = pTree.toPojoAt();
@@ -195,6 +195,53 @@ describe("PredicateTree", () => {
     const pTreeClone = PredicateTree.fromPojo(pTreePojo);
 
     expect(Object.keys(pTreePojo).length).toBe(14);
+  });
+  it.only("should be able to build complex matcher function.", () => {
+    const pTree = buildMegaPredicateTree(new PredicateTree());
+
+    const pTreePojo = pTree.toPojoAt();
+
+    // Add debug info to see the structure
+    console.log(JSON.stringify(pTreePojo, null, 2));
+    console.log("Node count:", Object.keys(pTreePojo).length);
+
+    const pTreeClone = PredicateTree.fromPojo(pTreePojo);
+
+    // Build the matcher function
+    const matcher = pTree.buildMatcherFunction();
+
+    // Debug the matcher function body
+    const matcherFnBody = pTree.buildJavaScriptMatcherBodyAt(pTree.rootNodeId);
+    console.log("\nGenerated matcher function body:", matcherFnBody);
+
+    // Create a record that should PASS the matcher
+    const passingRecord = {
+      "child.0": "first field",
+      "child.1": "second field",
+      age: 21, // NOT less than 18 (passes NotTree condition)
+      postalCode: "04240", // Matches postal code
+    };
+
+    // Create a record that should FAIL the matcher (age < 18)
+    const failingRecord = {
+      "child.0": "first field",
+      "child.1": "second field",
+      age: 16, // Less than 18 (fails NotTree condition)
+      postalCode: "04240", // Matches postal code
+    };
+
+    // Test the matcher with both records
+    console.log("Passing record result:", matcher.isMatch(passingRecord));
+    console.log("Failing record result:", matcher.isMatch(failingRecord));
+
+    // Assertions
+    expect(matcher.isMatch(passingRecord)).toBe(true);
+    expect(matcher.isMatch(failingRecord)).toBe(false);
+
+    // Let's also check the clone works correctly
+    const cloneMatcher = pTreeClone.buildMatcherFunction();
+    expect(cloneMatcher.isMatch(passingRecord)).toBe(true);
+    expect(cloneMatcher.isMatch(failingRecord)).toBe(false);
   });
 });
 
