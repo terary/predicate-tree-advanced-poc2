@@ -24,42 +24,37 @@ const runBoth = args.includes("--all") || args.includes("-a");
 
 // Function to display help information
 function showHelpMessage() {
-  console.log("========================================================");
-  console.log("  Predicate Tree Examples");
-  console.log("========================================================");
-  console.log("");
-  console.log("Usage: ./index-run.sh [options]");
-  console.log("       npx ts-node index.ts [options]");
-  console.log("");
-  console.log("Options:");
-  console.log("  --help, -h            Show this help message");
-  console.log(
-    "  --validated, -v       Run the example WITH subject dictionary validation"
-  );
-  console.log(
-    "  --non-validated, -n   Run the example WITHOUT subject dictionary validation"
-  );
-  console.log(
-    "  --labelled, -l        Run the example WITH multilingual labels"
-  );
-  console.log("  --all, -a             Run all examples");
-  console.log("");
-  console.log(
-    "If no options are provided, this help message will be displayed."
-  );
-  console.log("");
-  console.log("Examples:");
-  console.log(
-    "  ./index-run.sh --validated      Run only the validated example"
-  );
-  console.log(
-    "  ./index-run.sh --non-validated  Run only the non-validated example"
-  );
-  console.log(
-    "  ./index-run.sh --labelled       Run only the labelled example"
-  );
-  console.log("  ./index-run.sh --all            Run all examples");
-  console.log("========================================================");
+  const helpText = `
+========================================================
+  Predicate Tree Examples
+========================================================
+
+Usage: ./index-run.sh [options]
+       npx ts-node index.ts [options]
+
+Options:
+  --help, -h            Show this help message
+  --validated, -v       Run the example WITH subject dictionary validation
+  --non-validated, -n   Run the example WITHOUT subject dictionary validation
+  --labelled, -l        Run the example WITH multilingual labels
+  --all, -a             Run all examples
+
+If no options are provided, this help message will be displayed.
+
+Examples:
+  ./index-run.sh --validated      Run only the validated example
+  ./index-run.sh --non-validated  Run only the non-validated example
+  ./index-run.sh --labelled       Run only the labelled example
+  ./index-run.sh --all            Run all examples
+========================================================`;
+
+  console.log(helpText);
+}
+
+// Function to run an example with appropriate messaging
+function runExample(exampleFn: () => void, description: string) {
+  console.log(`Running ${description}...\n`);
+  exampleFn();
 }
 
 // Show help by default if no specific example is requested
@@ -70,7 +65,9 @@ if (showHelp && !runValidated && !runNonValidated && !runLabelled && !runBoth) {
 
 // Run the examples based on command line args
 if (runBoth) {
-  console.log("Running all predicate tree examples...\n");
+  const message = "Running all predicate tree examples...";
+  console.log(message + "\n");
+
   runPredicateTreeValidationExample();
   console.log("\n\n");
   runPredicateTreeWithoutDictionaryExample();
@@ -79,23 +76,25 @@ if (runBoth) {
 } else {
   // Run requested examples
   if (runValidated) {
-    console.log(
-      "Running predicate tree WITH subject dictionary validation...\n"
+    runExample(
+      runPredicateTreeValidationExample,
+      "predicate tree WITH subject dictionary validation"
     );
-    runPredicateTreeValidationExample();
     console.log("\n");
   }
 
   if (runNonValidated) {
-    console.log(
-      "Running predicate tree WITHOUT subject dictionary validation...\n"
+    runExample(
+      runPredicateTreeWithoutDictionaryExample,
+      "predicate tree WITHOUT subject dictionary validation"
     );
-    runPredicateTreeWithoutDictionaryExample();
     console.log("\n");
   }
 
   if (runLabelled) {
-    console.log("Running predicate tree WITH multilingual labels...\n");
-    runLabelledPredicateTreeExample();
+    runExample(
+      runLabelledPredicateTreeExample,
+      "predicate tree WITH multilingual labels"
+    );
   }
 }

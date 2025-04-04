@@ -292,7 +292,9 @@ function buildLabelledPredicateTree(): GenericExpressionTree<PredicateContent> {
   // Start with a root AND junction
   const rootId = tree.rootNodeId;
   tree.replaceNodeContent(rootId, { operator: "$and" });
-  console.log("✅ Root node created with $and operator");
+
+  // Create a message array to collect all status messages
+  const statusMessages = ["✅ Root node created with $and operator"];
 
   // Add some predicates
   tree.appendChildNodeWithContent(rootId, {
@@ -300,20 +302,20 @@ function buildLabelledPredicateTree(): GenericExpressionTree<PredicateContent> {
     operator: "contains",
     value: "Smith",
   });
-  console.log("✅ Added customer.name predicate");
+  statusMessages.push("✅ Added customer.name predicate");
 
   tree.appendChildNodeWithContent(rootId, {
     subject: "customer.age",
     operator: "greaterThan",
     value: 30,
   });
-  console.log("✅ Added customer.age predicate");
+  statusMessages.push("✅ Added customer.age predicate");
 
   // Add a nested OR junction
   const orJunctionId = tree.appendChildNodeWithContent(rootId, {
     operator: "$or",
   });
-  console.log("✅ Added $or junction node");
+  statusMessages.push("✅ Added $or junction node");
 
   // Add children to the OR junction
   tree.appendChildNodeWithContent(orJunctionId, {
@@ -321,14 +323,17 @@ function buildLabelledPredicateTree(): GenericExpressionTree<PredicateContent> {
     operator: "lessThan",
     value: 100,
   });
-  console.log("✅ Added product.price predicate");
+  statusMessages.push("✅ Added product.price predicate");
 
   tree.appendChildNodeWithContent(orJunctionId, {
     subject: "product.category",
     operator: "equals",
     value: "Electronics",
   });
-  console.log("✅ Added product.category predicate");
+  statusMessages.push("✅ Added product.category predicate");
+
+  // Log all status messages at once
+  console.log(statusMessages.join("\n"));
 
   return tree;
 }
@@ -339,12 +344,18 @@ function buildLabelledPredicateTree(): GenericExpressionTree<PredicateContent> {
 function validateTreeStructure(
   tree: GenericExpressionTree<PredicateContent>
 ): boolean {
-  console.log("\n===============================================");
-  console.log("  VALIDATING TREE STRUCTURE");
-  console.log("===============================================");
+  const validationHeader = `
+===============================================
+  VALIDATING TREE STRUCTURE
+===============================================`;
+
+  console.log(validationHeader);
 
   const rootNodeId = tree.rootNodeId;
   const rootContent = tree.getChildContentAt(rootNodeId) as PredicateContent;
+
+  // Collect validation messages
+  const validationMessages = [];
 
   // First, check root node content
   if (rootContent?.operator !== "$and") {
@@ -352,7 +363,7 @@ function validateTreeStructure(
     return false;
   }
 
-  console.log("✅ Verified root node has $and operator");
+  validationMessages.push("✅ Verified root node has $and operator");
 
   // Get all child nodes of root
   const childNodeIds = tree.getChildrenNodeIdsOf(rootNodeId);
@@ -365,7 +376,7 @@ function validateTreeStructure(
     return false;
   }
 
-  console.log("✅ Verified root node has 3 children as expected");
+  validationMessages.push("✅ Verified root node has 3 children as expected");
 
   // Get content of all child nodes
   const childContents = childNodeIds.map(
@@ -406,7 +417,9 @@ function validateTreeStructure(
   });
 
   if (isValid) {
-    console.log("✅ Verified all root children have correct content");
+    validationMessages.push(
+      "✅ Verified all root children have correct content"
+    );
   }
 
   // Find the OR junction node
@@ -427,7 +440,7 @@ function validateTreeStructure(
     return false;
   }
 
-  console.log("✅ Verified OR junction has 2 children as expected");
+  validationMessages.push("✅ Verified OR junction has 2 children as expected");
 
   // Get content of OR junction children
   const orChildContents = orChildNodeIds.map(
@@ -465,19 +478,20 @@ function validateTreeStructure(
   });
 
   if (orChildrenValid) {
-    console.log("✅ Verified all OR junction children have correct content");
+    validationMessages.push(
+      "✅ Verified all OR junction children have correct content"
+    );
   }
 
+  // Output all validation messages at once
+  console.log(validationMessages.join("\n"));
+
   const allValid = isValid && orChildrenValid;
-  if (allValid) {
-    console.log(
-      "\n✅ VALIDATION SUCCESSFUL: Tree structure matches expected format"
-    );
-  } else {
-    console.error(
-      "\n❌ VALIDATION FAILED: Tree structure does not match expected format"
-    );
-  }
+  const summaryMessage = allValid
+    ? "\n✅ VALIDATION SUCCESSFUL: Tree structure matches expected format"
+    : "\n❌ VALIDATION FAILED: Tree structure does not match expected format";
+
+  console.log(summaryMessage);
 
   return allValid;
 }
@@ -488,36 +502,48 @@ function validateTreeStructure(
 function displayMultilingualDescriptions(
   tree: GenericExpressionTree<PredicateContent>
 ) {
-  console.log("\n===============================================");
-  console.log("  HUMAN-READABLE DESCRIPTIONS");
-  console.log("===============================================");
+  const descriptionHeader = `
+===============================================
+  HUMAN-READABLE DESCRIPTIONS
+===============================================`;
+
+  console.log(descriptionHeader);
 
   // Get descriptions in different languages
   const englishDescription = treeToHumanReadableDescription(tree, "en");
   const spanishDescription = treeToHumanReadableDescription(tree, "es");
 
-  console.log("\nEnglish Description:");
-  console.log(`➡️ ${englishDescription}`);
+  const descriptions = `
+English Description:
+➡️ ${englishDescription}
 
-  console.log("\nSpanish Description:");
-  console.log(`➡️ ${spanishDescription}`);
+Spanish Description:
+➡️ ${spanishDescription}`;
+
+  console.log(descriptions);
 }
 
 /**
  * Main function to run the example
  */
 export function runLabelledPredicateTreeExample(): void {
-  console.log("===============================================");
-  console.log("  PREDICATE TREE WITH MULTILINGUAL LABELS");
-  console.log("===============================================");
+  const headers = {
+    main: `===============================================
+  PREDICATE TREE WITH MULTILINGUAL LABELS
+===============================================`,
+    pojo: `
+===============================================
+  EXPORTED POJO STRUCTURE
+===============================================`,
+  };
+
+  console.log(headers.main);
 
   // Build our predicate tree
   const tree = buildLabelledPredicateTree();
 
   // Show the POJO structure
-  console.log("\n===============================================");
-  console.log("  EXPORTED POJO STRUCTURE");
-  console.log("===============================================");
+  console.log(headers.pojo);
 
   const pojo = tree.toPojoAt(tree.rootNodeId);
   console.log(JSON.stringify(pojo, null, 2));
@@ -527,14 +553,6 @@ export function runLabelledPredicateTreeExample(): void {
 
   // Display human-readable descriptions in different languages
   displayMultilingualDescriptions(tree);
-
-  console.log("\n===============================================");
-  console.log(
-    isValid
-      ? "  EXAMPLE COMPLETED SUCCESSFULLY"
-      : "  EXAMPLE COMPLETED WITH VALIDATION ERRORS"
-  );
-  console.log("===============================================");
 }
 
 // If this file is run directly

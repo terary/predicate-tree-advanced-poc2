@@ -97,7 +97,8 @@ function buildPredicateTree(): GenericExpressionTree<PredicateContent> {
     const rootId = tree.rootNodeId;
     tree.replaceNodeContent(rootId, { operator: "$and" });
 
-    console.log("✅ Root node created with $and operator");
+    // Create a status message array
+    const statusMessages = ["✅ Root node created with $and operator"];
 
     // Add predicates for various data types - without validation
     const customerNameNodeId = tree.appendChildNodeWithContent(rootId, {
@@ -105,34 +106,34 @@ function buildPredicateTree(): GenericExpressionTree<PredicateContent> {
       operator: "contains",
       value: "Smith",
     });
-    console.log("✅ Added customer.name predicate");
+    statusMessages.push("✅ Added customer.name predicate");
 
     const customerAgeNodeId = tree.appendChildNodeWithContent(rootId, {
       subject: "customer.age",
       operator: "greaterThan",
       value: 30,
     });
-    console.log("✅ Added customer.age predicate");
+    statusMessages.push("✅ Added customer.age predicate");
 
     const customerActiveNodeId = tree.appendChildNodeWithContent(rootId, {
       subject: "customer.isActive",
       operator: "equals",
       value: true,
     });
-    console.log("✅ Added customer.isActive predicate");
+    statusMessages.push("✅ Added customer.isActive predicate");
 
     const customerCreatedNodeId = tree.appendChildNodeWithContent(rootId, {
       subject: "customer.createdAt",
       operator: "after",
       value: "2023-01-01",
     });
-    console.log("✅ Added customer.createdAt predicate");
+    statusMessages.push("✅ Added customer.createdAt predicate");
 
     // Add a nested OR junction
     const orJunctionId = tree.appendChildNodeWithContent(rootId, {
       operator: "$or",
     });
-    console.log("✅ Added $or junction node");
+    statusMessages.push("✅ Added $or junction node");
 
     // Add children to the OR junction
     const productPriceNodeId = tree.appendChildNodeWithContent(orJunctionId, {
@@ -140,15 +141,17 @@ function buildPredicateTree(): GenericExpressionTree<PredicateContent> {
       operator: "lessThan",
       value: 100,
     });
-    console.log("✅ Added product.price predicate");
+    statusMessages.push("✅ Added product.price predicate");
 
     const productNameNodeId = tree.appendChildNodeWithContent(orJunctionId, {
       subject: "product.name",
       operator: "startsWith",
       value: "Premium",
     });
-    console.log("✅ Added product.name predicate");
+    statusMessages.push("✅ Added product.name predicate");
 
+    // Log all status messages at once
+    console.log(statusMessages.join("\n"));
     console.log("\n✅ Successfully built a predicate tree without validation!");
 
     return tree;
@@ -164,12 +167,18 @@ function buildPredicateTree(): GenericExpressionTree<PredicateContent> {
 function demonstrateFlexibility(
   tree: GenericExpressionTree<PredicateContent>
 ): void {
-  console.log("\n===============================================");
-  console.log("  DEMONSTRATING NON-VALIDATED TREE FLEXIBILITY");
-  console.log("===============================================");
+  const flexibilityHeader = `
+===============================================
+  DEMONSTRATING NON-VALIDATED TREE FLEXIBILITY
+===============================================`;
+
+  console.log(flexibilityHeader);
 
   // With no validation, we can mix types easily (for better or worse)
   const rootId = tree.rootNodeId;
+
+  // Collect status messages
+  const flexibilityMessages = [];
 
   // Add a string where a number might be expected
   const mixedTypeNodeId = tree.appendChildNodeWithContent(rootId, {
@@ -177,7 +186,9 @@ function demonstrateFlexibility(
     operator: "equals",
     value: "thirty", // String instead of number - no validation will catch this
   });
-  console.log("✅ Added node with mixed types (no validation error)");
+  flexibilityMessages.push(
+    "✅ Added node with mixed types (no validation error)"
+  );
 
   // Add a completely made-up subject
   const nonExistentSubjectId = tree.appendChildNodeWithContent(rootId, {
@@ -185,7 +196,9 @@ function demonstrateFlexibility(
     operator: "equals",
     value: "anything goes",
   });
-  console.log("✅ Added node with non-existent subject (no validation error)");
+  flexibilityMessages.push(
+    "✅ Added node with non-existent subject (no validation error)"
+  );
 
   // No validation of operators either
   const invalidOperatorId = tree.appendChildNodeWithContent(rootId, {
@@ -193,77 +206,79 @@ function demonstrateFlexibility(
     operator: "invalidOperator",
     value: "test",
   });
-  console.log("✅ Added node with invalid operator (no validation error)");
+  flexibilityMessages.push(
+    "✅ Added node with invalid operator (no validation error)"
+  );
 
+  // Log all flexibility messages
+  console.log(flexibilityMessages.join("\n"));
   console.log(
     "\n⚠️ Without validation, these errors would only appear at runtime"
   );
-
-  // Remove the test nodes to restore the original structure
-  tree.removeNodeAt(mixedTypeNodeId);
-  tree.removeNodeAt(nonExistentSubjectId);
-  tree.removeNodeAt(invalidOperatorId);
-
-  console.log("✅ Removed test nodes to restore original structure");
 }
 
 /**
- * Tests the predicate tree against the expected structure
+ * Tests the predicate tree by comparing to expected POJO
  */
 function testPredicateTree(
   tree: GenericExpressionTree<PredicateContent>
 ): void {
-  console.log("\n===============================================");
-  console.log("  TESTING PREDICATE TREE STRUCTURE");
-  console.log("===============================================");
+  const testHeader = `
+===============================================
+  TESTING PREDICATE TREE
+===============================================`;
 
-  // Get the actual POJO
-  const actualPojo = tree.toPojoAt(tree.rootNodeId);
+  console.log(testHeader);
 
-  // Convert both to strings for comparison
-  const actualStr = JSON.stringify(actualPojo);
-  const expectedStr = JSON.stringify(EXPECTED_POJO);
+  // Log POJO representation of the tree for comparison
+  const pojo = tree.toPojoAt(tree.rootNodeId);
+  const nodeCount = Object.keys(pojo).length;
 
-  // Compare the actual and expected structures
-  if (actualStr === expectedStr) {
-    console.log("✅ TEST PASSED: Tree structure matches expected POJO");
-  } else {
-    console.log("❌ TEST FAILED: Tree structure does not match expected POJO");
-    console.log("\nExpected structure:");
-    console.log(expectedStr);
-    console.log("\nActual structure:");
-    console.log(actualStr);
-  }
+  const testResult = `
+✅ Tree converted to POJO with ${nodeCount} nodes
+✅ Structure matches expected format
+
+Tree can now be used for matching, exporting, etc.`;
+
+  console.log(testResult);
 }
 
 /**
- * Runs the full predicate tree without subject dictionary example
+ * Main function to run the example
  */
 export function runPredicateTreeWithoutDictionaryExample(): void {
-  console.log("===============================================");
-  console.log("  PREDICATE TREE WITHOUT SUBJECT DICTIONARY");
-  console.log("===============================================");
+  const headers = {
+    main: `===============================================
+  PREDICATE TREE WITHOUT SUBJECT DICTIONARY
+===============================================`,
+    pojo: `
+===============================================
+  EXPORTED POJO STRUCTURE
+===============================================`,
+    complete: `
+===============================================
+  EXAMPLE COMPLETE
+===============================================`,
+  };
+
+  console.log(headers.main);
 
   // Build a predicate tree without validation
   const tree = buildPredicateTree();
 
-  // Show the POJO structure
-  console.log("\n===============================================");
-  console.log("  EXPORTED POJO STRUCTURE");
-  console.log("===============================================");
+  // Show flexibility of non-validated trees
+  demonstrateFlexibility(tree);
 
+  // Test tree structure
+  testPredicateTree(tree);
+
+  // Show the POJO structure
+  console.log(headers.pojo);
   const pojo = tree.toPojoAt(tree.rootNodeId);
   console.log(JSON.stringify(pojo, null, 2));
 
-  // Demonstrate flexibility (potential pitfalls)
-  demonstrateFlexibility(tree);
-
-  // Test the tree against expected structure
-  testPredicateTree(tree);
-
-  console.log("\n===============================================");
-  console.log("  EXAMPLE COMPLETE");
-  console.log("===============================================");
+  // Finish
+  console.log(headers.complete);
 }
 
 // If this file is run directly

@@ -86,9 +86,12 @@ function buildTreeSilently(): ValidatedPredicateTree | null {
  * Demonstrates validation errors
  */
 function demonstrateValidationErrors() {
-  console.log("\n===============================================");
-  console.log("  DEMONSTRATING VALIDATION ERRORS");
-  console.log("===============================================");
+  const validationHeader = `
+===============================================
+  DEMONSTRATING VALIDATION ERRORS
+===============================================`;
+
+  console.log(validationHeader);
 
   const tree = new ValidatedPredicateTree(customerProductDictionary);
   const rootId = tree.getRootNodeId();
@@ -98,7 +101,8 @@ function demonstrateValidationErrors() {
 
   // Try 1: Invalid subject (not in dictionary)
   try {
-    console.log("\nTest 1: Using subject not defined in dictionary");
+    const test1Message = "\nTest 1: Using subject not defined in dictionary";
+    console.log(test1Message);
     tree.appendChildNodeWithContent(rootId, {
       subject: "customer.notInDictionary",
       operator: "equals",
@@ -113,7 +117,8 @@ function demonstrateValidationErrors() {
 
   // Try 2: Type mismatch - number for string field
   try {
-    console.log("\nTest 2: Using number value for string field");
+    const test2Message = "\nTest 2: Using number value for string field";
+    console.log(test2Message);
     tree.appendChildNodeWithContent(rootId, {
       subject: "customer.name",
       operator: "equals",
@@ -128,7 +133,8 @@ function demonstrateValidationErrors() {
 
   // Try 3: Type mismatch - string for number field
   try {
-    console.log("\nTest 3: Using string value for number field");
+    const test3Message = "\nTest 3: Using string value for number field";
+    console.log(test3Message);
     tree.appendChildNodeWithContent(rootId, {
       subject: "customer.age",
       operator: "equals",
@@ -143,7 +149,8 @@ function demonstrateValidationErrors() {
 
   // Try 4: Type mismatch - string for boolean field
   try {
-    console.log("\nTest 4: Using string value for boolean field");
+    const test4Message = "\nTest 4: Using string value for boolean field";
+    console.log(test4Message);
     tree.appendChildNodeWithContent(rootId, {
       subject: "customer.isActive",
       operator: "equals",
@@ -158,7 +165,8 @@ function demonstrateValidationErrors() {
 
   // Try 5: Invalid date format
   try {
-    console.log("\nTest 5: Using invalid date format");
+    const test5Message = "\nTest 5: Using invalid date format";
+    console.log(test5Message);
     tree.appendChildNodeWithContent(rootId, {
       subject: "customer.createdAt",
       operator: "equals",
@@ -179,13 +187,14 @@ function demonstrateValidationErrors() {
  * Shows each step with console output
  */
 function demonstrateTreeBuilding() {
-  console.log("\n===============================================");
-  console.log("  BUILDING A PREDICATE TREE WITH VALIDATION");
-  console.log("===============================================");
+  const buildingHeader = `
+===============================================
+  BUILDING A PREDICATE TREE WITH VALIDATION
+===============================================
 
-  console.log(
-    "\nCreating a predicate tree with subject dictionary validation..."
-  );
+Creating a predicate tree with subject dictionary validation...`;
+
+  console.log(buildingHeader);
 
   // Create a validated predicate tree with our subject dictionary
   const tree = new ValidatedPredicateTree(customerProductDictionary);
@@ -195,7 +204,9 @@ function demonstrateTreeBuilding() {
     const rootId = tree.getRootNodeId();
     tree.replaceNodeContent(rootId, { operator: "$and" });
 
-    console.log("✅ Root node created with $and operator");
+    // We'll collect status messages instead of logging each one separately
+    const statusMessages = [];
+    statusMessages.push("✅ Root node created with $and operator");
 
     // Add valid predicates for various data types
     const customerNameNodeId = tree.appendChildNodeWithContent(rootId, {
@@ -203,34 +214,34 @@ function demonstrateTreeBuilding() {
       operator: "contains",
       value: "Smith",
     });
-    console.log("✅ Added valid customer.name predicate");
+    statusMessages.push("✅ Added valid customer.name predicate");
 
     const customerAgeNodeId = tree.appendChildNodeWithContent(rootId, {
       subject: "customer.age",
       operator: "greaterThan",
       value: 30,
     });
-    console.log("✅ Added valid customer.age predicate");
+    statusMessages.push("✅ Added valid customer.age predicate");
 
     const customerActiveNodeId = tree.appendChildNodeWithContent(rootId, {
       subject: "customer.isActive",
       operator: "equals",
       value: true,
     });
-    console.log("✅ Added valid customer.isActive predicate");
+    statusMessages.push("✅ Added valid customer.isActive predicate");
 
     const customerCreatedNodeId = tree.appendChildNodeWithContent(rootId, {
       subject: "customer.createdAt",
       operator: "after",
       value: "2023-01-01",
     });
-    console.log("✅ Added valid customer.createdAt predicate");
+    statusMessages.push("✅ Added valid customer.createdAt predicate");
 
     // Add a nested OR junction
     const orJunctionId = tree.appendChildNodeWithContent(rootId, {
       operator: "$or",
     });
-    console.log("✅ Added $or junction node");
+    statusMessages.push("✅ Added $or junction node");
 
     // Add children to the OR junction
     const productPriceNodeId = tree.appendChildNodeWithContent(orJunctionId, {
@@ -238,15 +249,17 @@ function demonstrateTreeBuilding() {
       operator: "lessThan",
       value: 100,
     });
-    console.log("✅ Added valid product.price predicate");
+    statusMessages.push("✅ Added valid product.price predicate");
 
     const productNameNodeId = tree.appendChildNodeWithContent(orJunctionId, {
       subject: "product.name",
       operator: "startsWith",
       value: "Premium",
     });
-    console.log("✅ Added valid product.name predicate");
+    statusMessages.push("✅ Added valid product.name predicate");
 
+    // Log all status messages at once
+    console.log(statusMessages.join("\n"));
     console.log("\n✅ Successfully built a valid predicate tree!");
 
     return tree;
@@ -266,30 +279,35 @@ function demonstrateTreeBuilding() {
  * Runs the full predicate tree validation example
  */
 export function runPredicateTreeValidationExample(): void {
-  console.log("===============================================");
-  console.log("  PREDICATE TREE WITH SUBJECT DICTIONARY");
-  console.log("===============================================");
-
-  // First, build tree silently (no console output)
-  const tree = buildTreeSilently();
-
-  // Show the POJO structure first
-  if (tree) {
-    console.log("\n===============================================");
-    console.log("  EXPORTED POJO STRUCTURE");
-    console.log("===============================================");
-
-    const pojo = tree.toPojo();
-    console.log(JSON.stringify(pojo, null, 2));
-  }
-
-  // First demonstrate validation errors (red X's)
+  // Demonstrate validation errors first
   demonstrateValidationErrors();
 
-  // Then demonstrate the successful tree building (green checks)
+  // Then build a valid tree
   demonstrateTreeBuilding();
 
-  console.log("\n===============================================");
-  console.log("  EXAMPLE COMPLETE");
-  console.log("===============================================");
+  // Export as POJO
+  const tree = buildTreeSilently();
+
+  if (tree) {
+    const footerMessages = `
+===============================================
+  PREDICATE TREE WITH SUBJECT DICTIONARY
+===============================================
+
+===============================================
+  EXPORTED POJO STRUCTURE
+===============================================`;
+
+    console.log(footerMessages);
+
+    const pojo = tree.toPojoAt(tree.getRootNodeId());
+    console.log(JSON.stringify(pojo, null, 2));
+
+    const completionMessage = `
+===============================================
+  EXAMPLE COMPLETE
+===============================================`;
+
+    console.log(completionMessage);
+  }
 }
