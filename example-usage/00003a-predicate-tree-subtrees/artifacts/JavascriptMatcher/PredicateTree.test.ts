@@ -143,10 +143,6 @@ describe("PredicateTree", () => {
 
     const pTreePojo = pTree.toPojoAt();
 
-    // Add debug info to see the structure
-    console.log(JSON.stringify(pTreePojo, null, 2));
-    console.log("Node count:", Object.keys(pTreePojo).length);
-
     const pTreeClone = PredicateTree.fromPojo(pTreePojo);
 
     // Build the matcher function
@@ -154,7 +150,6 @@ describe("PredicateTree", () => {
 
     // Debug the matcher function body
     const matcherFnBody = pTree.buildJavaScriptMatcherBodyAt(pTree.rootNodeId);
-    console.log("\nGenerated matcher function body:", matcherFnBody);
 
     // Create a record that should PASS the matcher
     const passingRecord = {
@@ -172,10 +167,6 @@ describe("PredicateTree", () => {
       postalCode: "04240", // Matches postal code
     };
 
-    // Test the matcher with both records
-    console.log("Passing record result:", matcher.isMatch(passingRecord));
-    console.log("Failing record result:", matcher.isMatch(failingRecord));
-
     // Assertions
     expect(matcher.isMatch(passingRecord)).toBe(true);
     expect(matcher.isMatch(failingRecord)).toBe(false);
@@ -192,13 +183,6 @@ describe("PredicateTree", () => {
     // Convert to POJO for serialization
     const originalTreePojo = originalTree.toPojoAt();
 
-    // Add debug info to see the structure
-    console.log(
-      "Original tree POJO:",
-      JSON.stringify(originalTreePojo, null, 2)
-    );
-    console.log("Node count:", Object.keys(originalTreePojo).length);
-
     // Create a clone from the original tree's POJO
     const clonedTree = PredicateTree.fromPojo(originalTreePojo);
 
@@ -213,9 +197,6 @@ describe("PredicateTree", () => {
     const clonedMatcherBody = clonedTree.buildJavaScriptMatcherBodyAt(
       clonedTree.rootNodeId
     );
-
-    console.log("\nOriginal tree matcher function body:", originalMatcherBody);
-    console.log("Cloned tree matcher function body:", clonedMatcherBody);
 
     // Create a record that should PASS the matcher
     const passingRecord = {
