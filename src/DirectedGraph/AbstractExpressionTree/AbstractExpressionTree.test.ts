@@ -25,7 +25,7 @@ import type {
 } from "./types";
 import { AbstractTree } from "../AbstractTree/AbstractTree";
 import { DirectedGraphError } from "../DirectedGraphError";
-import { AbstractExpressionFactory } from "../../../example-usage/predicate-tree/AbstractExpressionFactory";
+import { AbstractExpressionFactory } from "../../test-resources/predicate-tree/AbstractExpressionFactory";
 import { IExpressionTree } from "../ITree";
 `
 the single subtree node idea wont work, nor do we want it to work.
@@ -45,6 +45,7 @@ export class ClassTestAbstractExpressionTree extends AbstractExpressionTree<TPre
   ): string {
     return super.appendChildNodeWithContent(parentNodeId, nodeContent);
   }
+
   public reflect(...args: any[]) {
     return Reflect.construct(this.constructor, []);
   }

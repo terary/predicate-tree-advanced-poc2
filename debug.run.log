@@ -1,0 +1,24 @@
+node:internal/modules/cjs/loader:1146
+  throw err;
+  ^
+
+Error: Cannot find module './index.ts'
+Require stack:
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/imaginaryUncacheableRequireResolveScript
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1143:15)
+    at Function.resolve (node:internal/modules/helpers:190:19)
+    at requireResolveNonCached (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/ts-node/dist/bin.js:489:16)
+    at getProjectSearchDir (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/ts-node/dist/bin.js:459:40)
+    at phase3 (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/ts-node/dist/bin.js:263:27)
+    at bootstrap (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/ts-node/dist/bin.js:44:30)
+    at main (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/ts-node/dist/bin.js:32:12)
+    at Object.<anonymous> (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/ts-node/dist/bin.js:519:5)
+    at Module._compile (node:internal/modules/cjs/loader:1369:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1427:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/mypart/tmc/projects/predicate-tree-advanced-poc2/imaginaryUncacheableRequireResolveScript'
+  ]
+}
+
+Node.js v20.12.2

@@ -1,0 +1,71 @@
+{
+  "complexDemo": {
+    "parentId": "complexDemo",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "complexDemo:0": {
+    "parentId": "complexDemo",
+    "nodeContent": {
+      "subjectId": "firstName",
+      "operator": "$eq",
+      "value": "John"
+    }
+  },
+  "complexDemo:1": {
+    "parentId": "complexDemo",
+    "nodeContent": {
+      "operator": "$or"
+    }
+  },
+  "complexDemo:1:0": {
+    "parentId": "complexDemo:1",
+    "nodeContent": {
+      "subjectId": "department",
+      "operator": "$eq",
+      "value": "Engineering"
+    }
+  },
+  "complexDemo:1:1": {
+    "parentId": "complexDemo:1",
+    "nodeContent": {
+      "subjectId": "department",
+      "operator": "$eq",
+      "value": "Marketing"
+    }
+  },
+  "complexDemo:2": {
+    "parentId": "complexDemo",
+    "nodeType": "subtree:NotTree",
+    "nodeContent": {
+      "operator": "$and",
+      "_meta": {
+        "negated": true,
+        "description": "NOT group (all predicates inside are negated)"
+      }
+    }
+  },
+  "complexDemo:2:not-root": {
+    "parentId": "complexDemo:2",
+    "nodeContent": {
+      "subjectId": "age",
+      "operator": "$lt",
+      "value": 18,
+      "_meta": {
+        "negated": true
+      }
+    }
+  },
+  "complexDemo:2:child1": {
+    "parentId": "complexDemo:2",
+    "nodeContent": {
+      "subjectId": "role",
+      "operator": "$eq",
+      "value": "Intern",
+      "_meta": {
+        "negated": true
+      }
+    }
+  }
+}

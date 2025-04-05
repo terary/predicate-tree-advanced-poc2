@@ -32,7 +32,7 @@ abstract class AbstractTree<T extends object> implements ITree<T> {
   } = {};
 
   private _nodeKeyDelimiter = ":";
-  protected _rootNodeId;
+  protected _rootNodeId: string;
   protected _incrementor = new Incrementor();
 
   constructor(rootNodeId = "_root_", nodeContent?: T) {
@@ -44,6 +44,19 @@ abstract class AbstractTree<T extends object> implements ITree<T> {
     }
   }
 
+  /**
+   * Appends a new child node with the provided content to a specified parent node.
+   *
+   * This method creates a new node in the tree, assigns it the given content,
+   * and makes it a child of the specified parent node. The node ID is automatically
+   * generated.  The returned nodeId can be used in local scope to build up the expression.
+   * The tree manages content and may move it around.  Although the nodeId may remain valid
+   * the content may get changed so nodeIds are considered temporal.
+   *
+   * @param parentNodeId - The ID of the parent node to which the new child node will be attached
+   * @param nodeContent - The content to be stored in the new child node. Can be null, an object of type T, or another ITree<T>
+   * @returns The ID of the newly created child node
+   */
   public appendChildNodeWithContent(
     parentNodeId: string,
     nodeContent: TGenericNodeContent<T>
@@ -221,6 +234,21 @@ abstract class AbstractTree<T extends object> implements ITree<T> {
     }
 
     return this._nodeDictionary[nodeId].nodeContent;
+  }
+
+  getNodeIdsWithNodeContent(
+    matcherFn: (nodeContent: T) => boolean,
+    shouldIncludeSubtrees?: boolean //*tmc* what about subtrees ?
+  ): string[] {
+    const allNodeIds = this.getTreeNodeIdsAt(this.rootNodeId);
+
+    return allNodeIds.filter((nodeId) => {
+      if (this.isSubtree(nodeId) || this.getChildContentAt(nodeId) === null) {
+        return false; // *tmc* for the time being, we look only at natural tree elements (no subtree).
+      }
+      const content = this.getChildContentAt(nodeId);
+      return matcherFn(content as T);
+    });
   }
 
   public getChildrenNodeIdsOf(
@@ -626,6 +654,9 @@ abstract class AbstractTree<T extends object> implements ITree<T> {
     return this.#toPojo(nodeId, nodeId, transformer);
   }
 
+  public SubtreeNodeTypeName: string =
+    "_ABSTRACT_FOR_BACKWARD_COMPATIBILITY_ONLY_";
+
   #toPojo(
     currentNodeId: string,
     parentNodeId: string,
@@ -639,9 +670,13 @@ abstract class AbstractTree<T extends object> implements ITree<T> {
       Object.entries(subtreePojo).forEach(([nodeId, nodeContent]) => {
         workingPojoDocument[nodeId] = nodeContent;
       });
+      //  static SubtreeNodeTypeName = "subtree";
 
       workingPojoDocument[currentNodeId] = {
-        nodeType: AbstractTree.SubtreeNodeTypeName,
+        nodeType: [
+          AbstractTree.SubtreeNodeTypeName,
+          nodeContent.SubtreeNodeTypeName,
+        ].join(":"),
         nodeContent: nodeContent.getChildContentAt(nodeContent.rootNodeId),
         parentId: parentNodeId,
       };

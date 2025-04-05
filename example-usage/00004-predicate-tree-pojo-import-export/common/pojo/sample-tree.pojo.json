@@ -1,0 +1,46 @@
+{
+  "blueSkyDemo": {
+    "parentId": null,
+    "nodeContent": {
+      "operator": "$or"
+    }
+  },
+  "blueSkyDemo:0": {
+    "parentId": "blueSkyDemo",
+    "nodeContent": {
+      "subjectId": "lastName",
+      "operator": "$eq",
+      "value": "Flintstone"
+    }
+  },
+  "blueSkyDemo:1": {
+    "parentId": "blueSkyDemo",
+    "nodeContent": {
+      "subjectId": "lastName",
+      "operator": "$eq",
+      "value": "Rubble"
+    }
+  },
+  "blueSkyDemo:2": {
+    "parentId": "blueSkyDemo",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "blueSkyDemo:2:0": {
+    "parentId": "blueSkyDemo:2",
+    "nodeContent": {
+      "subjectId": "address",
+      "operator": "$contains",
+      "value": "Bedrock"
+    }
+  },
+  "blueSkyDemo:2:1": {
+    "parentId": "blueSkyDemo:2",
+    "nodeContent": {
+      "subjectId": "age",
+      "operator": "$gt",
+      "value": 25
+    }
+  }
+}

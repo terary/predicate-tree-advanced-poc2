@@ -1,0 +1,6 @@
+
+=== Demonstrating Object Identity with Predicate Trees and Subtree ===
+✅ PASS: The parent content IS the subtree itself. Object identity is preserved correctly.
+✅ PASS: subtree IDs return no value from parent tree.
+✅ PASS: Retrieved original value from subtree using subtreeNodeId.
+All Good

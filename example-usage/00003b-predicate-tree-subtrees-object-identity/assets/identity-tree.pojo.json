@@ -1,0 +1,51 @@
+{
+  "identity-root": {
+    "parentId": null,
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+
+  "identity-root-child-1": {
+    "parentId": "identity-root",
+    "nodeContent": {
+      "subject": "objectId",
+      "operator": "$eq",
+      "value": "123"
+    }
+  },
+
+  "identity-root-child-2": {
+    "parentId": "identity-root",
+    "nodeContent": {
+      "subject": "type",
+      "operator": "$eq",
+      "value": "Person"
+    }
+  },
+  "parent-root": {
+    "parentId": null,
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "parent-child-0": {
+    "parentId": "parent-root",
+    "nodeContent": {
+      "subject": "name",
+      "operator": "$eq",
+      "value": "John"
+    }
+  },
+  "parent-child-1": {
+    "parentId": "parent-root",
+    "nodeContent": {
+      "subject": "age",
+      "operator": "$gt",
+      "value": 18
+    }
+  },
+  "actuals": {
+    "fullTreeJsonStringBase64": "eyJfcm9vdF8iOnsicGFyZW50SWQiOiJfcm9vdF8iLCJub2RlQ29udGVudCI6eyJvcGVyYXRvciI6IiRhbmQifX0sIl9yb290XzowIjp7InBhcmVudElkIjoiX3Jvb3RfIiwibm9kZUNvbnRlbnQiOnsic3ViamVjdCI6Im5hbWUiLCJvcGVyYXRvciI6IiRlcSIsInZhbHVlIjoiSm9obiJ9fSwiX3Jvb3RfOjEiOnsicGFyZW50SWQiOiJfcm9vdF8iLCJub2RlQ29udGVudCI6eyJzdWJqZWN0IjoiYWdlIiwib3BlcmF0b3IiOiIkZ3QiLCJ2YWx1ZSI6MTh9fSwiX3Jvb3RfOjIiOnsibm9kZVR5cGUiOiJzdWJ0cmVlIiwibm9kZUNvbnRlbnQiOnsib3BlcmF0b3IiOiIkYW5kIn0sInBhcmVudElkIjoiX3Jvb3RfIn0sIl9yb290XzoyOjAiOnsicGFyZW50SWQiOiJfcm9vdF86MiIsIm5vZGVDb250ZW50Ijp7InN1YmplY3QiOiJvYmplY3RJZCIsIm9wZXJhdG9yIjoiJGVxIiwidmFsdWUiOiIxMjMifX0sIl9yb290XzoyOjEiOnsicGFyZW50SWQiOiJfcm9vdF86MiIsIm5vZGVDb250ZW50Ijp7InN1YmplY3QiOiJ0eXBlIiwib3BlcmF0b3IiOiIkZXEiLCJ2YWx1ZSI6IlBlcnNvbiJ9fX0="
+  }
+}

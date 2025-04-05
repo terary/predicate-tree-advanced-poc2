@@ -1,0 +1,1370 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>AbstractTree | predicate-tree-advanced-poc</title>
+	<meta name="description" content="Documentation for predicate-tree-advanced-poc">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">predicate-tree-advanced-poc</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">predicate-tree-advanced-poc</a>
+				</li>
+				<li>
+					<a href="AbstractTree.html">AbstractTree</a>
+				</li>
+			</ul>
+			<h1>Class AbstractTree&lt;T&gt;</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">AbstractTree</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a>
+							</li>
+							<li>
+								<a href="AbstractDirectedGraph.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractDirectedGraph</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter"><a href="AbstractTree.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="AbstractTree.html#EmptyNode" class="tsd-kind-icon">Empty<wbr>Node</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="AbstractTree.html#SHOULD_INCLUDE_SUBTREES" class="tsd-kind-icon">SHOULD_<wbr>INCLUDE_<wbr>SUBTREES</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="AbstractTree.html#SubtreeNodeTypeName" class="tsd-kind-icon">Subtree<wbr>Node<wbr>Type<wbr>Name</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="AbstractTree.html#rootNodeId" class="tsd-kind-icon">root<wbr>Node<wbr>Id</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#appendChildNodeWithContent" class="tsd-kind-icon">append<wbr>Child<wbr>Node<wbr>With<wbr>Content</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#appendTreeAt" class="tsd-kind-icon">append<wbr>Tree<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#cloneAt" class="tsd-kind-icon">clone<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#countDescendantsOf" class="tsd-kind-icon">count<wbr>Descendants<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#countGreatestDepthOf" class="tsd-kind-icon">count<wbr>Greatest<wbr>Depth<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#countLeavesOf" class="tsd-kind-icon">count<wbr>Leaves<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#countTotalNodes" class="tsd-kind-icon">count<wbr>Total<wbr>Nodes</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getChildContentAt" class="tsd-kind-icon">get<wbr>Child<wbr>Content<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getChildrenContentOf" class="tsd-kind-icon">get<wbr>Children<wbr>Content<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getChildrenNodeIdsOf" class="tsd-kind-icon">get<wbr>Children<wbr>Node<wbr>Ids<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getCountTotalNodes" class="tsd-kind-icon">get<wbr>Count<wbr>Total<wbr>Nodes</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getDescendantContentOf" class="tsd-kind-icon">get<wbr>Descendant<wbr>Content<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getDescendantNodeIds" class="tsd-kind-icon">get<wbr>Descendant<wbr>Node<wbr>Ids</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getNodeIdsWithNodeContent" class="tsd-kind-icon">get<wbr>Node<wbr>Ids<wbr>With<wbr>Node<wbr>Content</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getParentNodeId" class="tsd-kind-icon">get<wbr>Parent<wbr>Node<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getSiblingIds" class="tsd-kind-icon">get<wbr>Sibling<wbr>Ids</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getSubtreeIdsAt" class="tsd-kind-icon">get<wbr>Subtree<wbr>Ids<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getTreeContentAt" class="tsd-kind-icon">get<wbr>Tree<wbr>Content<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#getTreeNodeIdsAt" class="tsd-kind-icon">get<wbr>Tree<wbr>Node<wbr>Ids<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#isBranch" class="tsd-kind-icon">is<wbr>Branch</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#isLeaf" class="tsd-kind-icon">is<wbr>Leaf</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#isRoot" class="tsd-kind-icon">is<wbr>Root</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#isSubtree" class="tsd-kind-icon">is<wbr>Subtree</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#move" class="tsd-kind-icon">move</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#moveChildren" class="tsd-kind-icon">move<wbr>Children</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#removeNodeAt" class="tsd-kind-icon">remove<wbr>Node<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#removeSingleNode" class="tsd-kind-icon">remove<wbr>Single<wbr>Node</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#replaceNodeContent" class="tsd-kind-icon">replace<wbr>Node<wbr>Content</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#toPojoAt" class="tsd-kind-icon">to<wbr>Pojo<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#visitAllAt" class="tsd-kind-icon">visit<wbr>All<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AbstractTree.html#visitLeavesOf" class="tsd-kind-icon">visit<wbr>Leaves<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="AbstractTree.html#obfuscatePojo" class="tsd-kind-icon">obfuscate<wbr>Pojo</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Abstract<wbr>Tree&lt;T&gt;<span class="tsd-signature-symbol">(</span>rootNodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, nodeContent<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AbstractTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L38">src/DirectedGraph/AbstractTree/AbstractTree.ts:38</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>rootNodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;_root_&quot;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeContent: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="AbstractTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="EmptyNode" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> Empty<wbr>Node</h3>
+					<div class="tsd-signature tsd-kind-icon">Empty<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L27">src/DirectedGraph/AbstractTree/AbstractTree.ts:27</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="SHOULD_INCLUDE_SUBTREES" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> SHOULD_<wbr>INCLUDE_<wbr>SUBTREES</h3>
+					<div class="tsd-signature tsd-kind-icon">SHOULD_<wbr>INCLUDE_<wbr>SUBTREES<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L29">src/DirectedGraph/AbstractTree/AbstractTree.ts:29</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="SubtreeNodeTypeName" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> Subtree<wbr>Node<wbr>Type<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">Subtree<wbr>Node<wbr>Type<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;subtree&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L28">src/DirectedGraph/AbstractTree/AbstractTree.ts:28</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="rootNodeId" class="tsd-anchor"></a>
+					<h3>root<wbr>Node<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> rootNodeId<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#rootNodeId">rootNodeId</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L559">src/DirectedGraph/AbstractTree/AbstractTree.ts:559</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="appendChildNodeWithContent" class="tsd-anchor"></a>
+					<h3>append<wbr>Child<wbr>Node<wbr>With<wbr>Content</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">append<wbr>Child<wbr>Node<wbr>With<wbr>Content<span class="tsd-signature-symbol">(</span>parentNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, nodeContent<span class="tsd-signature-symbol">: </span><a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#appendChildNodeWithContent">appendChildNodeWithContent</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L58">src/DirectedGraph/AbstractTree/AbstractTree.ts:58</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Appends a new child node with the provided content to a specified parent node.</p>
+								</div>
+								<p>This method creates a new node in the tree, assigns it the given content,
+									and makes it a child of the specified parent node. The node ID is automatically
+								generated using the parent node ID and an incrementing counter.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the parent node to which the new child node will be attached</p>
+									</div>
+								</li>
+								<li>
+									<h5>nodeContent: <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The content to be stored in the new child node. Can be null, an object of type T, or another ITree<T></p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>The ID of the newly created child node</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="appendTreeAt" class="tsd-anchor"></a>
+					<h3>append<wbr>Tree<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">append<wbr>Tree<wbr>At<span class="tsd-signature-symbol">(</span>targetNodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, sourceTree<span class="tsd-signature-symbol">: </span><a href="AbstractTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, sourceBranchRootNodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#TFromToMap" class="tsd-signature-type" data-tsd-kind="Type alias">TFromToMap</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#appendTreeAt">appendTreeAt</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L74">src/DirectedGraph/AbstractTree/AbstractTree.ts:74</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>targetNodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+								<li>
+									<h5>sourceTree: <a href="AbstractTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> sourceBranchRootNodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TFromToMap" class="tsd-signature-type" data-tsd-kind="Type alias">TFromToMap</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="cloneAt" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> clone<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">clone<wbr>At<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L119">src/DirectedGraph/AbstractTree/AbstractTree.ts:119</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="countDescendantsOf" class="tsd-anchor"></a>
+					<h3>count<wbr>Descendants<wbr>Of</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">count<wbr>Descendants<wbr>Of<span class="tsd-signature-symbol">(</span>parentNodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#countDescendantsOf">countDescendantsOf</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L121">src/DirectedGraph/AbstractTree/AbstractTree.ts:121</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>parentNodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="countGreatestDepthOf" class="tsd-anchor"></a>
+					<h3>count<wbr>Greatest<wbr>Depth<wbr>Of</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">count<wbr>Greatest<wbr>Depth<wbr>Of<span class="tsd-signature-symbol">(</span>subTreeRootNodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#countGreatestDepthOf">countGreatestDepthOf</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L136">src/DirectedGraph/AbstractTree/AbstractTree.ts:136</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns greatest distance between nodeId and furthest leaf.
+										If node is leaf returns 1.
+										Hence depth:
+										sub-root | child | grandchild
+									1      2          3</p>
+									<ul>
+										<li>same philosophy as length</li>
+									</ul>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>subTreeRootNodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>greatest depth of given node and its furthest leaf.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="countLeavesOf" class="tsd-anchor"></a>
+					<h3>count<wbr>Leaves<wbr>Of</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">count<wbr>Leaves<wbr>Of<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#countLeavesOf">countLeavesOf</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L156">src/DirectedGraph/AbstractTree/AbstractTree.ts:156</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="countTotalNodes" class="tsd-anchor"></a>
+					<h3>count<wbr>Total<wbr>Nodes</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">count<wbr>Total<wbr>Nodes<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, shouldIncludeSubtrees<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#countTotalNodes">countTotalNodes</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L163">src/DirectedGraph/AbstractTree/AbstractTree.ts:163</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+								<li>
+									<h5>shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getChildContentAt" class="tsd-anchor"></a>
+					<h3>get<wbr>Child<wbr>Content<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Child<wbr>Content<wbr>At<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getChildContentAt">getChildContentAt</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L221">src/DirectedGraph/AbstractTree/AbstractTree.ts:221</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getChildrenContentOf" class="tsd-anchor"></a>
+					<h3>get<wbr>Children<wbr>Content<wbr>Of</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Children<wbr>Content<wbr>Of<span class="tsd-signature-symbol">(</span>parentNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, shouldIncludeSubtrees<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getChildrenContentOf">getChildrenContentOf</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L293">src/DirectedGraph/AbstractTree/AbstractTree.ts:293</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getChildrenNodeIdsOf" class="tsd-anchor"></a>
+					<h3>get<wbr>Children<wbr>Node<wbr>Ids<wbr>Of</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Children<wbr>Node<wbr>Ids<wbr>Of<span class="tsd-signature-symbol">(</span>parentNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, shouldIncludeSubtrees<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getChildrenNodeIdsOf">getChildrenNodeIdsOf</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L252">src/DirectedGraph/AbstractTree/AbstractTree.ts:252</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getCountTotalNodes" class="tsd-anchor"></a>
+					<h3>get<wbr>Count<wbr>Total<wbr>Nodes</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Count<wbr>Total<wbr>Nodes<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L276">src/DirectedGraph/AbstractTree/AbstractTree.ts:276</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getDescendantContentOf" class="tsd-anchor"></a>
+					<h3>get<wbr>Descendant<wbr>Content<wbr>Of</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Descendant<wbr>Content<wbr>Of<span class="tsd-signature-symbol">(</span>parentNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, shouldIncludeSubtrees<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getDescendantContentOf">getDescendantContentOf</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L304">src/DirectedGraph/AbstractTree/AbstractTree.ts:304</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getDescendantNodeIds" class="tsd-anchor"></a>
+					<h3>get<wbr>Descendant<wbr>Node<wbr>Ids</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Descendant<wbr>Node<wbr>Ids<span class="tsd-signature-symbol">(</span>parentNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, shouldIncludeSubtrees<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getDescendantNodeIds">getDescendantNodeIds</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L336">src/DirectedGraph/AbstractTree/AbstractTree.ts:336</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getNodeIdsWithNodeContent" class="tsd-anchor"></a>
+					<h3>get<wbr>Node<wbr>Ids<wbr>With<wbr>Node<wbr>Content</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Node<wbr>Ids<wbr>With<wbr>Node<wbr>Content<span class="tsd-signature-symbol">(</span>matcherFn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>nodeContent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span>, shouldIncludeSubtrees<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getNodeIdsWithNodeContent">getNodeIdsWithNodeContent</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L237">src/DirectedGraph/AbstractTree/AbstractTree.ts:237</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>matcherFn: <span class="tsd-signature-symbol">(</span>nodeContent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-signature">
+											<ul class="tsd-signatures tsd-kind-type-literal">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>nodeContent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>nodeContent: <span class="tsd-signature-type">T</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getParentNodeId" class="tsd-anchor"></a>
+					<h3>get<wbr>Parent<wbr>Node<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Parent<wbr>Node<wbr>Id<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getParentNodeId">getParentNodeId</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L369">src/DirectedGraph/AbstractTree/AbstractTree.ts:369</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getSiblingIds" class="tsd-anchor"></a>
+					<h3>get<wbr>Sibling<wbr>Ids</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Sibling<wbr>Ids<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getSiblingIds">getSiblingIds</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L399">src/DirectedGraph/AbstractTree/AbstractTree.ts:399</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getSubtreeIdsAt" class="tsd-anchor"></a>
+					<h3>get<wbr>Subtree<wbr>Ids<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Subtree<wbr>Ids<wbr>At<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getSubtreeIdsAt">getSubtreeIdsAt</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L418">src/DirectedGraph/AbstractTree/AbstractTree.ts:418</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getTreeContentAt" class="tsd-anchor"></a>
+					<h3>get<wbr>Tree<wbr>Content<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Tree<wbr>Content<wbr>At<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, shouldIncludeSubtrees<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getTreeContentAt">getTreeContentAt</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L426">src/DirectedGraph/AbstractTree/AbstractTree.ts:426</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+								<li>
+									<h5>shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getTreeNodeIdsAt" class="tsd-anchor"></a>
+					<h3>get<wbr>Tree<wbr>Node<wbr>Ids<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Tree<wbr>Node<wbr>Ids<wbr>At<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#getTreeNodeIdsAt">getTreeNodeIdsAt</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L441">src/DirectedGraph/AbstractTree/AbstractTree.ts:441</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isBranch" class="tsd-anchor"></a>
+					<h3>is<wbr>Branch</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Branch<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#isBranch">isBranch</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L452">src/DirectedGraph/AbstractTree/AbstractTree.ts:452</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isLeaf" class="tsd-anchor"></a>
+					<h3>is<wbr>Leaf</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Leaf<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#isLeaf">isLeaf</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L456">src/DirectedGraph/AbstractTree/AbstractTree.ts:456</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isRoot" class="tsd-anchor"></a>
+					<h3>is<wbr>Root</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Root<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#isRoot">isRoot</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L464">src/DirectedGraph/AbstractTree/AbstractTree.ts:464</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isSubtree" class="tsd-anchor"></a>
+					<h3>is<wbr>Subtree</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Subtree<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#isSubtree">isSubtree</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L468">src/DirectedGraph/AbstractTree/AbstractTree.ts:468</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="move" class="tsd-anchor"></a>
+					<h3>move</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">move<span class="tsd-signature-symbol">(</span>sourceNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, targetNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#move">move</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L478">src/DirectedGraph/AbstractTree/AbstractTree.ts:478</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>sourceNode becomes child of targetNode
+									children of sourceNode become grandchildren of target</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>sourceNodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>targetNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="moveChildren" class="tsd-anchor"></a>
+					<h3>move<wbr>Children</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">move<wbr>Children<span class="tsd-signature-symbol">(</span>sourceNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, targetNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#moveChildren">moveChildren</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L503">src/DirectedGraph/AbstractTree/AbstractTree.ts:503</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>children of sourceNode become children of targetNode.
+									sourceNode becomes childless</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>sourceNodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>targetNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="removeNodeAt" class="tsd-anchor"></a>
+					<h3>remove<wbr>Node<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Node<wbr>At<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#removeNodeAt">removeNodeAt</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L527">src/DirectedGraph/AbstractTree/AbstractTree.ts:527</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="removeSingleNode" class="tsd-anchor"></a>
+					<h3>remove<wbr>Single<wbr>Node</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Single<wbr>Node<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L537">src/DirectedGraph/AbstractTree/AbstractTree.ts:537</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="replaceNodeContent" class="tsd-anchor"></a>
+					<h3>replace<wbr>Node<wbr>Content</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">replace<wbr>Node<wbr>Content<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, nodeContent<span class="tsd-signature-symbol">: </span><a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#replaceNodeContent">replaceNodeContent</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L541">src/DirectedGraph/AbstractTree/AbstractTree.ts:541</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>nodeContent: <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="toPojoAt" class="tsd-anchor"></a>
+					<h3>to<wbr>Pojo<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Pojo<wbr>At<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, transformer<span class="tsd-signature-symbol">?: </span>&lt;T&gt;<span class="tsd-signature-symbol">(</span>nodeContent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../modules.html#TNodePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TNodePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#toPojoAt">toPojoAt</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L648">src/DirectedGraph/AbstractTree/AbstractTree.ts:648</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> transformer: &lt;T&gt;<span class="tsd-signature-symbol">(</span>nodeContent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../modules.html#TNodePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TNodePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-signature">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-has-type-parameter">
+												<li class="tsd-signature tsd-kind-icon">&lt;T&gt;<span class="tsd-signature-symbol">(</span>nodeContent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#TNodePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TNodePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-type-parameters-title">Type parameters</h4>
+													<ul class="tsd-type-parameters">
+														<li>
+															<h4>T</h4>
+														</li>
+													</ul>
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>nodeContent: <span class="tsd-signature-type">T</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <a href="../modules.html#TNodePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TNodePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="visitAllAt" class="tsd-anchor"></a>
+					<h3>visit<wbr>All<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">visit<wbr>All<wbr>At<span class="tsd-signature-symbol">(</span>visitor<span class="tsd-signature-symbol">: </span><a href="../interfaces/ITreeVisitor.html" class="tsd-signature-type" data-tsd-kind="Interface">ITreeVisitor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, nodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#visitAllAt">visitAllAt</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L567">src/DirectedGraph/AbstractTree/AbstractTree.ts:567</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>visitor: <a href="../interfaces/ITreeVisitor.html" class="tsd-signature-type" data-tsd-kind="Interface">ITreeVisitor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="visitLeavesOf" class="tsd-anchor"></a>
+					<h3>visit<wbr>Leaves<wbr>Of</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">visit<wbr>Leaves<wbr>Of<span class="tsd-signature-symbol">(</span>visitor<span class="tsd-signature-symbol">: </span><a href="../interfaces/ITreeVisitor.html" class="tsd-signature-type" data-tsd-kind="Interface">ITreeVisitor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, nodeId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/ITree.html">ITree</a>.<a href="../interfaces/ITree.html#visitLeavesOf">visitLeavesOf</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L598">src/DirectedGraph/AbstractTree/AbstractTree.ts:598</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>visitor: <a href="../interfaces/ITreeVisitor.html" class="tsd-signature-type" data-tsd-kind="Interface">ITreeVisitor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+					<a name="obfuscatePojo" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> obfuscate<wbr>Pojo</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">obfuscate<wbr>Pojo&lt;P&gt;<span class="tsd-signature-symbol">(</span>pojo<span class="tsd-signature-symbol">: </span><a href="../modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/AbstractTree/AbstractTree.ts#L628">src/DirectedGraph/AbstractTree/AbstractTree.ts:628</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>P</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pojo: <a href="../modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="AbstractDirectedGraph.html" class="tsd-kind-icon">Abstract<wbr>Directed<wbr>Graph</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="AbstractExpressionTree.html" class="tsd-kind-icon">Abstract<wbr>Expression<wbr>Tree</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="AbstractObfuscatedExpressionTree.html" class="tsd-kind-icon">Abstract<wbr>Obfuscated<wbr>Expression<wbr>Tree</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-has-type-parameter">
+						<a href="AbstractTree.html" class="tsd-kind-icon">Abstract<wbr>Tree</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+								<a href="AbstractTree.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="AbstractTree.html#EmptyNode" class="tsd-kind-icon">Empty<wbr>Node</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="AbstractTree.html#SHOULD_INCLUDE_SUBTREES" class="tsd-kind-icon">SHOULD_<wbr>INCLUDE_<wbr>SUBTREES</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="AbstractTree.html#SubtreeNodeTypeName" class="tsd-kind-icon">Subtree<wbr>Node<wbr>Type<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="AbstractTree.html#rootNodeId" class="tsd-kind-icon">root<wbr>Node<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#appendChildNodeWithContent" class="tsd-kind-icon">append<wbr>Child<wbr>Node<wbr>With<wbr>Content</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#appendTreeAt" class="tsd-kind-icon">append<wbr>Tree<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#cloneAt" class="tsd-kind-icon">clone<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#countDescendantsOf" class="tsd-kind-icon">count<wbr>Descendants<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#countGreatestDepthOf" class="tsd-kind-icon">count<wbr>Greatest<wbr>Depth<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#countLeavesOf" class="tsd-kind-icon">count<wbr>Leaves<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#countTotalNodes" class="tsd-kind-icon">count<wbr>Total<wbr>Nodes</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getChildContentAt" class="tsd-kind-icon">get<wbr>Child<wbr>Content<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getChildrenContentOf" class="tsd-kind-icon">get<wbr>Children<wbr>Content<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getChildrenNodeIdsOf" class="tsd-kind-icon">get<wbr>Children<wbr>Node<wbr>Ids<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getCountTotalNodes" class="tsd-kind-icon">get<wbr>Count<wbr>Total<wbr>Nodes</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getDescendantContentOf" class="tsd-kind-icon">get<wbr>Descendant<wbr>Content<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getDescendantNodeIds" class="tsd-kind-icon">get<wbr>Descendant<wbr>Node<wbr>Ids</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getNodeIdsWithNodeContent" class="tsd-kind-icon">get<wbr>Node<wbr>Ids<wbr>With<wbr>Node<wbr>Content</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getParentNodeId" class="tsd-kind-icon">get<wbr>Parent<wbr>Node<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getSiblingIds" class="tsd-kind-icon">get<wbr>Sibling<wbr>Ids</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getSubtreeIdsAt" class="tsd-kind-icon">get<wbr>Subtree<wbr>Ids<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getTreeContentAt" class="tsd-kind-icon">get<wbr>Tree<wbr>Content<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#getTreeNodeIdsAt" class="tsd-kind-icon">get<wbr>Tree<wbr>Node<wbr>Ids<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#isBranch" class="tsd-kind-icon">is<wbr>Branch</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#isLeaf" class="tsd-kind-icon">is<wbr>Leaf</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#isRoot" class="tsd-kind-icon">is<wbr>Root</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#isSubtree" class="tsd-kind-icon">is<wbr>Subtree</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#move" class="tsd-kind-icon">move</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#moveChildren" class="tsd-kind-icon">move<wbr>Children</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#removeNodeAt" class="tsd-kind-icon">remove<wbr>Node<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#removeSingleNode" class="tsd-kind-icon">remove<wbr>Single<wbr>Node</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#replaceNodeContent" class="tsd-kind-icon">replace<wbr>Node<wbr>Content</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#toPojoAt" class="tsd-kind-icon">to<wbr>Pojo<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#visitAllAt" class="tsd-kind-icon">visit<wbr>All<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AbstractTree.html#visitLeavesOf" class="tsd-kind-icon">visit<wbr>Leaves<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+								<a href="AbstractTree.html#obfuscatePojo" class="tsd-kind-icon">obfuscate<wbr>Pojo</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-class">
+						<a href="DirectedGraphError.html" class="tsd-kind-icon">Directed<wbr>Graph<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="GenericExpressionTree.html" class="tsd-kind-icon">Generic<wbr>Expression<wbr>Tree</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="Incrementor.html" class="tsd-kind-icon">Incrementor</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="KeyStore.html" class="tsd-kind-icon">Key<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="KeyStoreError.html" class="tsd-kind-icon">Key<wbr>Store<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/IDirectedGraph.html" class="tsd-kind-icon">IDirected<wbr>Graph</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/IExpressionTree.html" class="tsd-kind-icon">IExpression<wbr>Tree</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/ITree.html" class="tsd-kind-icon">ITree</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="../interfaces/ITreeVisitor.html" class="tsd-kind-icon">ITree<wbr>Visitor</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../modules.html#TFromToMap" class="tsd-kind-icon">TFrom<wbr>ToMap</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="../modules.html#TGenericNodeContent" class="tsd-kind-icon">TGeneric<wbr>Node<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="../modules.html#TGenericNodeType" class="tsd-kind-icon">TGeneric<wbr>Node<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="../modules.html#TNodePojo" class="tsd-kind-icon">TNode<wbr>Pojo</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="../modules.html#TTreePojo" class="tsd-kind-icon">TTree<wbr>Pojo</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#isUUIDv4" class="tsd-kind-icon">isUUIDv4</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

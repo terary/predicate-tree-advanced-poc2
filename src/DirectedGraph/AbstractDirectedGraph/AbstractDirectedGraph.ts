@@ -33,19 +33,20 @@ abstract class AbstractDirectedGraph<T extends object>
   }
 
   /**
-   * The tricky bit here is that the  subtree._rootNodeId
-   * must be the same as parent's node.nodeId
-   * @param targetParentNodeId
-   * @returns
+   * Creates a subtree at the specified node.
+   * The subtree will have the same node id as its parent node in the original tree.
+   * @param parentNodeId - The ID of the node where the subtree will be created
+   * @returns The created subtree with proper typing
    */
-  public createSubtreeAt<Q>(parentNodeId: string): IDirectedGraph<T> {
-    // can we rethink this.  Is there a better way?
-    // @ts-ignore - not newable, I believe ok in javascript, not ok in typescript
-    const subtree = new this.constructor(parentNodeId) as typeof this;
+  public createSubtreeAt(parentNodeId: string): IDirectedGraph<T> {
+    // Create a new instance of the same class
+    const subtree = new (this.constructor as new (
+      rootNodeId?: string
+    ) => AbstractDirectedGraph<T>)(parentNodeId);
 
     const subtreeParentNodeId = super.appendChildNodeWithContent(
       parentNodeId,
-      subtree as unknown as ITree<T>
+      subtree as ITree<T>
     );
 
     subtree._rootNodeId = subtreeParentNodeId;
@@ -78,7 +79,12 @@ abstract class AbstractDirectedGraph<T extends object>
     ) as TTreePojo<T>;
 
     Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
-      if (nodePojo.nodeType === AbstractTree.SubtreeNodeTypeName) {
+      if (
+        nodePojo &&
+        nodePojo.nodeType && // 'startswith' may lead to issues and it will create 'default' subtree
+        nodePojo.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName)
+      ) {
+        // if (nodePojo.nodeType === AbstractTree.SubtreeNodeTypeName) {
         const subtree = dTree.createSubtreeAt(treeParentId);
         subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
         AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
@@ -110,31 +116,31 @@ abstract class AbstractDirectedGraph<T extends object>
     return fromToMap;
   };
 
-  protected static getNewInstance<P extends object>(
+  protected static getNewInstance<T extends object>(
     rootSeedNodeId?: string,
-    nodeContent?: P
+    nodeContent?: T
   ) {
-    class GenericDirectedGraph extends AbstractDirectedGraph<P> {}
+    // class GenericDirectedGraph extends AbstractDirectedGraph<P> {}
 
     return new GenericDirectedGraph(rootSeedNodeId, nodeContent);
   }
 
-  public static fromPojo<P extends object, Q>(
-    srcPojoTree: TTreePojo<P>,
+  public static fromPojo<T extends object, Q>(
+    srcPojoTree: TTreePojo<T>,
     transform: (
-      nodeContent: TNodePojo<P>
-    ) => TGenericNodeContent<P> = defaultFromPojoTransform
+      nodeContent: TNodePojo<T>
+    ) => TGenericNodeContent<T> = defaultFromPojoTransform
     //    TreeClassBuilder?: (rootNodeId?: string, nodeContent?: P) => IDirectedGraph<P>
-  ): IDirectedGraph<P> {
-    return AbstractDirectedGraph.#fromPojo<P, Q>(srcPojoTree, transform);
+  ): IDirectedGraph<T> {
+    return AbstractDirectedGraph.#fromPojo<T, Q>(srcPojoTree, transform);
   }
 
-  static #fromPojo<P extends object, Q>(
-    srcPojoTree: TTreePojo<P>,
+  static #fromPojo<T extends object, Q>(
+    srcPojoTree: TTreePojo<T>,
     transform: (
-      nodeContent: TNodePojo<P>
-    ) => TGenericNodeContent<P> = defaultFromPojoTransform // branch coverage complains
-  ): IDirectedGraph<P> {
+      nodeContent: TNodePojo<T>
+    ) => TGenericNodeContent<T> = defaultFromPojoTransform // branch coverage complains
+  ): IDirectedGraph<T> {
     const pojoObject = { ...srcPojoTree };
 
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
@@ -142,12 +148,12 @@ abstract class AbstractDirectedGraph<T extends object>
     const rootNodePojo = pojoObject[rootNodeId];
 
     // const dTree = TreeClassBuilder("root"); // as AbstractTree<T>;
-    const dTree = AbstractDirectedGraph.getNewInstance<P>();
+    const dTree = AbstractDirectedGraph.getNewInstance<T>();
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 
     AbstractDirectedGraph.#fromPojoTraverseAndExtractChildren(
-      (dTree as AbstractDirectedGraph<P>)._rootNodeId,
+      (dTree as AbstractDirectedGraph<T>)._rootNodeId,
       rootNodeId,
       dTree,
       pojoObject,
@@ -162,8 +168,8 @@ abstract class AbstractDirectedGraph<T extends object>
     return dTree;
   }
 }
-class GenericDirectedGraph<P extends object>
-  extends AbstractDirectedGraph<P>
-  implements IDirectedGraph<P> {}
+class GenericDirectedGraph<T extends object>
+  extends AbstractDirectedGraph<T>
+  implements IDirectedGraph<T> {}
 
-export { AbstractDirectedGraph };
+export { AbstractDirectedGraph, GenericDirectedGraph };

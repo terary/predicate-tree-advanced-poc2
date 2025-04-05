@@ -115,7 +115,9 @@ const makePojo3Children9Grandchildren = () => {
   };
 };
 
-const pojo2Children1subtree9leaves_content: { [nodeId: string]: TPredicateTypes } = {};
+const pojo2Children1subtree9leaves_content: {
+  [nodeId: string]: TPredicateTypes;
+} = {};
 pojo2Children1subtree9leaves_content["root"] = { operator: "$and" };
 pojo2Children1subtree9leaves_content["child_0"] = { operator: "$or" };
 pojo2Children1subtree9leaves_content["child_1"] = { operator: "$or" };
@@ -168,7 +170,9 @@ pojo2Children1subtree9leaves_content["child_2_2"] = {
 // --------
 
 // const make3Children2Subtree3Children = (dTree: IExpressionTree<TPredicateTypes>) => {
-const make3Children2Subtree3Children = (dTree: ClassTestAbstractExpressionTree) => {
+const make3Children2Subtree3Children = (
+  dTree: ClassTestAbstractExpressionTree
+) => {
   const dTreeIds: { [id: string]: string } = {};
 
   dTree.replaceNodeContent(dTree.rootNodeId, originalWidgetsSubtree["root"]);
@@ -180,18 +184,28 @@ const make3Children2Subtree3Children = (dTree: ClassTestAbstractExpressionTree) 
     originalWidgetsSubtree["child_0"]
   );
   // const subtree0 = dTree.createSubtreeAt(dTreeIds["child_0"]);
-  const subtree0 = dTree.createSubtreeAt(dTree.rootNodeId) as ClassTestAbstractExpressionTree;
+  const subtree0 = dTree.createSubtreeAt(
+    dTree.rootNodeId
+  ) as ClassTestAbstractExpressionTree;
   dTreeIds["subtree0:root"] = subtree0.rootNodeId;
-  subtree0.replaceNodeContent(subtree0.rootNodeId, originalWidgetsSubtree["subtree0:root"]);
+  subtree0.replaceNodeContent(
+    subtree0.rootNodeId,
+    originalWidgetsSubtree["subtree0:root"]
+  );
 
   dTreeIds["child_1"] = dTree._appendChildNodeWithContent(
     dTree.rootNodeId,
     originalWidgetsSubtree["child_1"]
   );
 
-  const subtree1 = dTree.createSubtreeAt(dTree.rootNodeId) as ClassTestAbstractExpressionTree;
+  const subtree1 = dTree.createSubtreeAt(
+    dTree.rootNodeId
+  ) as ClassTestAbstractExpressionTree;
   dTreeIds["subtree1:root"] = subtree1.rootNodeId;
-  subtree1.replaceNodeContent(subtree1.rootNodeId, originalWidgetsSubtree["subtree1:root"]);
+  subtree1.replaceNodeContent(
+    subtree1.rootNodeId,
+    originalWidgetsSubtree["subtree1:root"]
+  );
 
   dTreeIds["child_2"] = dTree._appendChildNodeWithContent(
     dTree.rootNodeId,
@@ -507,7 +521,7 @@ const makePojo2Children1subtree9leaves = () => {
     },
     child_1: {
       parentId: "root",
-      nodeType: "subtree",
+      nodeType: "subtree:subtree",
       nodeContent: content["child_1"],
     },
     child_2: {

@@ -19,7 +19,10 @@ const parseCandidateRootNodeId = <T>(treeObject: TTreePojo<T>): string[] => {
  * @param pojo TTreePojo<T>
  * @returns TTreePojo<T>
  */
-const extractChildrenNodes = <T>(pojoParentId: string, pojo: TTreePojo<T>): TTreePojo<T> => {
+const extractChildrenNodes = <T>(
+  pojoParentId: string,
+  pojo: TTreePojo<T>
+): TTreePojo<T> => {
   const children: TTreePojo<T> = {};
   Object.entries(pojo).forEach(([nodeKey, node]) => {
     if (node.parentId === pojoParentId) {
@@ -36,7 +39,7 @@ const parseUniquePojoRootKeyOrThrow = <T>(pojoDocument: TTreePojo<T>) => {
 
   if (candidateRootIds.length !== 1) {
     throw new DirectedGraphError(
-      `No distinct root found. There must exist on and only one nodeId === {parentId}. Found ${candidateRootIds.length}.`
+      `No distinct root found. There must exist one and only one nodeId === {parentId}. Found ${candidateRootIds.length}.`
     );
   }
 

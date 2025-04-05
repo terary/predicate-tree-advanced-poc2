@@ -10,7 +10,12 @@ import type {
   TTreePojo,
 } from "../types";
 import { ExpressionTreeError } from "./ExpressionTreeError";
-import { AbstractExpressionFactory } from "../../../example-usage/predicate-tree/AbstractExpressionFactory";
+import {
+  createAndJunction,
+  createOrJunction,
+  IJunctionOperator,
+  JunctionOperatorType,
+} from "./types";
 
 const defaultFromPojoTransform = <P extends object>(
   nodeContent: TNodePojo<P>
@@ -43,7 +48,7 @@ abstract class AbstractExpressionTree<P extends object>
   ): IAppendChildNodeIds {
     return this.appendContentWithJunction(
       parentNodeId,
-      { operator: "$and" } as unknown as P,
+      createAndJunction() as unknown as P,
       nodeContent
     );
   }
@@ -56,13 +61,25 @@ abstract class AbstractExpressionTree<P extends object>
    */
   abstract createSubtreeAt(nodeId: string): IExpressionTree<P>;
 
-  protected defaultJunction(nodeId: string): P {
-    // the leaf node at nodeId is being converted to a junction (branch)
-    // need to return the best option for junction operator (&&, ||, '$or', ...)
+  /**
+   * Creates a subtree of the specified type
+   * This method is used when importing trees from POJO to create subtrees of the appropriate type
+   * The default implementation creates a generic subtree, but subclasses can override
+   * this method to create specialized subtree types based on the node type.
+   * @param nodeId The ID of the parent node where the subtree should be attached
+   * @param nodeType The type of the subtree (e.g., "subtree:NotTree")
+   * @returns A new subtree of the appropriate type
+   */
+  createSubtreeOfTypeAt(nodeId: string, nodeType: string): IExpressionTree<P> {
+    // Default implementation simply creates a generic subtree
+    // Subclasses should override this to create specialized subtree types
+    return this.createSubtreeAt(nodeId);
+  }
 
-    // This needs to be abstract and defined in subclasses
-    // @ts-ignore
-    return { operator: "$and" };
+  protected defaultJunction(nodeId: string): P {
+    // Create a default junction operator with $and
+    // This should be properly typed in subclasses that extend this class
+    return createAndJunction() as unknown as P;
   }
 
   appendTreeAt(
@@ -101,7 +118,7 @@ abstract class AbstractExpressionTree<P extends object>
   ): IAppendChildNodeIds {
     return this.appendContentWithJunction(
       parentNodeId,
-      { operator: "$or" } as unknown as P,
+      createOrJunction() as unknown as P,
       nodeContent
     );
   }
@@ -209,6 +226,25 @@ abstract class AbstractExpressionTree<P extends object>
   ): IExpressionTree<P> {
     const pojoObject = { ...srcPojoTree };
 
+    // WHAT THE THE FUCK - THIS IS A COMPOSER HACK
+    // THAT HAS CAUSED MANY PROBLEMS.
+    //  Super Classes shall have no knowledge of the subclasses (rookie mistake)
+    //
+    //
+    // Ensure correct nodeType format for all subtree nodes
+    // Object.keys(pojoObject).forEach((key) => {
+    //   const node = pojoObject[key];
+    //   if (node.nodeType && node.nodeType === "subtree") {
+    //     // Check if this is a NotTree by examining the content
+    //     const nodeContent = node.nodeContent as any;
+    //     if (nodeContent && nodeContent._meta && nodeContent._meta.negated) {
+    //       // This is likely a NotTree subtree
+    //       pojoObject[key].nodeType =
+    //         AbstractTree.SubtreeNodeTypeName + ":NotTree";
+    //     }
+    //   }
+    // });
+
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
     const rootNodePojo = pojoObject[rootNodeId];
     const dTree = AbstractExpressionTree.getNewInstance<P>("root");
@@ -246,13 +282,19 @@ abstract class AbstractExpressionTree<P extends object>
     ) as TTreePojo<T>;
 
     Object.entries(childrenNodes).forEach(([nodeId, nodePojo]) => {
-      if (nodePojo.nodeType === AbstractTree.SubtreeNodeTypeName) {
-        const subtree = dTree.createSubtreeAt(treeParentId);
+      if (
+        nodePojo.nodeType &&
+        nodePojo.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName + ":")
+      ) {
+        // Use createSubtreeOfTypeAt instead of createSubtreeAt
+        // This allows subclasses to create the appropriate subtree type
+        const subtree = dTree.createSubtreeOfTypeAt(
+          treeParentId,
+          nodePojo.nodeType
+        );
         subtree.replaceNodeContent(subtree.rootNodeId, transformer(nodePojo));
         AbstractExpressionTree.#fromPojoTraverseAndExtractChildren(
-          // (dTree as AbstractExpressionTree<T>)._rootNodeId,
           subtree.rootNodeId,
-          // subtree.AbstractExpressionTree,
           nodeId,
           subtree as IExpressionTree<T>,
           treeObject,
@@ -349,6 +391,32 @@ abstract class AbstractExpressionTree<P extends object>
       }
     });
   }
+
+  public toPojoAt(
+    nodeId: string = this.rootNodeId,
+    transformer?: (nodeContent: any) => any
+  ): TTreePojo<P> {
+    // Get the base POJO from AbstractTree
+    const pojo = super.toPojoAt(nodeId, transformer);
+
+    // Cursor HACK - CAUSES MANY PROBLEMS
+    // Left here because cursor likes to do the same stupid shit, over and over (like humans)
+    // Maybe if cursor can see it's already attempted this stupid shit, it will
+    // Find all subtree nodes and ensure proper nodeType format
+    // Object.entries(pojo).forEach(([key, node]) => {
+    //   if (
+    //     node.nodeType &&
+    //     !node.nodeType.startsWith(AbstractTree.SubtreeNodeTypeName + ":")
+    //   ) {
+    //     // This is a subtree with an incorrect nodeType format
+    //     // Format it as "subtree:ActualType"
+    //     pojo[key].nodeType =
+    //       AbstractTree.SubtreeNodeTypeName + ":" + node.nodeType;
+    //   }
+    // });
+
+    return pojo;
+  }
 }
 
 class GenericExpressionTree<
@@ -375,6 +443,15 @@ class GenericExpressionTree<
     subtree._incrementor = this._incrementor;
 
     return subtree as IExpressionTree<Q>;
+  }
+
+  createSubtreeOfTypeAt<Q extends T>(
+    targetNodeId: string,
+    nodeType: string
+  ): IExpressionTree<Q> {
+    // Generic implementation just creates a normal subtree
+    // Specialized subclasses will override this with more specific behavior
+    return this.createSubtreeAt<Q>(targetNodeId);
   }
 }
 

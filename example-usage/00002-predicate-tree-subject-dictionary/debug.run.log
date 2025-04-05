@@ -1,0 +1,329 @@
+Running all predicate tree examples...
+
+
+===============================================
+  DEMONSTRATING VALIDATION ERRORS
+===============================================
+
+❌ Testing invalid predicates (expected to fail):
+
+Test 1: Using subject not defined in dictionary
+  ❌ Error correctly thrown: Unknown subject: customer.notInDictionary
+
+Test 2: Using number value for string field
+  ❌ Error correctly thrown: Value for customer.name must be a string
+
+Test 3: Using string value for number field
+  ❌ Error correctly thrown: Value for customer.age must be a number
+
+Test 4: Using string value for boolean field
+  ❌ Error correctly thrown: Value for customer.isActive must be a boolean
+
+Test 5: Using invalid date format
+  ❌ Error correctly thrown: Value for customer.createdAt must be a valid date
+
+✅ All validation errors were correctly caught!
+
+===============================================
+  BUILDING A PREDICATE TREE WITH VALIDATION
+===============================================
+
+Creating a predicate tree with subject dictionary validation...
+✅ Root node created with $and operator
+✅ Added valid customer.name predicate
+✅ Added valid customer.age predicate
+✅ Added valid customer.isActive predicate
+✅ Added valid customer.createdAt predicate
+✅ Added $or junction node
+✅ Added valid product.price predicate
+✅ Added valid product.name predicate
+
+✅ Successfully built a valid predicate tree!
+
+===============================================
+  PREDICATE TREE WITH SUBJECT DICTIONARY
+===============================================
+
+===============================================
+  EXPORTED POJO STRUCTURE
+===============================================
+{
+  "_root_": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "_root_:0": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.name",
+      "operator": "contains",
+      "value": "Smith"
+    }
+  },
+  "_root_:1": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.age",
+      "operator": "greaterThan",
+      "value": 30
+    }
+  },
+  "_root_:2": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.isActive",
+      "operator": "equals",
+      "value": true
+    }
+  },
+  "_root_:3": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.createdAt",
+      "operator": "after",
+      "value": "2023-01-01"
+    }
+  },
+  "_root_:4": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$or"
+    }
+  },
+  "_root_:4:5": {
+    "parentId": "_root_:4",
+    "nodeContent": {
+      "subject": "product.price",
+      "operator": "lessThan",
+      "value": 100
+    }
+  },
+  "_root_:4:6": {
+    "parentId": "_root_:4",
+    "nodeContent": {
+      "subject": "product.name",
+      "operator": "startsWith",
+      "value": "Premium"
+    }
+  }
+}
+
+===============================================
+  EXAMPLE COMPLETE
+===============================================
+
+
+
+===============================================
+  PREDICATE TREE WITHOUT SUBJECT DICTIONARY
+===============================================
+
+Building a predicate tree without subject dictionary validation...
+✅ Root node created with $and operator
+✅ Added customer.name predicate
+✅ Added customer.age predicate
+✅ Added customer.isActive predicate
+✅ Added customer.createdAt predicate
+✅ Added $or junction node
+✅ Added product.price predicate
+✅ Added product.name predicate
+
+✅ Successfully built a predicate tree without validation!
+
+===============================================
+  DEMONSTRATING NON-VALIDATED TREE FLEXIBILITY
+===============================================
+✅ Added node with mixed types (no validation error)
+✅ Added node with non-existent subject (no validation error)
+✅ Added node with invalid operator (no validation error)
+
+⚠️ Without validation, these errors would only appear at runtime
+
+===============================================
+  TESTING PREDICATE TREE
+===============================================
+
+✅ Tree converted to POJO with 11 nodes
+✅ Structure matches expected format
+
+Tree can now be used for matching, exporting, etc.
+
+===============================================
+  EXPORTED POJO STRUCTURE
+===============================================
+{
+  "_root_": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "_root_:0": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.name",
+      "operator": "contains",
+      "value": "Smith"
+    }
+  },
+  "_root_:1": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.age",
+      "operator": "greaterThan",
+      "value": 30
+    }
+  },
+  "_root_:2": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.isActive",
+      "operator": "equals",
+      "value": true
+    }
+  },
+  "_root_:3": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.createdAt",
+      "operator": "after",
+      "value": "2023-01-01"
+    }
+  },
+  "_root_:4": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$or"
+    }
+  },
+  "_root_:4:5": {
+    "parentId": "_root_:4",
+    "nodeContent": {
+      "subject": "product.price",
+      "operator": "lessThan",
+      "value": 100
+    }
+  },
+  "_root_:4:6": {
+    "parentId": "_root_:4",
+    "nodeContent": {
+      "subject": "product.name",
+      "operator": "startsWith",
+      "value": "Premium"
+    }
+  },
+  "_root_:7": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.age",
+      "operator": "equals",
+      "value": "thirty"
+    }
+  },
+  "_root_:8": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.nonExistentField",
+      "operator": "equals",
+      "value": "anything goes"
+    }
+  },
+  "_root_:9": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.name",
+      "operator": "invalidOperator",
+      "value": "test"
+    }
+  }
+}
+
+===============================================
+  EXAMPLE COMPLETE
+===============================================
+
+
+
+===============================================
+  PREDICATE TREE WITH MULTILINGUAL LABELS
+===============================================
+Building a predicate tree with labelled subject dictionary...
+✅ Root node created with $and operator
+✅ Added customer.name predicate
+✅ Added customer.age predicate
+✅ Added $or junction node
+✅ Added product.price predicate
+✅ Added product.category predicate
+
+===============================================
+  EXPORTED POJO STRUCTURE
+===============================================
+{
+  "_root_": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$and"
+    }
+  },
+  "_root_:0": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.name",
+      "operator": "contains",
+      "value": "Smith"
+    }
+  },
+  "_root_:1": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "subject": "customer.age",
+      "operator": "greaterThan",
+      "value": 30
+    }
+  },
+  "_root_:2": {
+    "parentId": "_root_",
+    "nodeContent": {
+      "operator": "$or"
+    }
+  },
+  "_root_:2:3": {
+    "parentId": "_root_:2",
+    "nodeContent": {
+      "subject": "product.price",
+      "operator": "lessThan",
+      "value": 100
+    }
+  },
+  "_root_:2:4": {
+    "parentId": "_root_:2",
+    "nodeContent": {
+      "subject": "product.category",
+      "operator": "equals",
+      "value": "Electronics"
+    }
+  }
+}
+
+===============================================
+  VALIDATING TREE STRUCTURE
+===============================================
+✅ Verified root node has $and operator
+✅ Verified root node has 3 children as expected
+✅ Verified all root children have correct content
+✅ Verified OR junction has 2 children as expected
+✅ Verified all OR junction children have correct content
+
+✅ VALIDATION SUCCESSFUL: Tree structure matches expected format
+
+===============================================
+  HUMAN-READABLE DESCRIPTIONS
+===============================================
+
+English Description:
+➡️ Customer Name contains "Smith" AND Age is greater than 30 AND (Price is less than 100 OR Category equals "Electronics")
+
+Spanish Description:
+➡️ Nombre del Cliente contiene "Smith" Y Edad es mayor que 30 Y (Precio es menor que 100 O Categoría es igual a "Electronics")
