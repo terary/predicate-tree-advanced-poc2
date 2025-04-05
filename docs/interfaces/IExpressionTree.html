@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IExpressionTree | predicate-tree-advanced-poc</title>
-	<meta name="description" content="Documentation for predicate-tree-advanced-poc">
+	<title>IExpressionTree | Predicate Tree Library - v2.0.2-beta.0</title>
+	<meta name="description" content="Documentation for Predicate Tree Library - v2.0.2-beta.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">predicate-tree-advanced-poc</a>
+					<a href="../index.html" class="title">Predicate Tree Library - v2.0.2-beta.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">predicate-tree-advanced-poc</a>
+					<a href="../modules.html">Predicate Tree Library - v2.0.2-beta.0</a>
 				</li>
 				<li>
 					<a href="IExpressionTree.html">IExpressionTree</a>
@@ -65,11 +65,25 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Interface for an expression tree that extends the basic tree</p>
+					</div>
+					<p>An expression tree is specialized for representing logical or mathematical expressions
+					with junction nodes (AND, OR, etc.) connecting operands.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
 						<h4>P<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The type of node content in the expression tree</p>
+							</div>
+						</div>
 					</li>
 				</ul>
 			</section>
@@ -114,6 +128,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IExpressionTree.html#countLeavesOf" class="tsd-kind-icon">count<wbr>Leaves<wbr>Of</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IExpressionTree.html#countTotalNodes" class="tsd-kind-icon">count<wbr>Total<wbr>Nodes</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="IExpressionTree.html#createSubtreeAt" class="tsd-kind-icon">create<wbr>Subtree<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="IExpressionTree.html#createSubtreeOfTypeAt" class="tsd-kind-icon">create<wbr>Subtree<wbr>OfType<wbr>At</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IExpressionTree.html#getChildContentAt" class="tsd-kind-icon">get<wbr>Child<wbr>Content<wbr>At</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IExpressionTree.html#getChildrenContentOf" class="tsd-kind-icon">get<wbr>Children<wbr>Content<wbr>Of</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IExpressionTree.html#getChildrenNodeIdsOf" class="tsd-kind-icon">get<wbr>Children<wbr>Node<wbr>Ids<wbr>Of</a></li>
@@ -151,9 +166,14 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#rootNodeId">rootNodeId</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L31">src/DirectedGraph/ITree.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L44">src/DirectedGraph/ITree.ts:44</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The ID of the root node of the tree</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -169,19 +189,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#appendChildNodeWithContent">appendChildNodeWithContent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L33">src/DirectedGraph/ITree.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L53">src/DirectedGraph/ITree.ts:53</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Appends a child node with the provided content to a specified parent node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>treeParentId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the parent node</p>
+									</div>
 								</li>
 								<li>
 									<h5>nodeContent: <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The content to be stored in the new node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>The ID of the newly created node</p>
 						</li>
 					</ul>
 				</section>
@@ -195,22 +227,37 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L120">src/DirectedGraph/ITree.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L334">src/DirectedGraph/ITree.ts:334</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Appends a new node with a junction connecting it to the parent</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the parent node</p>
+									</div>
 								</li>
 								<li>
 									<h5>junctionContent: <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The content for the junction node</p>
+									</div>
 								</li>
 								<li>
 									<h5>nodeContent: <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The content for the new node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IAppendChildNodeIds</span></h4>
+							<p>Object containing IDs of created nodes</p>
 						</li>
 					</ul>
 				</section>
@@ -225,22 +272,37 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#appendTreeAt">appendTreeAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L38">src/DirectedGraph/ITree.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L66">src/DirectedGraph/ITree.ts:66</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Appends a source tree as a subtree at the specified target node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>targetNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the target node where the tree will be appended</p>
+									</div>
 								</li>
 								<li>
 									<h5>sourceTree: <a href="ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The source tree to append</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> sourceBranchRootNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of a branch in the source tree to append</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TFromToMap" class="tsd-signature-type" data-tsd-kind="Type alias">TFromToMap</a><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Mapping from source node IDs to target node IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -254,16 +316,25 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L125">src/DirectedGraph/ITree.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L346">src/DirectedGraph/ITree.ts:346</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a clone of the tree or subtree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node to clone from</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="IExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Interface">IExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A new expression tree</p>
 						</li>
 					</ul>
 				</section>
@@ -278,16 +349,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#countDescendantsOf">countDescendantsOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L47">src/DirectedGraph/ITree.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L94">src/DirectedGraph/ITree.ts:94</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Counts the number of descendants of the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node to start counting from (defaults to root)</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>The number of descendants</p>
 						</li>
 					</ul>
 				</section>
@@ -302,16 +382,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#countGreatestDepthOf">countGreatestDepthOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L45">src/DirectedGraph/ITree.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L78">src/DirectedGraph/ITree.ts:78</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Counts the greatest depth from the specified node to its furthest leaf</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node to start counting from (defaults to root)</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>The greatest depth</p>
 						</li>
 					</ul>
 				</section>
@@ -326,16 +415,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#countLeavesOf">countLeavesOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L46">src/DirectedGraph/ITree.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L86">src/DirectedGraph/ITree.ts:86</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Counts the number of leaf nodes under the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node to start counting from (defaults to root)</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>The number of leaf nodes</p>
 						</li>
 					</ul>
 				</section>
@@ -350,19 +448,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#countTotalNodes">countTotalNodes</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L48">src/DirectedGraph/ITree.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L103">src/DirectedGraph/ITree.ts:103</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Counts the total number of nodes in the tree or subtree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node to start counting from (defaults to root)</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether to include nodes in subtrees</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>The total number of nodes</p>
 						</li>
 					</ul>
 				</section>
@@ -376,16 +486,64 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L126">src/DirectedGraph/ITree.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L354">src/DirectedGraph/ITree.ts:354</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a subtree at the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node where the subtree will be created</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="IExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Interface">IExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>The created subtree</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="createSubtreeOfTypeAt" class="tsd-anchor"></a>
+					<h3>create<wbr>Subtree<wbr>OfType<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Subtree<wbr>OfType<wbr>At<span class="tsd-signature-symbol">(</span>nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, nodeType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="IExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Interface">IExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L364">src/DirectedGraph/ITree.ts:364</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a subtree of the specified type at the given node
+									This method is used when importing trees from POJO to create subtrees of the appropriate type</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node where the subtree will be created</p>
+									</div>
+								</li>
+								<li>
+									<h5>nodeType: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of the subtree (e.g., &quot;subtree:NotTree&quot;)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="IExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Interface">IExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>The created subtree of the appropriate type</p>
 						</li>
 					</ul>
 				</section>
@@ -400,16 +558,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getChildContentAt">getChildContentAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L58">src/DirectedGraph/ITree.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L111">src/DirectedGraph/ITree.ts:111</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the content of the node with the specified ID</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>The content of the node</p>
 						</li>
 					</ul>
 				</section>
@@ -424,19 +591,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getChildrenContentOf">getChildrenContentOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L60">src/DirectedGraph/ITree.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L120">src/DirectedGraph/ITree.ts:120</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the content of all children of the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the parent node</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether to include nodes in subtrees</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of node contents</p>
 						</li>
 					</ul>
 				</section>
@@ -451,19 +630,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getChildrenNodeIdsOf">getChildrenNodeIdsOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L64">src/DirectedGraph/ITree.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L132">src/DirectedGraph/ITree.ts:132</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the IDs of all children of the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the parent node</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether to include nodes in subtrees</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of node IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -478,19 +669,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getDescendantContentOf">getDescendantContentOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L73">src/DirectedGraph/ITree.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L156">src/DirectedGraph/ITree.ts:156</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the content of all descendants of the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the parent node</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether to include nodes in subtrees</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of node contents</p>
 						</li>
 					</ul>
 				</section>
@@ -505,19 +708,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getDescendantNodeIds">getDescendantNodeIds</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L77">src/DirectedGraph/ITree.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L168">src/DirectedGraph/ITree.ts:168</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the IDs of all descendants of the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>parentNodeKey: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the parent node</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether to include nodes in subtrees</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of node IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -531,19 +746,31 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L127">src/DirectedGraph/ITree.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L373">src/DirectedGraph/ITree.ts:373</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a new instance of the expression tree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> rootSeed: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional seed for the root node ID</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeContent: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">P</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional content for the root node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="IExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Interface">IExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A new expression tree</p>
 						</li>
 					</ul>
 				</section>
@@ -558,13 +785,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getNodeIdsWithNodeContent">getNodeIdsWithNodeContent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L68">src/DirectedGraph/ITree.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L144">src/DirectedGraph/ITree.ts:144</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the IDs of nodes whose content matches the provided function</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>matcherFn: <span class="tsd-signature-symbol">(</span>nodeContent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Function that returns true for matching nodes</p>
+									</div>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-signature">
 											<ul class="tsd-signatures tsd-kind-type-literal">
@@ -586,9 +821,13 @@
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether to include nodes in subtrees</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of matching node IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -603,16 +842,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getParentNodeId">getParentNodeId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L82">src/DirectedGraph/ITree.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L179">src/DirectedGraph/ITree.ts:179</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the ID of the parent of the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>The ID of the parent node</p>
 						</li>
 					</ul>
 				</section>
@@ -627,16 +875,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getSiblingIds">getSiblingIds</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L83">src/DirectedGraph/ITree.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L187">src/DirectedGraph/ITree.ts:187</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the IDs of siblings of the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of sibling node IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -651,16 +908,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getSubtreeIdsAt">getSubtreeIdsAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L84">src/DirectedGraph/ITree.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L195">src/DirectedGraph/ITree.ts:195</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the IDs of subtrees at the specified node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node (defaults to root)</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of subtree IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -675,19 +941,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getTreeContentAt">getTreeContentAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L85">src/DirectedGraph/ITree.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L204">src/DirectedGraph/ITree.ts:204</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the content of all nodes in the tree or subtree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node (defaults to root)</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> shouldIncludeSubtrees: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether to include nodes in subtrees</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of node contents</p>
 						</li>
 					</ul>
 				</section>
@@ -702,16 +980,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#getTreeNodeIdsAt">getTreeNodeIdsAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L92">src/DirectedGraph/ITree.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L215">src/DirectedGraph/ITree.ts:215</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the IDs of all nodes in the tree or subtree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of node IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -726,16 +1013,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#isBranch">isBranch</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L94">src/DirectedGraph/ITree.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L223">src/DirectedGraph/ITree.ts:223</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if the specified node is a branch (has children)</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if the node is a branch</p>
 						</li>
 					</ul>
 				</section>
@@ -750,16 +1046,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#isLeaf">isLeaf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L95">src/DirectedGraph/ITree.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L231">src/DirectedGraph/ITree.ts:231</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if the specified node is a leaf (has no children)</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if the node is a leaf</p>
 						</li>
 					</ul>
 				</section>
@@ -774,16 +1079,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#isRoot">isRoot</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L96">src/DirectedGraph/ITree.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L239">src/DirectedGraph/ITree.ts:239</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if the specified node is the root of the tree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if the node is the root</p>
 						</li>
 					</ul>
 				</section>
@@ -798,16 +1112,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#isSubtree">isSubtree</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L97">src/DirectedGraph/ITree.ts:97</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L247">src/DirectedGraph/ITree.ts:247</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if the specified node is a subtree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if the node is a subtree</p>
 						</li>
 					</ul>
 				</section>
@@ -822,19 +1145,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#move">move</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L100">src/DirectedGraph/ITree.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L256">src/DirectedGraph/ITree.ts:256</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Moves a node to a new parent</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>srcNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node to move</p>
+									</div>
 								</li>
 								<li>
 									<h5>targetNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the new parent</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TFromToMap" class="tsd-signature-type" data-tsd-kind="Type alias">TFromToMap</a><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Mapping from source node IDs to target node IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -849,19 +1184,31 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#moveChildren">moveChildren</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L101">src/DirectedGraph/ITree.ts:101</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L265">src/DirectedGraph/ITree.ts:265</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Moves all children of a node to a new parent</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>srcNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node whose children to move</p>
+									</div>
 								</li>
 								<li>
 									<h5>targetNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the new parent</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TFromToMap" class="tsd-signature-type" data-tsd-kind="Type alias">TFromToMap</a><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Mapping from source node IDs to target node IDs</p>
 						</li>
 					</ul>
 				</section>
@@ -876,13 +1223,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#removeNodeAt">removeNodeAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L104">src/DirectedGraph/ITree.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L280">src/DirectedGraph/ITree.ts:280</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes a node and its descendants</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node to remove</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -900,16 +1255,27 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#replaceNodeContent">replaceNodeContent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L103">src/DirectedGraph/ITree.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L273">src/DirectedGraph/ITree.ts:273</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Replaces the content of a node</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
 								</li>
 								<li>
 									<h5>nodeContent: <a href="../modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The new content</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -927,16 +1293,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#toPojoAt">toPojoAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L106">src/DirectedGraph/ITree.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L288">src/DirectedGraph/ITree.ts:288</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Converts the tree or subtree to a plain object</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node (defaults to root)</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>Plain object representation of the tree</p>
 						</li>
 					</ul>
 				</section>
@@ -951,19 +1326,33 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#visitAllAt">visitAllAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L107">src/DirectedGraph/ITree.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L297">src/DirectedGraph/ITree.ts:297</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Visits all nodes in the tree or subtree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>visitor: <a href="ITreeVisitor.html" class="tsd-signature-type" data-tsd-kind="Interface">ITreeVisitor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The visitor to apply to each node</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node to start from (defaults to root)</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> parentNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the parent node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -981,19 +1370,33 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ITree.html">ITree</a>.<a href="ITree.html#visitLeavesOf">visitLeavesOf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/b6dbba0/src/DirectedGraph/ITree.ts#L112">src/DirectedGraph/ITree.ts:112</a></li>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/ITree.ts#L310">src/DirectedGraph/ITree.ts:310</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Visits all leaf nodes in the tree or subtree</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>visitor: <a href="ITreeVisitor.html" class="tsd-signature-type" data-tsd-kind="Interface">ITreeVisitor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The visitor to apply to each leaf node</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the node to start from (defaults to root)</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> parentNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional ID of the parent node</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1076,6 +1479,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="IExpressionTree.html#createSubtreeAt" class="tsd-kind-icon">create<wbr>Subtree<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="IExpressionTree.html#createSubtreeOfTypeAt" class="tsd-kind-icon">create<wbr>Subtree<wbr>OfType<wbr>At</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
 								<a href="IExpressionTree.html#getChildContentAt" class="tsd-kind-icon">get<wbr>Child<wbr>Content<wbr>At</a>
@@ -1171,8 +1577,32 @@
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="../modules.html#TTreePojo" class="tsd-kind-icon">TTree<wbr>Pojo</a>
 					</li>
+					<li class=" tsd-kind-property">
+						<a href="../modules.html#treeUtils" class="tsd-kind-icon">tree<wbr>Utils</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="../modules.html#cloneTree" class="tsd-kind-icon">clone<wbr>Tree</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="../modules.html#cloneTreeFrom" class="tsd-kind-icon">clone<wbr>Tree<wbr>From</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="../modules.html#createSubtree" class="tsd-kind-icon">create<wbr>Subtree</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="../modules.html#getNodeContent" class="tsd-kind-icon">get<wbr>Node<wbr>Content</a>
+					</li>
 					<li class=" tsd-kind-function">
 						<a href="../modules.html#isUUIDv4" class="tsd-kind-icon">isUUIDv4</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="../modules.html#reRootTree" class="tsd-kind-icon">re<wbr>Root<wbr>Tree</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="../modules.html#treeToPojo" class="tsd-kind-icon">tree<wbr>ToPojo</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="../modules.html#treeToPojoAt" class="tsd-kind-icon">tree<wbr>ToPojo<wbr>At</a>
 					</li>
 				</ul>
 			</nav>
@@ -1184,19 +1614,21 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
 			</ul>
 		</div>
 	</div>

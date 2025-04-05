@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "name": "Predicate Tree Library",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "readme": "README.docs.md",
+  "theme": "default"
+} 

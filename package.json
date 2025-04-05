@@ -21,7 +21,7 @@
     "build": "rm -rf dist && NODE_ENV=production  tsc -p tsconfig.dist.json",
     "gabby:build": "npm run build",
     "gabby:pack": "npm run build && npm pack",
-    "docs:api": "typedoc --entryPoints src/index.ts --excludePrivate --excludeProtected --out docs",
+    "docs": "typedoc --options typedoc.json",
     "audit:high": "npm audit | grep -E 'Severity: (high|critical)' -A5 -B1"
   },
   "keywords": [
@@ -48,6 +48,8 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
+    "gh-pages": "^6.1.0",
+    "http-server": "^14.1.1",
     "node-ts": "^5.1.1",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.4",

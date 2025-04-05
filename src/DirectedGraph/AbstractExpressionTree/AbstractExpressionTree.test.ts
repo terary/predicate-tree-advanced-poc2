@@ -1,19 +1,17 @@
+import type { TGenericNodeContent, TTreePojo } from "../types";
 import {
   AbstractExpressionTree,
   GenericExpressionTree,
 } from "./AbstractExpressionTree";
-import type {
-  TNodePojo,
-  TTreePojo,
-  TGenericNodeContent,
-  TGenericNodeType,
-} from "../types";
 
+import { AbstractExpressionFactory } from "../../test-resources/predicate-tree/AbstractExpressionFactory";
+import { AbstractTree } from "../AbstractTree/AbstractTree";
+import { DirectedGraphError } from "../DirectedGraphError";
+import { IExpressionTree } from "../ITree";
 import {
   make3Children2Subtree3Children,
-  makePojo3Children9Grandchildren,
-  makePojo3Children,
   makePojo2Children1subtree9leaves,
+  makePojo3Children9Grandchildren,
   SortPredicateTest,
 } from "./test-utilities";
 import type {
@@ -23,10 +21,6 @@ import type {
   TPredicateNodeTypes,
   TPredicateTypes,
 } from "./types";
-import { AbstractTree } from "../AbstractTree/AbstractTree";
-import { DirectedGraphError } from "../DirectedGraphError";
-import { AbstractExpressionFactory } from "../../test-resources/predicate-tree/AbstractExpressionFactory";
-import { IExpressionTree } from "../ITree";
 `
 the single subtree node idea wont work, nor do we want it to work.
 

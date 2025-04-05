@@ -1,34 +1,26 @@
-import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
-import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpressionTree";
 import { isUUIDv4 } from "../../common/utilities/isFunctions";
-import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
-import { IExpressionTree, ITreeVisitor } from "../ITree";
+import { AbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree";
+import { ClassTestAbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree.test";
+import {
+  make3Children2Subtree3Children,
+  makePojo3Children9Grandchildren,
+  SortPredicateTest,
+} from "../AbstractExpressionTree/test-utilities";
+import { IExpressionTree } from "../ITree";
 import { TGenericNodeContent, TTreePojo } from "../types";
+import { AbstractObfuscatedExpressionTree } from "./AbstractObfuscatedExpressionTree";
 import {
   filterPojoContent,
   filterPojoContentPredicateValues,
-  WidgetSort,
-  // make3Children2Subtree3Children,
 } from "./test-helpers/test.utilities";
-import {
-  makePojo3Children9Grandchildren,
-  make3Children2Subtree3Children,
-  SortPredicateTest,
-} from "../AbstractExpressionTree/test-utilities";
-import { ClassTestAbstractExpressionTree } from "../AbstractExpressionTree/AbstractExpressionTree.test";
+import { TestTreeVisitor } from "./test-helpers/TestTreeVisitor";
 
 //const exposedTree = new
 //
 
-import type {
-  TJunction,
-  TOperand,
-  TOperandOperators,
-  TPredicateNodeTypes,
-  TPredicateTypes,
-} from "../AbstractExpressionTree/types";
-import { ObfuscatedError } from "./ObfuscatedError";
 import { AbstractExpressionFactory } from "../../test-resources/predicate-tree/AbstractExpressionFactory";
+import type { TPredicateNodeTypes } from "../AbstractExpressionTree/types";
+import { ObfuscatedError } from "./ObfuscatedError";
 
 class TestWidget {
   private _name: string;
