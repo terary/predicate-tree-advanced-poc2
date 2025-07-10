@@ -1,4 +1,4 @@
-# Predicate Tree with Subject Dictionary Example
+# Predicate Tree with Subject Dictionary Example (00002-predicate-tree-subject-dictionary)
 
 This example demonstrates how to use a subject dictionary with predicate trees to validate predicates against a schema.
 
@@ -94,6 +94,9 @@ try {
 ## Running This Example
 
 ```bash
+# Navigate to the example directory
+cd 00002-predicate-tree-subject-dictionary
+
 # Install dependencies
 npm install
 

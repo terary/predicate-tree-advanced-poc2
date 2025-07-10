@@ -32,6 +32,7 @@ import {
   filterPojoContent,
   WidgetType,
 } from "./test.utilities";
+import { AbstractTree } from "../AbstractTree";
 class TestAbstractDirectedGraph extends AbstractDirectedGraph<WidgetType> {
   public getParentNodeId(nodeId: string): string {
     return super.getParentNodeId(nodeId);

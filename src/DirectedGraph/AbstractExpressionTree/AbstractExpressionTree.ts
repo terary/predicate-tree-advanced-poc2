@@ -247,7 +247,8 @@ abstract class AbstractExpressionTree<P extends object>
 
     const rootNodeId = treeUtils.parseUniquePojoRootKeyOrThrow(pojoObject);
     const rootNodePojo = pojoObject[rootNodeId];
-    const dTree = AbstractExpressionTree.getNewInstance<P>("root");
+    //    const dTree = AbstractExpressionTree.getNewInstance<P>("root");
+    const dTree = AbstractExpressionTree.getNewInstance<P>(rootNodeId);
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 

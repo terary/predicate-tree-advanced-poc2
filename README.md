@@ -3,6 +3,8 @@
 Project Documentation Site:
 https://terary.github.io/predicate-tree-advanced-poc2/
 
+## Overview
+
 Content and Structure are completely independent
 There should not be mix-use of keys
 
@@ -17,6 +19,31 @@ Because Tree structure operations and content operations are different the inter
 should have different operations for both, getContentAt, getNodeAt
 
 - because the structure knows nothing about content, predicateTree constructor will need to accept isJunction function
+
+## Documentation
+
+This library comes with comprehensive documentation:
+
+- **API Documentation**: Visit our [documentation site](https://terary.github.io/predicate-tree-advanced-poc2/)
+- **Examples**: See the [example-usage](./example-usage) directory for complete examples
+- **Type-Safe API**: We provide a `SafeAPI` namespace to address TypeScript inheritance limitations
+
+### Generating Documentation Locally
+
+To generate and view the documentation locally:
+
+```bash
+# Install dependencies
+npm install
+
+# Generate HTML documentation
+npm run docs:html
+
+# Serve documentation locally
+npm run docs:serve
+```
+
+## Core Functionality
 
 - minimum functionality
   moveChild

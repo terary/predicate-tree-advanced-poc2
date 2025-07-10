@@ -1,0 +1,31 @@
+
+> predicate-tree-advanced-poc@2.0.2-beta.0 docs:api
+> typedoc --options typedoc.json
+
+[91mError: [0mThe plugin typedoc-plugin-markdown could not be loaded.
+[91mError: [0mError: Cannot find module 'typedoc-plugin-markdown'
+Require stack:
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/utils/plugins.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/utils/index.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/models/reflections/project.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/models/reflections/index.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/models/index.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/converter/context.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/converter/index.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/application.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/index.js
+- /mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/bin/typedoc
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1143:15)
+    at Module._load (node:internal/modules/cjs/loader:984:27)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at require (node:internal/modules/helpers:179:18)
+    at loadPlugins (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/utils/plugins.js:13:30)
+    at Application.bootstrap (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/dist/lib/application.js:163:33)
+    at Object.<anonymous> (/mypart/tmc/projects/predicate-tree-advanced-poc2/node_modules/typedoc/bin/typedoc:25:5)
+    at Module._compile (node:internal/modules/cjs/loader:1369:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1427:10)
+    at Module.load (node:internal/modules/cjs/loader:1206:32)
+[91mError: [0mTried to set an option (navigation) that was not declared.
+[91mError: [0mTried to set an option (visibilityFilters) that was not declared.
+[91mError: [0mTried to set an option (searchInComments) that was not declared.
+[91mError: [0mTried to set an option (githubPages) that was not declared.
