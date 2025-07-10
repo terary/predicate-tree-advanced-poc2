@@ -6,5 +6,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "readme": "README.docs.md",
-  "theme": "default"
+  "theme": "default",
+  "categorizeByGroup": true,
+  "sort": ["alphabetical"]
 } 

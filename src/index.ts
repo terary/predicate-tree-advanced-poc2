@@ -1,3 +1,22 @@
+/**
+ * # Predicate Tree Library
+ *
+ * This library provides a flexible and powerful implementation of expression trees
+ * for building predicate logic systems.
+ *
+ * ## Example Usage
+ *
+ * The library includes several examples in the `example-usage` directory:
+ *
+ * - **00001-simple-predicate-tree**: Basic usage with simple predicates
+ * - **00002-predicate-tree-subject-dictionary**: Using validation with a subject dictionary
+ * - **00003a-predicate-tree-subtrees, 00003b-predicate-tree-subtrees-object-identity**: Working with subtrees
+ * - **00004-predicate-tree-pojo-import-export**: Serialization with POJOs
+ * - **00005-anti-pattern**: Common patterns to avoid
+ *
+ * @packageDocumentation
+ */
+
 // Main tree implementations
 export {
   AbstractExpressionTree,
@@ -5,7 +24,10 @@ export {
 } from "./DirectedGraph/AbstractExpressionTree/AbstractExpressionTree";
 export { AbstractObfuscatedExpressionTree } from "./DirectedGraph/AbstractObfuscatedExpressionTree/AbstractObfuscatedExpressionTree";
 export { AbstractTree } from "./DirectedGraph/AbstractTree/AbstractTree";
-export { AbstractDirectedGraph } from "./DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph";
+export {
+  AbstractDirectedGraph,
+  GenericDirectedGraph,
+} from "./DirectedGraph/AbstractDirectedGraph/AbstractDirectedGraph";
 
 // Error types
 export { DirectedGraphError } from "./DirectedGraph/DirectedGraphError/DirectedGraphError";
@@ -32,7 +54,14 @@ export { isUUIDv4 } from "./common/utilities/isFunctions";
 export { Incrementor } from "./DirectedGraph/Incrementor/Incrementor";
 export { KeyStore } from "./DirectedGraph/keystore/KeyStore";
 export { KeyStoreError } from "./DirectedGraph/keystore/KeyStoreError";
+/**
+ * @deprecated - use pojoUtilities instead
+ * @see pojoUtilities
+ * @description - the name 'pojoUtilities' makes more sense because its purpose is to work
+ *  with pojo to build trees and not trees directly.
+ */
 export { default as treeUtils } from "./DirectedGraph/AbstractDirectedGraph/treeUtilities";
+export { default as pojoUtilities } from "./DirectedGraph/AbstractDirectedGraph/treeUtilities";
 
 // Import needed types for our SafeAPI namespace
 import {
@@ -56,6 +85,14 @@ import type {
  * This namespace contains helper functions that work around TypeScript inheritance
  * issues with static methods. Use these methods in client code instead of directly
  * calling static methods on the tree classes.
+ *
+ * ## Related Examples
+ *
+ * - **POJO Import/Export**: See `example-usage/00004-predicate-tree-pojo-import-export` for detailed examples
+ *   of how to use the SafeAPI to serialize and deserialize trees.
+ *
+ * - **Object Identity**: See `example-usage/00003b-predicate-tree-subtrees-object-identity` for examples of
+ *   maintaining object identity when using the SafeAPI.
  *
  * @example
  * ```typescript

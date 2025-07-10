@@ -1,4 +1,4 @@
-# Simple Predicate Tree Example
+# Simple Predicate Tree Example (00001-simple-predicate-tree)
 
 This example demonstrates the basic usage of the Predicate Tree library for creating and working with simple expression trees.
 
@@ -55,6 +55,9 @@ childIds.forEach((id) => {
 ## Running This Example
 
 ```bash
+# Navigate to the example directory
+cd 00001-simple-predicate-tree
+
 # Install dependencies
 npm install
 

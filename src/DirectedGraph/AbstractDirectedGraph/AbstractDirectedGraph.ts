@@ -148,7 +148,7 @@ abstract class AbstractDirectedGraph<T extends object>
     const rootNodePojo = pojoObject[rootNodeId];
 
     // const dTree = TreeClassBuilder("root"); // as AbstractTree<T>;
-    const dTree = AbstractDirectedGraph.getNewInstance<T>();
+    const dTree = AbstractDirectedGraph.getNewInstance<T>(rootNodeId);
     dTree.replaceNodeContent(dTree.rootNodeId, transform(rootNodePojo));
     delete pojoObject[rootNodeId];
 

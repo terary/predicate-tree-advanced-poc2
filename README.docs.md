@@ -21,7 +21,7 @@ The library is built around the following core concepts:
 
 ## Using the SafeAPI
 
-To avoid TypeScript inheritance issues, use the `SafeAPI` namespace provided by the library:
+To avoid TypeScript inheritance issues with static methods, use the `SafeAPI` namespace provided by the library:
 
 ```typescript
 import { SafeAPI } from "predicate-tree-advanced-poc";
@@ -65,7 +65,39 @@ The library provides several helper functions to work around TypeScript inherita
 - `treeToPojo()`: Convert a tree to a POJO
 - `treeToPojoAt()`: Convert a subtree to a POJO
 
-## Example Usage
+## Usage Examples
+
+The library includes several comprehensive examples that demonstrate different use cases and advanced features.
+
+### Example Categories
+
+The `example-usage` directory contains the following examples:
+
+1. **Simple Predicate Tree** (00001-simple-predicate-tree)
+
+   - Basic tree construction and manipulation
+   - Simple predicate evaluation
+
+2. **Subject Dictionary** (00002-predicate-tree-subject-dictionary)
+
+   - Using predicate trees with a subject dictionary for validation
+   - Type-checking predicates against a schema
+
+3. **Subtrees** (00003a-predicate-tree-subtrees, 00003b-predicate-tree-subtrees-object-identity)
+
+   - Working with nested subtrees
+   - Maintaining object identity across subtrees
+
+4. **POJO Import/Export** (00004-predicate-tree-pojo-import-export)
+
+   - Serializing and deserializing trees to/from POJOs
+   - Handling complex nested structures
+
+5. **Anti-Pattern Examples** (00005-anti-pattern)
+   - Common pitfalls to avoid
+   - Best practices for tree manipulation
+
+### Example Code Snippet
 
 Here's a complete example:
 
@@ -93,7 +125,21 @@ const pojo = treeToPojo(tree);
 const clonedTree = SafeAPI.createGenericTree(pojo);
 ```
 
+## Exploring the Examples
+
+To run the examples locally:
+
+1. Clone the repository
+2. Navigate to the example directory: `cd example-usage/00001-simple-predicate-tree`
+3. Run the example: `npm run index.ts`
+
+Each example includes:
+
+- A README.md with detailed explanations
+- Fully commented source code
+- Running examples that demonstrate key concepts
+
 ## Additional Resources
 
-- [GitHub Repository](https://github.com/terary/gabby-query-protocol-lib)
-- [Example Usage](https://github.com/terary/gabby-query-protocol-lib/tree/main/example-usage)
+- [GitHub Repository](https://github.com/terary/predicate-tree-advanced-poc2)
+- [Example Directory](https://github.com/terary/predicate-tree-advanced-poc2/tree/main/example-usage)

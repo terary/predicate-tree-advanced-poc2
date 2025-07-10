@@ -57,16 +57,32 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<a href="#predicate-tree-library" id="predicate-tree-library" style="color: inherit; text-decoration: none;">
+							<h1>Predicate Tree Library</h1>
+						</a>
+					</div>
+					<p>This library provides a flexible and powerful implementation of expression trees
+					for building predicate logic systems.</p>
+					<a href="#example-usage" id="example-usage" style="color: inherit; text-decoration: none;">
+						<h2>Example Usage</h2>
+					</a>
+					<p>The library includes several examples in the <code>example-usage</code> directory:</p>
+					<ul>
+						<li><strong>00001-simple-predicate-tree</strong>: Basic usage with simple predicates</li>
+						<li><strong>00002-predicate-tree-subject-dictionary</strong>: Using validation with a subject dictionary</li>
+						<li><strong>00003a-predicate-tree-subtrees, 00003b-predicate-tree-subtrees-object-identity</strong>: Working with subtrees</li>
+						<li><strong>00004-predicate-tree-pojo-import-export</strong>: Serialization with POJOs</li>
+						<li><strong>00005-anti-pattern</strong>: Common patterns to avoid</li>
+					</ul>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Namespaces</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-namespace"><a href="modules/SafeAPI.html" class="tsd-kind-icon">SafeAPI</a></li>
-							</ul>
-						</section>
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
@@ -91,6 +107,12 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
+							<h3>Namespaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-namespace"><a href="modules/SafeAPI.html" class="tsd-kind-icon">SafeAPI</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias"><a href="modules.html#TFromToMap" class="tsd-kind-icon">TFrom<wbr>ToMap</a></li>
@@ -98,12 +120,6 @@
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#TGenericNodeType" class="tsd-kind-icon">TGeneric<wbr>Node<wbr>Type</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#TNodePojo" class="tsd-kind-icon">TNode<wbr>Pojo</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#TTreePojo" class="tsd-kind-icon">TTree<wbr>Pojo</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property"><a href="modules.html#treeUtils" class="tsd-kind-icon">tree<wbr>Utils</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -119,6 +135,12 @@
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#treeToPojoAt" class="tsd-kind-icon">tree<wbr>ToPojo<wbr>At</a></li>
 							</ul>
 						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property"><a href="modules.html#treeUtils" class="tsd-kind-icon">tree<wbr>Utils</a></li>
+							</ul>
+						</section>
 					</div>
 				</section>
 			</section>
@@ -130,7 +152,7 @@
 					<div class="tsd-signature tsd-kind-icon">TFrom<wbr>ToMap<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/types.ts#L91">src/DirectedGraph/types.ts:91</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/DirectedGraph/types.ts#L91">src/DirectedGraph/types.ts:91</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -151,7 +173,7 @@
 					<div class="tsd-signature tsd-kind-icon">TGeneric<wbr>Node<wbr>Content&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/types.ts#L14">src/DirectedGraph/types.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/DirectedGraph/types.ts#L14">src/DirectedGraph/types.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -172,7 +194,7 @@
 					<div class="tsd-signature tsd-kind-icon">TGeneric<wbr>Node<wbr>Type&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>nodeContent<span class="tsd-signature-symbol">: </span><a href="modules.html#TGenericNodeContent" class="tsd-signature-type" data-tsd-kind="Type alias">TGenericNodeContent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/types.ts#L44">src/DirectedGraph/types.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/DirectedGraph/types.ts#L44">src/DirectedGraph/types.ts:44</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -196,7 +218,7 @@
 					<div class="tsd-signature tsd-kind-icon">TNode<wbr>Pojo&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>nodeContent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">; </span>nodeType<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>parentId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/types.ts#L86">src/DirectedGraph/types.ts:86</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/DirectedGraph/types.ts#L86">src/DirectedGraph/types.ts:86</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -226,7 +248,7 @@
 					<div class="tsd-signature tsd-kind-icon">TTree<wbr>Pojo&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/DirectedGraph/types.ts#L87">src/DirectedGraph/types.ts:87</a></li>
+							<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/DirectedGraph/types.ts#L87">src/DirectedGraph/types.ts:87</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -243,6 +265,436 @@
 							</li>
 						</ul>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="cloneTree" class="tsd-anchor"></a>
+					<h3>clone<wbr>Tree</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">clone<wbr>Tree&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/index.ts#L192">src/index.ts:192</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a clone of an entire tree (starting from the root node)</p>
+								</div>
+								<p>This function provides a type-safe way to clone a tree, preserving the
+								specific derived type of the tree.</p>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">();</span>
+<span style="color: #008000">// ... add nodes to tree ...</span>
+
+<span style="color: #008000">// Create a complete clone of the tree</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">clonedTree</span><span style="color: #000000"> = </span><span style="color: #795E26">cloneTree</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">);</span>
+</code></pre>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+								</li>
+								<li>
+									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The tree to clone</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TreeType</span></h4>
+							<p>A new tree instance of the same type</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="cloneTreeFrom" class="tsd-anchor"></a>
+					<h3>clone<wbr>Tree<wbr>From</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">clone<wbr>Tree<wbr>From&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/index.ts#L218">src/index.ts:218</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a clone of a tree starting at the specified node</p>
+								</div>
+								<p>This function provides a type-safe way to clone a subtree starting from
+								a specific node, preserving the specific derived type of the tree.</p>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">();</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">childNodeId</span><span style="color: #000000"> = </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #795E26">appendChildNodeWithContent</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">, { </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;test&quot;</span><span style="color: #000000"> });</span>
+
+<span style="color: #008000">// Create a clone starting from the child node</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">partialClone</span><span style="color: #000000"> = </span><span style="color: #795E26">cloneTreeFrom</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">childNodeId</span><span style="color: #000000">);</span>
+</code></pre>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+								</li>
+								<li>
+									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The tree to clone</p>
+									</div>
+								</li>
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node to start cloning from</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TreeType</span></h4>
+							<p>A new tree instance of the same type</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="createSubtree" class="tsd-anchor"></a>
+					<h3>create<wbr>Subtree</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Subtree&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, parentNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/index.ts#L274">src/index.ts:274</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a subtree at the specified node</p>
+								</div>
+								<p>This function provides a type-safe way to create a subtree at a specified node,
+								preserving the specific derived type of the tree.</p>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// Create a subtree at the root node</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">subtree</span><span style="color: #000000"> = </span><span style="color: #795E26">createSubtree</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">);</span>
+</code></pre>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+								</li>
+								<li>
+									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The parent tree</p>
+									</div>
+								</li>
+								<li>
+									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the parent node where the subtree will be created</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TreeType</span></h4>
+							<p>A new subtree instance</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="getNodeContent" class="tsd-anchor"></a>
+					<h3>get<wbr>Node<wbr>Content</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Node<wbr>Content&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/index.ts#L301">src/index.ts:301</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Safely gets the content of a node in the tree</p>
+								</div>
+								<p>This function provides a type-safe way to retrieve node content,
+								correctly typed as T rather than a more generic type.</p>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">&lt;</span><span style="color: #267F99">MyContentType</span><span style="color: #000000">&gt;();</span>
+<span style="color: #008000">// ... add nodes to tree ...</span>
+
+<span style="color: #008000">// Get the content of the root node</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">content</span><span style="color: #000000"> = </span><span style="color: #795E26">getNodeContent</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">);</span>
+<span style="color: #008000">// content is correctly typed as MyContentType</span>
+</code></pre>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+								</li>
+								<li>
+									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The tree to get content from</p>
+									</div>
+								</li>
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+							<p>The content of the node with correct typing</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="isUUIDv4" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> isUUIDv4</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">isUUIDv4<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/common/utilities/isFunctions.ts#L2">src/common/utilities/isFunctions.ts:2</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="reRootTree" class="tsd-anchor"></a>
+					<h3>re<wbr>Root<wbr>Tree</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">re<wbr>Root<wbr>Tree&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, sourceNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, newRootNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/index.ts#L245">src/index.ts:245</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Safely re-roots a tree at the specified node</p>
+								</div>
+								<p>This function provides a type-safe way to create a new tree with the
+								specified node as the new root, preserving the specific derived type of the tree.</p>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">();</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">childNodeId</span><span style="color: #000000"> = </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #795E26">appendChildNodeWithContent</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">, { </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;test&quot;</span><span style="color: #000000"> });</span>
+
+<span style="color: #008000">// Create a new tree with the child node as root</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">reRootedTree</span><span style="color: #000000"> = </span><span style="color: #795E26">reRootTree</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">childNodeId</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;new-root&quot;</span><span style="color: #000000">);</span>
+</code></pre>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+								</li>
+								<li>
+									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The tree to re-root</p>
+									</div>
+								</li>
+								<li>
+									<h5>sourceNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node to use as new root</p>
+									</div>
+								</li>
+								<li>
+									<h5>newRootNodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID to use for the new root node</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TreeType</span></h4>
+							<p>The re-rooted tree</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="treeToPojo" class="tsd-anchor"></a>
+					<h3>tree<wbr>ToPojo</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">tree<wbr>ToPojo&lt;T&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/index.ts#L326">src/index.ts:326</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Converts a tree to its POJO representation</p>
+								</div>
+								<p>This function provides a type-safe way to convert a tree to a POJO,
+								working around TypeScript inheritance issues.</p>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">&lt;</span><span style="color: #267F99">MyContentType</span><span style="color: #000000">&gt;();</span>
+<span style="color: #008000">// ... add nodes to tree ...</span>
+
+<span style="color: #008000">// Convert the entire tree to a POJO</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">pojo</span><span style="color: #000000"> = </span><span style="color: #795E26">treeToPojo</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">);</span>
+</code></pre>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tree: <a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The tree to convert</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A POJO representation of the tree</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="treeToPojoAt" class="tsd-anchor"></a>
+					<h3>tree<wbr>ToPojo<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">tree<wbr>ToPojo<wbr>At&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/e0b5ec1/src/index.ts#L354">src/index.ts:354</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Converts a tree to its POJO representation starting from the specified node</p>
+								</div>
+								<p>This function provides a type-safe way to convert a subtree to a POJO,
+								working around TypeScript inheritance issues.</p>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">&lt;</span><span style="color: #267F99">MyContentType</span><span style="color: #000000">&gt;();</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">childNodeId</span><span style="color: #000000"> = </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #795E26">appendChildNodeWithContent</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">, { </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;test&quot;</span><span style="color: #000000"> });</span>
+
+<span style="color: #008000">// Convert just the subtree to a POJO</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">subtreePojo</span><span style="color: #000000"> = </span><span style="color: #795E26">treeToPojoAt</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">childNodeId</span><span style="color: #000000">);</span>
+</code></pre>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+								</li>
+								<li>
+									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The tree to convert</p>
+									</div>
+								</li>
+								<li>
+									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The ID of the node to start from</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A POJO representation of the tree</p>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -359,436 +811,6 @@
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
-					<a name="cloneTree" class="tsd-anchor"></a>
-					<h3>clone<wbr>Tree</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">clone<wbr>Tree&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/index.ts#L165">src/index.ts:165</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Creates a clone of an entire tree (starting from the root node)</p>
-								</div>
-								<p>This function provides a type-safe way to clone a tree, preserving the
-								specific derived type of the tree.</p>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">();</span>
-<span style="color: #008000">// ... add nodes to tree ...</span>
-
-<span style="color: #008000">// Create a complete clone of the tree</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">clonedTree</span><span style="color: #000000"> = </span><span style="color: #795E26">cloneTree</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">);</span>
-</code></pre>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
-								</li>
-								<li>
-									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The tree to clone</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TreeType</span></h4>
-							<p>A new tree instance of the same type</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
-					<a name="cloneTreeFrom" class="tsd-anchor"></a>
-					<h3>clone<wbr>Tree<wbr>From</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">clone<wbr>Tree<wbr>From&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/index.ts#L191">src/index.ts:191</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Creates a clone of a tree starting at the specified node</p>
-								</div>
-								<p>This function provides a type-safe way to clone a subtree starting from
-								a specific node, preserving the specific derived type of the tree.</p>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">();</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">childNodeId</span><span style="color: #000000"> = </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #795E26">appendChildNodeWithContent</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">, { </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;test&quot;</span><span style="color: #000000"> });</span>
-
-<span style="color: #008000">// Create a clone starting from the child node</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">partialClone</span><span style="color: #000000"> = </span><span style="color: #795E26">cloneTreeFrom</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">childNodeId</span><span style="color: #000000">);</span>
-</code></pre>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
-								</li>
-								<li>
-									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The tree to clone</p>
-									</div>
-								</li>
-								<li>
-									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The ID of the node to start cloning from</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TreeType</span></h4>
-							<p>A new tree instance of the same type</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
-					<a name="createSubtree" class="tsd-anchor"></a>
-					<h3>create<wbr>Subtree</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Subtree&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, parentNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/index.ts#L247">src/index.ts:247</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Creates a subtree at the specified node</p>
-								</div>
-								<p>This function provides a type-safe way to create a subtree at a specified node,
-								preserving the specific derived type of the tree.</p>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">();</span>
-
-<span style="color: #008000">// Create a subtree at the root node</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">subtree</span><span style="color: #000000"> = </span><span style="color: #795E26">createSubtree</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">);</span>
-</code></pre>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
-								</li>
-								<li>
-									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The parent tree</p>
-									</div>
-								</li>
-								<li>
-									<h5>parentNodeId: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The ID of the parent node where the subtree will be created</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TreeType</span></h4>
-							<p>A new subtree instance</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
-					<a name="getNodeContent" class="tsd-anchor"></a>
-					<h3>get<wbr>Node<wbr>Content</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Node<wbr>Content&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/index.ts#L274">src/index.ts:274</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Safely gets the content of a node in the tree</p>
-								</div>
-								<p>This function provides a type-safe way to retrieve node content,
-								correctly typed as T rather than a more generic type.</p>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">&lt;</span><span style="color: #267F99">MyContentType</span><span style="color: #000000">&gt;();</span>
-<span style="color: #008000">// ... add nodes to tree ...</span>
-
-<span style="color: #008000">// Get the content of the root node</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">content</span><span style="color: #000000"> = </span><span style="color: #795E26">getNodeContent</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">);</span>
-<span style="color: #008000">// content is correctly typed as MyContentType</span>
-</code></pre>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
-								</li>
-								<li>
-									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The tree to get content from</p>
-									</div>
-								</li>
-								<li>
-									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The ID of the node</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-							<p>The content of the node with correct typing</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="isUUIDv4" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> isUUIDv4</h3>
-					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">isUUIDv4<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/common/utilities/isFunctions.ts#L2">src/common/utilities/isFunctions.ts:2</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>value: <span class="tsd-signature-type">any</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
-					<a name="reRootTree" class="tsd-anchor"></a>
-					<h3>re<wbr>Root<wbr>Tree</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">re<wbr>Root<wbr>Tree&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, sourceNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, newRootNodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/index.ts#L218">src/index.ts:218</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Safely re-roots a tree at the specified node</p>
-								</div>
-								<p>This function provides a type-safe way to create a new tree with the
-								specified node as the new root, preserving the specific derived type of the tree.</p>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">();</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">childNodeId</span><span style="color: #000000"> = </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #795E26">appendChildNodeWithContent</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">, { </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;test&quot;</span><span style="color: #000000"> });</span>
-
-<span style="color: #008000">// Create a new tree with the child node as root</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">reRootedTree</span><span style="color: #000000"> = </span><span style="color: #795E26">reRootTree</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">childNodeId</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;new-root&quot;</span><span style="color: #000000">);</span>
-</code></pre>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
-								</li>
-								<li>
-									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The tree to re-root</p>
-									</div>
-								</li>
-								<li>
-									<h5>sourceNodeId: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The ID of the node to use as new root</p>
-									</div>
-								</li>
-								<li>
-									<h5>newRootNodeId: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The ID to use for the new root node</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TreeType</span></h4>
-							<p>The re-rooted tree</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
-					<a name="treeToPojo" class="tsd-anchor"></a>
-					<h3>tree<wbr>ToPojo</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">tree<wbr>ToPojo&lt;T&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/index.ts#L299">src/index.ts:299</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Converts a tree to its POJO representation</p>
-								</div>
-								<p>This function provides a type-safe way to convert a tree to a POJO,
-								working around TypeScript inheritance issues.</p>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">&lt;</span><span style="color: #267F99">MyContentType</span><span style="color: #000000">&gt;();</span>
-<span style="color: #008000">// ... add nodes to tree ...</span>
-
-<span style="color: #008000">// Convert the entire tree to a POJO</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">pojo</span><span style="color: #000000"> = </span><span style="color: #795E26">treeToPojo</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">);</span>
-</code></pre>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>tree: <a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The tree to convert</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>A POJO representation of the tree</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
-					<a name="treeToPojoAt" class="tsd-anchor"></a>
-					<h3>tree<wbr>ToPojo<wbr>At</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">tree<wbr>ToPojo<wbr>At&lt;T, TreeType&gt;<span class="tsd-signature-symbol">(</span>tree<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TreeType</span>, nodeId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/terary/predicate-tree-advanced-poc2/blob/6927fa3/src/index.ts#L327">src/index.ts:327</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Converts a tree to its POJO representation starting from the specified node</p>
-								</div>
-								<p>This function provides a type-safe way to convert a subtree to a POJO,
-								working around TypeScript inheritance issues.</p>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tree</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GenericExpressionTree</span><span style="color: #000000">&lt;</span><span style="color: #267F99">MyContentType</span><span style="color: #000000">&gt;();</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">childNodeId</span><span style="color: #000000"> = </span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #795E26">appendChildNodeWithContent</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">.</span><span style="color: #001080">rootNodeId</span><span style="color: #000000">, { </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;test&quot;</span><span style="color: #000000"> });</span>
-
-<span style="color: #008000">// Convert just the subtree to a POJO</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">subtreePojo</span><span style="color: #000000"> = </span><span style="color: #795E26">treeToPojoAt</span><span style="color: #000000">(</span><span style="color: #001080">tree</span><span style="color: #000000">, </span><span style="color: #001080">childNodeId</span><span style="color: #000000">);</span>
-</code></pre>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
-								</li>
-								<li>
-									<h4>TreeType<span class="tsd-signature-symbol">: </span><a href="classes/AbstractExpressionTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractExpressionTree</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TreeType</span><span class="tsd-signature-symbol">&gt;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>tree: <span class="tsd-signature-type">TreeType</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The tree to convert</p>
-									</div>
-								</li>
-								<li>
-									<h5>nodeId: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The ID of the node to start from</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="modules.html#TTreePojo" class="tsd-signature-type" data-tsd-kind="Type alias">TTreePojo</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>A POJO representation of the tree</p>
-						</li>
-					</ul>
-				</section>
-			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
@@ -821,15 +843,6 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/GenericExpressionTree.html" class="tsd-kind-icon">Generic<wbr>Expression<wbr>Tree</a>
 					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/Incrementor.html" class="tsd-kind-icon">Incrementor</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="classes/KeyStore.html" class="tsd-kind-icon">Key<wbr>Store</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/KeyStoreError.html" class="tsd-kind-icon">Key<wbr>Store<wbr>Error</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/IDirectedGraph.html" class="tsd-kind-icon">IDirected<wbr>Graph</a>
 					</li>
@@ -841,6 +854,15 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/ITreeVisitor.html" class="tsd-kind-icon">ITree<wbr>Visitor</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/Incrementor.html" class="tsd-kind-icon">Incrementor</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/KeyStore.html" class="tsd-kind-icon">Key<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/KeyStoreError.html" class="tsd-kind-icon">Key<wbr>Store<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#TFromToMap" class="tsd-kind-icon">TFrom<wbr>ToMap</a>
@@ -856,9 +878,6 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="modules.html#TTreePojo" class="tsd-kind-icon">TTree<wbr>Pojo</a>
-					</li>
-					<li class=" tsd-kind-property">
-						<a href="modules.html#treeUtils" class="tsd-kind-icon">tree<wbr>Utils</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#cloneTree" class="tsd-kind-icon">clone<wbr>Tree</a>
@@ -883,6 +902,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#treeToPojoAt" class="tsd-kind-icon">tree<wbr>ToPojo<wbr>At</a>
+					</li>
+					<li class=" tsd-kind-property">
+						<a href="modules.html#treeUtils" class="tsd-kind-icon">tree<wbr>Utils</a>
 					</li>
 				</ul>
 			</nav>

@@ -81,7 +81,7 @@
 				<a href="#using-the-safeapi" id="using-the-safeapi" style="color: inherit; text-decoration: none;">
 					<h2>Using the SafeAPI</h2>
 				</a>
-				<p>To avoid TypeScript inheritance issues, use the <code>SafeAPI</code> namespace provided by the library:</p>
+				<p>To avoid TypeScript inheritance issues with static methods, use the <code>SafeAPI</code> namespace provided by the library:</p>
 				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">SafeAPI</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;predicate-tree-advanced-poc&quot;</span><span style="color: #000000">;</span>
 
 <span style="color: #008000">// Create a tree from a POJO</span>
@@ -125,8 +125,48 @@
 					<li><code>treeToPojo()</code>: Convert a tree to a POJO</li>
 					<li><code>treeToPojoAt()</code>: Convert a subtree to a POJO</li>
 				</ul>
-				<a href="#example-usage" id="example-usage" style="color: inherit; text-decoration: none;">
-					<h2>Example Usage</h2>
+				<a href="#usage-examples" id="usage-examples" style="color: inherit; text-decoration: none;">
+					<h2>Usage Examples</h2>
+				</a>
+				<p>The library includes several comprehensive examples that demonstrate different use cases and advanced features.</p>
+				<a href="#example-categories" id="example-categories" style="color: inherit; text-decoration: none;">
+					<h3>Example Categories</h3>
+				</a>
+				<p>The <code>example-usage</code> directory contains the following examples:</p>
+				<ol>
+					<li><p><strong>Simple Predicate Tree</strong> (00001-simple-predicate-tree)</p>
+						<ul>
+							<li>Basic tree construction and manipulation</li>
+							<li>Simple predicate evaluation</li>
+						</ul>
+					</li>
+					<li><p><strong>Subject Dictionary</strong> (00002-predicate-tree-subject-dictionary)</p>
+						<ul>
+							<li>Using predicate trees with a subject dictionary for validation</li>
+							<li>Type-checking predicates against a schema</li>
+						</ul>
+					</li>
+					<li><p><strong>Subtrees</strong> (00003a-predicate-tree-subtrees, 00003b-predicate-tree-subtrees-object-identity)</p>
+						<ul>
+							<li>Working with nested subtrees</li>
+							<li>Maintaining object identity across subtrees</li>
+						</ul>
+					</li>
+					<li><p><strong>POJO Import/Export</strong> (00004-predicate-tree-pojo-import-export)</p>
+						<ul>
+							<li>Serializing and deserializing trees to/from POJOs</li>
+							<li>Handling complex nested structures</li>
+						</ul>
+					</li>
+					<li><p><strong>Anti-Pattern Examples</strong> (00005-anti-pattern)</p>
+						<ul>
+							<li>Common pitfalls to avoid</li>
+							<li>Best practices for tree manipulation</li>
+						</ul>
+					</li>
+				</ol>
+				<a href="#example-code-snippet" id="example-code-snippet" style="color: inherit; text-decoration: none;">
+					<h3>Example Code Snippet</h3>
 				</a>
 				<p>Here&#39;s a complete example:</p>
 				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> {</span>
@@ -151,12 +191,27 @@
 <span style="color: #008000">// Create a new tree from the POJO</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">clonedTree</span><span style="color: #000000"> = </span><span style="color: #001080">SafeAPI</span><span style="color: #000000">.</span><span style="color: #795E26">createGenericTree</span><span style="color: #000000">(</span><span style="color: #001080">pojo</span><span style="color: #000000">);</span>
 </code></pre>
+				<a href="#exploring-the-examples" id="exploring-the-examples" style="color: inherit; text-decoration: none;">
+					<h2>Exploring the Examples</h2>
+				</a>
+				<p>To run the examples locally:</p>
+				<ol>
+					<li>Clone the repository</li>
+					<li>Navigate to the example directory: <code>cd example-usage/00001-simple-predicate-tree</code></li>
+					<li>Run the example: <code>npm run index.ts</code></li>
+				</ol>
+				<p>Each example includes:</p>
+				<ul>
+					<li>A README.md with detailed explanations</li>
+					<li>Fully commented source code</li>
+					<li>Running examples that demonstrate key concepts</li>
+				</ul>
 				<a href="#additional-resources" id="additional-resources" style="color: inherit; text-decoration: none;">
 					<h2>Additional Resources</h2>
 				</a>
 				<ul>
-					<li><a href="https://github.com/terary/gabby-query-protocol-lib">GitHub Repository</a></li>
-					<li><a href="https://github.com/terary/gabby-query-protocol-lib/tree/main/example-usage">Example Usage</a></li>
+					<li><a href="https://github.com/terary/predicate-tree-advanced-poc2">GitHub Repository</a></li>
+					<li><a href="https://github.com/terary/predicate-tree-advanced-poc2/tree/main/example-usage">Example Directory</a></li>
 				</ul>
 			</div>
 		</div>
@@ -191,15 +246,6 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/GenericExpressionTree.html" class="tsd-kind-icon">Generic<wbr>Expression<wbr>Tree</a>
 					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/Incrementor.html" class="tsd-kind-icon">Incrementor</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="classes/KeyStore.html" class="tsd-kind-icon">Key<wbr>Store</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/KeyStoreError.html" class="tsd-kind-icon">Key<wbr>Store<wbr>Error</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/IDirectedGraph.html" class="tsd-kind-icon">IDirected<wbr>Graph</a>
 					</li>
@@ -211,6 +257,15 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/ITreeVisitor.html" class="tsd-kind-icon">ITree<wbr>Visitor</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/Incrementor.html" class="tsd-kind-icon">Incrementor</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/KeyStore.html" class="tsd-kind-icon">Key<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/KeyStoreError.html" class="tsd-kind-icon">Key<wbr>Store<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#TFromToMap" class="tsd-kind-icon">TFrom<wbr>ToMap</a>
@@ -226,9 +281,6 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="modules.html#TTreePojo" class="tsd-kind-icon">TTree<wbr>Pojo</a>
-					</li>
-					<li class=" tsd-kind-property">
-						<a href="modules.html#treeUtils" class="tsd-kind-icon">tree<wbr>Utils</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#cloneTree" class="tsd-kind-icon">clone<wbr>Tree</a>
@@ -253,6 +305,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#treeToPojoAt" class="tsd-kind-icon">tree<wbr>ToPojo<wbr>At</a>
+					</li>
+					<li class=" tsd-kind-property">
+						<a href="modules.html#treeUtils" class="tsd-kind-icon">tree<wbr>Utils</a>
 					</li>
 				</ul>
 			</nav>

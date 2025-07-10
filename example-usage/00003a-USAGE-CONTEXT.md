@@ -1,4 +1,4 @@
-# Predicate Tree with Subtrees Example
+# Predicate Tree with Subtrees Example (00003a-predicate-tree-subtrees)
 
 This example demonstrates how to work with subtrees in the Predicate Tree library, allowing you to create nested hierarchical structures.
 
@@ -97,6 +97,9 @@ function traverseTree(tree, nodeId, depth = 0) {
 ## Running This Example
 
 ```bash
+# Navigate to the example directory
+cd 00003a-predicate-tree-subtrees
+
 # Install dependencies
 npm install
 

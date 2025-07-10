@@ -22,6 +22,7 @@
     "gabby:build": "npm run build",
     "gabby:pack": "npm run build && npm pack",
     "docs": "typedoc --options typedoc.json",
+    "docs:serve": "npm run docs && npx http-server docs",
     "audit:high": "npm audit | grep -E 'Severity: (high|critical)' -A5 -B1"
   },
   "keywords": [

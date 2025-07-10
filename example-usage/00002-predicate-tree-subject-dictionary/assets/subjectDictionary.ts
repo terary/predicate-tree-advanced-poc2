@@ -10,29 +10,29 @@ import { TSubjectDictionary, TSubjectType } from "./ValidatedPredicateTree";
 // Export the dictionary that contains all of our fields for customers and products
 export const customerProductDictionary: TSubjectDictionary = {
   // Customer fields
-  "customer.name": {
+  "customer:name": {
     datatype: "string",
     label: "Customer Name",
   },
-  "customer.email": {
+  "customer:email": {
     datatype: "string",
     label: "Email Address",
   },
-  "customer.age": {
+  "customer:age": {
     datatype: "number",
     label: "Age",
   },
-  "customer.isActive": {
+  "customer:isActive": {
     datatype: "boolean",
     label: "Active Status",
   },
-  "customer.createdAt": {
+  "customer:createdAt": {
     datatype: "date",
     label: "Registration Date",
   },
 
   // Customer address (object type with nested properties)
-  "customer.address": {
+  "customer:address": {
     datatype: "object",
     label: "Customer Address",
     shape: {
@@ -44,34 +44,34 @@ export const customerProductDictionary: TSubjectDictionary = {
   },
 
   // Customer orders (array type)
-  "customer.orders": {
+  "customer:orders": {
     datatype: "array",
     label: "Customer Orders",
     itemType: "object",
   },
 
   // Product fields
-  "product.id": {
+  "product:id": {
     datatype: "string",
     label: "Product ID",
   },
-  "product.name": {
+  "product:name": {
     datatype: "string",
     label: "Product Name",
   },
-  "product.price": {
+  "product:price": {
     datatype: "number",
     label: "Price",
   },
-  "product.inStock": {
+  "product:inStock": {
     datatype: "boolean",
     label: "In Stock",
   },
-  "product.category": {
+  "product:category": {
     datatype: "string",
     label: "Category",
   },
-  "product.createdAt": {
+  "product:createdAt": {
     datatype: "date",
     label: "Creation Date",
   },
